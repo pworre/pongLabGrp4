@@ -10,10 +10,8 @@ void testAtmega(){
 
     while(1){
 
-        if ((GPIO->PORTA == (1 << TEST_PIN)) && (CLOCK->TCNT3L == 0xFF)){
-            GPIO->PORTA = 0;
-        } if ((GPIO->PORTA == (1 << TEST_PIN)) && (CLOCK->TCNT3L == 0xFF)){
-            GPIO->PORTA = (1 << TEST_PIN);
+        if ((CLOCK->TCNT3L == 0xFF)){
+            GPIO->PORTA ^= (1 << TEST_PIN);
         }
     }
 }
