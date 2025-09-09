@@ -1,19 +1,22 @@
 #include <stdint.h>
 #include "drivers/gpio.h"
 #include "drivers/clock.h"
+#include "drivers/uart.h"
 
 #define TEST_PIN 1
 
 int main(){
-    volatile uint32_t i = 0;
-    GPIO ->DDRA = (1<<TEST_PIN);
+    USART0_Init(MYUBRR);
+    char letter = 'a';
+
     while (1){
-
-        if (i % 30000 == 0){
-            GPIO->PORTA ^= (1<<TEST_PIN);
+        //letter = USART0_Read();
+        //if (letter == 'a'){
+            //USART0_send_str("abc");
+        //}
+        if (USART0_Read() == 'a'){
+            USART0_send('a');
         }
-        i += 1;
     }
-
     return 0;
 }
