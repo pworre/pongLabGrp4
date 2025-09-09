@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include <drivers/gpio.h>
-#include <drivers/clock.h>
+#include "drivers/gpio.h"
+#include "drivers/clock.h"
 
 #define TEST_PIN 1
 
