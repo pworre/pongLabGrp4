@@ -1,7 +1,7 @@
 #ifndef GPIO_H
 #define GPIO_H
 #include <stdint.h>
-
+/*
 #define GPIO ((ATMEGA_GPIO_REG*)0x20)
 
 typedef struct {
@@ -10,5 +10,5 @@ typedef struct {
     volatile uint8_t DDRA;
     volatile uint8_t PORTA;
 } ATMEGA_GPIO_REG;
-
+*/
 #endif

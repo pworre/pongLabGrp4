@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "AVR",
+            "includePath": [
+                "${workspaceFolder}/**", 
+                "/home/student/avr-libc/include/avr/io.h"
+
+            ],
+            "defines": [
+                "__AVR_ATmega162__"
+            ],
+            "compilerPath": "/usr/bin/avr-gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

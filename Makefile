@@ -15,7 +15,7 @@ TARGET_CPU := atmega162
 TARGET_DEVICE := m162
 
 CC := avr-gcc
-CFLAGS := -O -std=c11 -mmcu=$(TARGET_CPU) -ggdb
+CFLAGS := -O -std=c11 -mmcu=$(TARGET_CPU) -ggdb -I/home/student/avr-libc/include
 
 #OBJECT_FILES = $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 

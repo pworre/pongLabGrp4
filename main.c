@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include "drivers/gpio.h"
 #include "drivers/clock.h"
 #include "drivers/uart.h"
@@ -7,16 +8,16 @@
 
 int main(){
     USART0_Init(MYUBRR);
-    char letter = 'a';
-
+    fdevopen(USART0_send, USART0_read);
+    unsigned char c; 
+    printf("Hei studass vi er ferdig med oving 1 \r\n");
     while (1){
-        //letter = USART0_Read();
-        //if (letter == 'a'){
-            //USART0_send_str("abc");
-        //}
-        if (USART0_Read() == 'a'){
-            USART0_send('a');
-        }
+        //printf("Hei hei\r\n");
+        //char letter = USART0_read();
+        //printf("%c\n", letter);
+        //USART0_send(letter);
+        USART0_send(USART0_read());
+
     }
     return 0;
 }
