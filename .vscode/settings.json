@@ -4,6 +4,7 @@
         "gpio.h": "c",
         "uart.h": "c",
         "io.h": "c",
-        "iom162.h": "c"
+        "iom162.h": "c",
+        "init.h": "c"
     }
 }
