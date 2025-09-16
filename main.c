@@ -4,6 +4,7 @@
 #include "drivers/clock.h"
 #include "drivers/uart.h"
 #include "drivers/init.h"
+#include "drivers/io_board.h"
 
 #define TEST_PIN 1
 
@@ -16,7 +17,9 @@ int main(){
     fdevopen(USART0_send, USART0_read);
 
     init();
-    SRAM_test();
+    //SRAM_test();
+
+    io_board_init();
     /*
     unsigned char c; 
     printf("Hei studass vi er ferdig med oving 1 \r\n");
