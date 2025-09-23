@@ -21,9 +21,10 @@ int main(){
 
 
     io_board_init();
+    io_board_calibration();
     while(1){
         //printf("%d", get_adc_data(1)); 
-        ADC_read();
+        ADC_print();
     }
     return 0;
 }

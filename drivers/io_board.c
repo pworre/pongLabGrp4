@@ -7,9 +7,15 @@
 #define PRESCALER 1
 #define freq 4
 
-// CHANNEL 1 // JOYSTICK X
-// CHANNEL 2 // JOYSTICK Y
-// CHANNEL
+// CHANNEL 0 // JOYSTICK X
+// CHANNEL 1 // JOYSTICK Y
+// CHANNEL 2 // TOUCH X
+// CHANNEL 3 //
+
+volatile uint8_t* adc_adress = (uint8_t *) 0x1000;
+static uint8_t adc_data[4];
+static int8_t scaled_values[4];
+uint8_t joystick_x_calibration, joystick_y_calibration;
 
 void io_board_init(){
     // Setter PD5 som output
@@ -34,8 +40,7 @@ void io_board_init(){
 
 
 void ADC_read(void){
-    volatile uint8_t* adc_adress = (uint8_t *) 0x1000;
-    static uint8_t adc_data[4];
+
     
     //adc_adress[0] = 0xff;
     adc_adress[0] = 0;
@@ -48,7 +53,47 @@ void ADC_read(void){
         adc_data[i] = adc_adress[i];
     }
 
-    printf("%d\r\n", adc_data[1]);
+    //printf("%d\r\n", adc_data[1]);
+}
+
+void ADC_print(void){
+    get_io_board_values();
+    printf("Joystick: %3d, %3d          Touch: %3d, %3d\r\n", scaled_values[0], scaled_values[1], scaled_values[2], scaled_values[3]);
+}
+
+void io_board_calibration(void){
+    uint8_t full_scale = 100;
+    ADC_read();
+    joystick_x_calibration = adc_data[1];
+    joystick_y_calibration = adc_data[0];
+}
+
+void get_io_board_values(void){
+    uint8_t x_joystick_max = 250;
+    uint8_t x_joystick_min = 77;
+    uint8_t y_joystick_max = 255;
+    uint8_t y_joystick_min = 67;
+    uint8_t touch_max = 255;
+    uint8_t touch_min = 0;
+
+    ADC_read();
+    
+    //joystick x
+    if (adc_data[1] < 0){
+        scaled_values[0] = ((adc_data[1] - joystick_x_calibration) *100 )/ ((joystick_x_calibration - x_joystick_max));
+    } else {
+        scaled_values[0] = ((adc_data[1] - joystick_x_calibration) *100 )/ ((joystick_x_calibration - x_joystick_min));
+    }
+
+
+    //joystick y
+    scaled_values[1] = ((adc_data[0] - joystick_y_calibration) * 100)/ ((y_joystick_max-y_joystick_min)/2);
+
+    //touch x
+    scaled_values[2] = (((adc_data[3] - (touch_max-touch_min)/2)) * 100)/ ((touch_max-touch_min)/2) ;
+
+    //touch y
+    scaled_values[3] = (((adc_data[2] - (touch_max-touch_min)/2)) *100)/ ((touch_max-touch_min)/2);
 }
 
 
