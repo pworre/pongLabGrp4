@@ -9,27 +9,21 @@
 #define TEST_PIN 1
 
 int main(){
-    DDRC = 0b11111111;
-    DDRA = 0b11111111;
+    //DDRC = 0b11111111;
+    //DDRA = 0b11111111;
     
 
     USART0_Init(MYUBRR);
     fdevopen(USART0_send, USART0_read);
 
     init();
-    //SRAM_test();
+    SRAM_test();
+
 
     io_board_init();
-    /*
-    unsigned char c; 
-    printf("Hei studass vi er ferdig med oving 1 \r\n");
-    while (1){
-        //printf("Hei hei\r\n");
-        //char letter = USART0_read();
-        //printf("%c\n", letter);
-        //USART0_send(letter);
-        USART0_send(USART0_read());
-
-    }*/
+    while(1){
+        //printf("%d", get_adc_data(1)); 
+        ADC_read();
+    }
     return 0;
 }
