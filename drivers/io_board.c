@@ -66,6 +66,7 @@ void io_board_calibration(void){
     ADC_read();
     joystick_x_calibration = adc_data[1];
     joystick_y_calibration = adc_data[0];
+    
 }
 
 void get_io_board_values(void){
@@ -91,6 +92,10 @@ void get_io_board_values(void){
 
     //touch y
     scaled_values[3] = (((adc_data[2] - (touch_max-touch_min)/2)) *100)/ ((touch_max-touch_min)/2);
+}
+
+void get_io_board_directions(void){
+
 }
 
 
