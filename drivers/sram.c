@@ -1,7 +1,7 @@
-#include "init.h"
+#include "sram.h"
 
 
-void init(){
+void sram_init(){
     // Enable external memory
     MCUCR |= (1 << SRE);
 

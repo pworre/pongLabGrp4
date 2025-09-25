@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifndef init_H
-#define init_H
+#ifndef sram_H
+#define sram_H
 
-void init();
+void sram_init();
 void SRAM_test(void);
 
 #endif

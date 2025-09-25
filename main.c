@@ -3,7 +3,7 @@
 #include "drivers/gpio.h"
 #include "drivers/clock.h"
 #include "drivers/uart.h"
-#include "drivers/init.h"
+#include "drivers/sram.h"
 #include "drivers/io_board.h"
 
 #define TEST_PIN 1
@@ -16,7 +16,7 @@ int main(){
     USART0_Init(MYUBRR);
     fdevopen(USART0_send, USART0_read);
 
-    init();
+    sram_init();
     SRAM_test();
 
 

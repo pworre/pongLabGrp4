@@ -79,11 +79,8 @@ void get_io_board_values(void){
     ADC_read();
     
     //joystick x
-    if (adc_data[1] < 0){
-        scaled_values[0] = ((adc_data[1] - joystick_x_calibration) *100 )/ ((joystick_x_calibration - x_joystick_max));
-    } else {
-        scaled_values[0] = ((adc_data[1] - joystick_x_calibration) *100 )/ ((joystick_x_calibration - x_joystick_min));
-    }
+
+    
 
 
     //joystick y
