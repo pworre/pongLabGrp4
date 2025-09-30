@@ -7,6 +7,7 @@
 #include "drivers/io_board.h"
 #include "drivers/spi.h"
 #include "drivers/oled.h"
+#include "drivers/fonts.h"
 
 #define TEST_PIN 1
 
@@ -18,8 +19,9 @@ int main(){
     USART0_Init(MYUBRR);
     fdevopen(USART0_send, USART0_read);
 
-    //sram_init();
+    sram_init();
     //SRAM_test();
+    
 
 
     io_board_init();
@@ -27,10 +29,26 @@ int main(){
 
     SPI_MasterInit();
     oled_init();
-    oled_pos(31,62);
-    transmit_oled_data(10);
-    oled_fill_screen();
     
+    /*
+    char* text = "NEW GAME";
+    oled_write_string(text, 8, 0, 32);
+
+    char* text2 = "LINJE 2!";
+    oled_write_string(text2, 8, 2, 5);
+
+    char* botn = "heilt nede!";
+    oled_write_string(botn, 4, 7, 60);
+    */
+
+    char* text0 = "TEST";
+    oled_write_string(text0, 8, 3, 30);
+    oled_update_screen();
+
+    //oled_fill_screen();
+    
+    //oled_pos(31,62);
+    //transmit_oled_data(10);
 
     //oled_goto_line(2);
     //transmit_oled_data(1);
@@ -40,5 +58,4 @@ int main(){
         //oled_fill_screen();
     }
     return 0;
-
 }

@@ -5,6 +5,8 @@
         "uart.h": "c",
         "io.h": "c",
         "iom162.h": "c",
-        "init.h": "c"
+        "init.h": "c",
+        "fonts.h": "c",
+        "oled.h": "c"
     }
 }

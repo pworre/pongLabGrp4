@@ -9,6 +9,14 @@ void sram_init(){
     SFIOR &= ~(0b111 << XMM0);
     SFIOR |= (1 << XMM2);
     //SFIOR &= ~((1 << XMM1) | (1 << XMM0)); 
+
+    // empty registers
+    volatile char *ext_ram = (char *) 0x1800;
+    uint16_t ext_ram_size = 0x800;
+    for (int i = 0; i < ext_ram_size; i++){
+        ext_ram[i] = 0;
+    }
+    
 }
 
 void SRAM_test(void)
