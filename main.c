@@ -30,7 +30,7 @@ int main(){
     SPI_MasterInit();
     oled_init();
     
-    /*
+    
     char* text = "NEW GAME";
     oled_write_string(text, 8, 0, 32);
 
@@ -39,7 +39,6 @@ int main(){
 
     char* botn = "heilt nede!";
     oled_write_string(botn, 4, 7, 60);
-    */
 
     char* text0 = "TEST";
     oled_write_string(text0, 8, 3, 30);

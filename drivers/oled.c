@@ -149,7 +149,7 @@ void oled_print_page(uint8_t page){
 
 void oled_write_byte(uint8_t page, uint8_t col, uint8_t byte){
     volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
-    uint8_t offset = page * 128 + col;
+    uint16_t offset = page * 128 + col;
     ext_ram[offset] = byte;
 }
 
@@ -160,7 +160,7 @@ void oled_get_page(uint8_t page){
     }
 
     volatile char *ext_ram = (char *) 0x1800;
-    uint8_t offset = 128 * page;
+    uint16_t offset = 128 * page;
     for (uint8_t i = 0; i<128; i++){
         oled_current_page[i] = ext_ram[offset + i];
     }
