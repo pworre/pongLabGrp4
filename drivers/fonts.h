@@ -13,7 +13,12 @@
 extern const uint8_t font8[95][8];
 extern const uint8_t font5[95][5];
 extern const uint8_t font4[95][4];
+extern const uint8_t figures[2][8];
 
+typedef enum {
+    DIK,
+    ARROW,
+} FIGURES;
 
 //void fonts_init(void);
 

@@ -6,6 +6,7 @@
 #define F_CLK 4915200UL
 #define PRESCALER 1
 #define freq 4
+#define btn_joystick_pin 2
 
 // CHANNEL 0 // JOYSTICK X
 // CHANNEL 1 // JOYSTICK Y
@@ -16,6 +17,7 @@ volatile uint8_t* adc_adress = (uint8_t *) 0x1000;
 static uint8_t adc_data[4];
 static int8_t scaled_values[4];
 uint8_t joystick_x_calibration, joystick_y_calibration;
+uint8_t buttons;
 
 void io_board_init(){
     // Setter PD5 som output
@@ -36,6 +38,10 @@ void io_board_init(){
     // Enable source clock uten prescaler
     TCCR1B &= ~(0b111);
     TCCR1B |= (1 << CS10);
+
+    // Setup joystick button as input
+    DDRE &= ~(1 << btn_joystick_pin);
+    buttons = 0;
 }
 
 
@@ -80,9 +86,7 @@ void get_io_board_values(void){
     ADC_read();
     
     //joystick x
-
-    
-
+    scaled_values[0] = ((adc_data[1] - joystick_x_calibration) * 100)/ ((x_joystick_max-x_joystick_min)/2);
 
     //joystick y
     scaled_values[1] = ((adc_data[0] - joystick_y_calibration) * 100)/ ((y_joystick_max-y_joystick_min)/2);
@@ -92,10 +96,40 @@ void get_io_board_values(void){
 
     //touch y
     scaled_values[3] = (((adc_data[2] - (touch_max-touch_min)/2)) *100)/ ((touch_max-touch_min)/2);
+
+
+    // Buttons
+    if ((PINE & (1 << btn_joystick_pin)) == 0) {
+        buttons |= 1;
+    } else {
+        buttons &= ~1;
+    }
+    
 }
 
 void get_io_board_directions(void){
+    uint8_t x = scaled_values[0];
+    uint8_t y = scaled_values[1];
 
+    if (x < 20 && y < 20){
+        joystick_dir = IDLE;
+    }
+    else if (x > y){
+        if (x < 0){
+            joystick_dir = DOWN;
+        } 
+        else{
+            joystick_dir = UP;
+        }
+    }
+    else{
+        if (y < 0){
+            joystick_dir =LEFT;
+        }
+        else{
+            joystick_dir = RIGHT;
+        }
+    }
 }
 
 

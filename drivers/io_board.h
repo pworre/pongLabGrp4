@@ -13,4 +13,25 @@ void get_io_board_values(void);
 void get_io_board_directions(void);
 
 
+typedef enum {
+    joystick_btn,
+    SL4,
+    SL5,
+    SL6,
+    SL7,
+    SR4, 
+    SR5,
+    SR6
+} BUTTONS;
+
+typedef enum {
+    IDLE, 
+    UP, 
+    DOWN,
+    LEFT,
+    RIGHT,
+} JOYSTICK_DIR;
+
+volatile JOYSTICK_DIR joystick_dir;
+
 #endif

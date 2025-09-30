@@ -136,6 +136,45 @@ void oled_write_string(char* ptr, uint8_t font_size, uint8_t page, uint8_t col){
     }
 }
 
+void oled_write_inverted_string(char* ptr, uint8_t font_size, uint8_t page, uint8_t col){
+
+    uint8_t char_count = 0;
+    // Reset current page buffer
+    for (int i = 0; i < 128; i++){
+        oled_current_page[i] = 0xFF;
+    }
+
+
+    while (*ptr != '\0' ){
+        switch (font_size){
+            case 4:
+                for (uint8_t i=0; i < 4; i++){
+                    oled_current_page[col + 4*char_count + i] =  ~pgm_read_byte(&font4[*ptr - 32][i]); //font4[*ptr - 32][i];
+                }
+                break;
+            case 5:
+                for (uint8_t i=0; i < 5; i++){
+                    oled_current_page[col + 5*char_count + i] = ~pgm_read_byte(&font5[*ptr - 32][i]); //font5[*ptr - 32][i];
+                }
+                break;
+            case 8:
+                for (uint8_t i=0; i < 8; i++){
+                    oled_current_page[col + 8*char_count + i] = ~pgm_read_byte(&font8[*ptr - 32][i]); //font8[*ptr - 32][i];
+                }
+                break;
+            default:
+            break;
+
+        }
+        char_count++;
+        ptr++;
+    }
+    
+    //oled_print_page(page);
+    for (int i = 0; i < 128; i++){ // OBS!!!
+        oled_write_byte(page, i, oled_current_page[i]);
+    }
+}
 
 
 void oled_print_page(uint8_t page){
@@ -144,7 +183,6 @@ void oled_print_page(uint8_t page){
         transmit_oled_data(oled_current_page[col]); // Sett alle piksler i kolonnen
     }
 }
-
 
 
 void oled_write_byte(uint8_t page, uint8_t col, uint8_t byte){
@@ -170,5 +208,34 @@ void oled_update_screen(void){
     for (uint8_t page = 0; page < 8; page++){
         oled_get_page(page);
         oled_print_page(page);
+    }
+}
+
+void oled_draw(FIGURES fig, uint8_t page, uint8_t col){
+
+    // Reset current page buffer
+    for (int i = 0; i < 128; i++){
+        oled_current_page[i] = 0;
+    }
+    uint8_t width = 0;
+
+    switch (fig){
+        case DIK:
+            width = 8;
+            break;
+        case ARROW:
+            width = 8;
+            break;
+        default:
+            break;
+    }
+    
+    for (uint8_t i=0; i < width; i++){
+        oled_current_page[col + i] =  pgm_read_byte(&figures[fig][i]); //font4[*ptr - 32][i];
+    }
+    
+    //oled_print_page(page);
+    for (int i = 0; i < width; i++){ // OBS!!!
+        oled_write_byte(page, (col + i), oled_current_page[col + i]);
     }
 }

@@ -8,6 +8,7 @@
 #include "drivers/spi.h"
 #include "drivers/oled.h"
 #include "drivers/fonts.h"
+#include "drivers/menu.h"
 
 #define TEST_PIN 1
 
@@ -31,7 +32,7 @@ int main(){
     oled_init();
     
     
-    char* text = "NEW GAME";
+    /*char* text = "NEW GAME";
     oled_write_string(text, 8, 0, 32);
 
     char* text2 = "LINJE 2!";
@@ -42,6 +43,8 @@ int main(){
 
     char* text0 = "TEST";
     oled_write_string(text0, 8, 3, 30);
+    oled_draw(DIK, 5, 80);*/
+    draw_main_menu();
     oled_update_screen();
 
     //oled_fill_screen();
