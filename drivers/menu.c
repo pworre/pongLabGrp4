@@ -224,11 +224,14 @@ void draw_main_menu(void){
 } //tegne til hele skjermen
 
 void draw_new_game_menu(void){
+    char* header = "NEW GAME";
+    oled_write_inverted_string(header, 8, 0, 23);
     char* start = "Start";
     oled_write_string(start, 4, 2, 71);
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
 
+/*
 void draw_score_menu(void){
     char* place = '1' - 32;
     char* score;
@@ -247,7 +250,37 @@ void draw_score_menu(void){
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
 
+*/
+
+void draw_score_menu(void) {
+    char* header = "HIGH SCORES";
+    oled_write_inverted_string(header, 8, 0, 23);
+
+    for (uint8_t i = 0; i < 5; i++) {
+        char line[10];  // midlertidig buffer for teksten på hver linje
+        char num_str[4];
+        uint8_t score = high_scores[i];
+
+        // lag streng for plassnummer (1-5)
+        char place = '1' + i;
+
+        // konverter score til tekst
+        snprintf(num_str, sizeof(num_str), "%d", score);
+
+        // lag linjetekst i formatet "1. 76"
+        snprintf(line, sizeof(line), "%c. %s", place, num_str);
+
+        // skriv til OLED, f.eks. én linje per side (page)
+        oled_write_string(line, 4, 2 + i, 63);
+    }
+
+    oled_update_screen();
+}
+
+
 void draw_settings_menu(void){
+    char* header = "SETTINGS";
+    oled_write_inverted_string(header, 8, 0, 23);
     char* Calinration_str = "Calibration";
     oled_write_string(Calinration_str, 4, 2, 71);
     char* Brightness_str = "Brightness";

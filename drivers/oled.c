@@ -245,29 +245,3 @@ void oled_draw(FIGURES fig, uint8_t page, uint8_t col){
         oled_write_byte(page, (col + i), oled_current_page[col + i]);
     }
 }
-
-char* int_to_str(uint8_t num){
-    char* string;
-    uint8_t i = 0;
-
-    if (num == 0){
-        string[i++] = '0' - 32;
-        string[i] = '\0';
-        return string;
-    }
-
-    while (num > 0)
-    {
-        string[i++] = (num % 10) + '0' - 32;
-        num /= 10;
-    }
-    string[i] = '\0';
-
-
-    for (uint8_t j = 0; j<(i/2); j++){
-        char temp = string[j];
-        string[j] = string[i-j-1];
-        string[i-j-1] = temp;
-    }
-    return string;
-}
