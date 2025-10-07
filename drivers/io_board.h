@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "spi.h"
+#include <stdlib.h>
 
 #ifndef IO_BOARD_H
 #define IO_BOARD_H

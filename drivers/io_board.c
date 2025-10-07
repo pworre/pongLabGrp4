@@ -128,13 +128,13 @@ void get_io_board_values(void){
 }
 
 void get_io_board_directions(void){
-    uint8_t x = scaled_values[0];
-    uint8_t y = scaled_values[1];
+    int8_t x = scaled_values[0];
+    int8_t y = scaled_values[1];
 
-    if (x < 10 && y < 10){
+    if (abs(x) < 10 && abs(y) < 10){
         joystick_dir = IDLE;
     }
-    else if (x > y){
+    else if (abs(x) > abs(y)){
         if (x < 0){
             joystick_dir = DOWN;
         } 
