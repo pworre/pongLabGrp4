@@ -136,18 +136,18 @@ void get_io_board_directions(void){
     }
     else if (abs(x) > abs(y)){
         if (x < 0){
-            joystick_dir = DOWN;
+            joystick_dir = LEFT;
         } 
         else{
-            joystick_dir = UP;
+            joystick_dir = RIGHT;
         }
     }
     else{
         if (y < 0){
-            joystick_dir =LEFT;
+            joystick_dir = DOWN;
         }
         else{
-            joystick_dir = RIGHT;
+            joystick_dir = UP;
         }
     }
 }

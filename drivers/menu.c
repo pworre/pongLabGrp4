@@ -6,12 +6,13 @@ void main_menu(void){
     main_menu_state = NEW_GAME; //skal initialiseres et annet sted
     draw_main_menu();
     while (1){
+        _delay_us(200);
         switch (main_menu_state)
         {
         case NEW_GAME:
             oled_draw(ARROW, 2, 0); //drawing the correct arrow
-            oled_write_string(' ', 8, 4, 0);
-            oled_write_string(' ', 8, 6, 0);
+            oled_draw(EMPTY, 4, 0);
+            oled_draw(EMPTY, 6, 0);
             oled_update_screen();
 
             get_io_board_values();
@@ -33,9 +34,9 @@ void main_menu(void){
             break;
 
         case SCORE:
-            oled_draw(ARROW, 4, 0); //drawing the correct arrow
-            oled_write_string(' ', 8, 2, 0);
-            oled_write_string(' ', 8, 6, 0);
+            oled_draw(EMPTY, 2, 0); //drawing the correct arrow
+            oled_draw(ARROW, 4, 0);
+            oled_draw(EMPTY, 6, 0);
             oled_update_screen();
 
             get_io_board_values();
@@ -61,9 +62,9 @@ void main_menu(void){
             break;
 
         case SETTINGS:
-            oled_draw(ARROW, 6, 0); //drawing the correct arrow
-            oled_write_string(' ', 8, 2, 0);
-            oled_write_string(' ', 8, 4, 0);
+            oled_draw(EMPTY, 2, 0); //drawing the correct arrow
+            oled_draw(EMPTY, 4, 0);
+            oled_draw(ARROW, 6, 0);
             oled_update_screen();
 
             get_io_board_values();

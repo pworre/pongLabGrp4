@@ -18,6 +18,7 @@ extern const uint8_t figures[2][8];
 typedef enum {
     DIK,
     ARROW,
+    EMPTY,
 } FIGURES;
 
 //void fonts_init(void);
