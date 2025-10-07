@@ -7,6 +7,7 @@
         "iom162.h": "c",
         "init.h": "c",
         "fonts.h": "c",
-        "oled.h": "c"
+        "oled.h": "c",
+        "clock.h": "c"
     }
 }

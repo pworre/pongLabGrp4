@@ -1,3 +1,4 @@
+#define F_CPU 4915200UL
 #include "spi.h"
 #include "fonts.h"
 

@@ -1,3 +1,4 @@
+#define F_CPU 4915200UL
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -9,8 +10,8 @@
 #define SS_OLED 3
 #define SS_IO_BOARD 2
 #define SS_ARDUINO 1 //ikke koblet ennå
-#define DELAY_COMMAND_DATA 40 // us
-#define DELAY_DATA_DATA 2 // us
+#define DELAY_COMMAND_DATA 60 // us
+#define DELAY_DATA_DATA 4 // us
 
 typedef enum {
     IO_BOARD,

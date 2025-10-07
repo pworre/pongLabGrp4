@@ -152,6 +152,26 @@ void get_io_board_directions(void){
     }
 }
 
+void io_board_led_power(uint8_t led_nr, uint8_t state){
+    SPI_MasterTransmit((0x05), IO_BOARD);
+    _delay_us(DELAY_COMMAND_DATA);
+    SPI_MasterTransmit(led_nr, IO_BOARD); // 0 -> 5
+    _delay_us(DELAY_COMMAND_DATA);
+    SPI_MasterTransmit(state, IO_BOARD);
+    _delay_us(DELAY_DATA_DATA);
+    PORTB |= ((1 << SS_OLED) | (1 << SS_ARDUINO) | (1 << SS_IO_BOARD));
+}
+
+
+void io_board_led_pwm(uint8_t led_nr, uint8_t width){
+    SPI_MasterTransmit((0x06), IO_BOARD);
+    _delay_us(DELAY_COMMAND_DATA);
+    SPI_MasterTransmit(led_nr, IO_BOARD); // 0 -> 5
+    _delay_us(DELAY_COMMAND_DATA);
+    SPI_MasterTransmit(width, IO_BOARD); // 0 -> 255
+    _delay_us(DELAY_DATA_DATA);
+    PORTB |= ((1 << SS_OLED) | (1 << SS_ARDUINO) | (1 << SS_IO_BOARD));
+}
 
 /*
     void ADC_read(uint8_t chanel){

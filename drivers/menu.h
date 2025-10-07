@@ -1,3 +1,4 @@
+#define F_CPU 4915200UL
 #include "oled.h"
 #include "io_board.h"
 

@@ -1,3 +1,4 @@
+#define F_CPU 4915200UL
 #include <stdint.h>
 #include <stdio.h>
 #include "drivers/gpio.h"
@@ -22,7 +23,7 @@ int main(){
     fdevopen(USART0_send, USART0_read);
 
     sram_init();
-    //SRAM_test();
+    SRAM_test();
     
 
 
@@ -33,42 +34,63 @@ int main(){
     oled_init();
 
     while(1){
-        /*
-        uint8_t buttons;
+        uint8_t buttons[3];
         // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
         SPI_MasterTransmit((0x04), IO_BOARD);
         _delay_us(DELAY_COMMAND_DATA);
-        printf("Data\r");
-        for (int byte_nr = 0; byte_nr < 3; byte_nr++){
+        buttons[0] = SPI_read(IO_BOARD);
+        _delay_us(DELAY_DATA_DATA);    
+        buttons[1] = SPI_read(IO_BOARD);
+        _delay_us(DELAY_DATA_DATA);
+        buttons[2] = SPI_read(IO_BOARD);
+        _delay_us(DELAY_DATA_DATA);
+        PORTB |= ((1 << SS_OLED) | (1 << SS_ARDUINO) | (1 << SS_IO_BOARD));
+
+        printf("%d              %d              %d\r\n", buttons[0], buttons[1], buttons[2]);
+        _delay_ms(500);
+        //printf("%d\r\n", buttons);
+        _delay_us(DELAY_DATA_DATA);
+
+        io_board_led_power(2, 1);
+        io_board_led_pwm(2, 100);
+
+        /*
+        //printf("Data\r\n");
+        for (uint8_t byte_nr = 0; byte_nr < 3; byte_nr++){
             switch(byte_nr){
                 case 0: // RIGHT
                     buttons = SPI_read(IO_BOARD);
+                    break;
                 case 1: // LEFT
                     buttons = SPI_read(IO_BOARD);
+                    break;
                 case 2: // NAV
                     buttons = SPI_read(IO_BOARD);
+                    /*
                     if ((buttons & (1 << 4)) == 1){
                         printf("NAV-knapp trykket");
                     }
+                    break;    }
+                default:
+                    break;
+            
             }
-        _delay_us(DELAY_DATA_DATA);
-        }
         */
 
-        
-        SPI_MasterTransmit((0x05), IO_BOARD);
-        _delay_us(DELAY_COMMAND_DATA);
-        SPI_MasterTransmit(3, IO_BOARD);
-        _delay_us(DELAY_COMMAND_DATA);
-        SPI_MasterTransmit(1, IO_BOARD);
-        _delay_us(1000);
-        // Nytt ledd
-        SPI_MasterTransmit((0x05), IO_BOARD);
-        _delay_us(DELAY_COMMAND_DATA);
-        SPI_MasterTransmit(1, IO_BOARD);
-        _delay_us(DELAY_COMMAND_DATA);
-        SPI_MasterTransmit(1, IO_BOARD);
-        _delay_us(DELAY_COMMAND_DATA);
+       /*
+        for (uint8_t state = 0; state < 2; state++){
+            for (uint8_t i = 0; i < 5; i++){
+                io_board_led_power(i, state);
+                _delay_us(1000);
+                io_board_led_pwm(i, 255);
+                _delay_us(1000);
+            }
+            printf("LED\r\n");
+            _delay_ms(1000);
+        }
+       printf("I while\r\n");
+       io_board_led_power(2, 0b11111111);
+       */
     }
     
     

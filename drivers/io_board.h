@@ -1,3 +1,4 @@
+#define F_CPU 4915200UL
 #include <avr/io.h>
 #include <util/delay.h>
 #include "spi.h"
@@ -15,6 +16,8 @@ void ADC_print(void);
 void io_board_calibration(void);
 void get_io_board_values(void);
 void get_io_board_directions(void);
+void io_board_led_power(uint8_t led_nr, uint8_t state);
+void io_board_led_pwm(uint8_t led_nr, uint8_t width);
 
 
 typedef enum {
