@@ -40,8 +40,7 @@ void SPI_MasterTransmit(uint8_t data, SLAVES slave)
     while(!(SPSR & (1<<SPIF)));
 }
 
-uint8_t SPI_read(uint8_t command, SLAVES slave){
-    SPI_MasterTransmit(command, slave);
-    //_delay_ns(20);
+uint8_t SPI_read(SLAVES slave){
+    SPI_MasterTransmit(0, slave);
     return SPDR;
 }

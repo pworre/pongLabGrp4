@@ -110,21 +110,21 @@ void get_io_board_values(void){
     uint8_t buttons;
     // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
     SPI_MasterTransmit((0x04), IO_BOARD);
+    _delay_us(DELAY_COMMAND_DATA);
     for (int byte_nr = 0; byte_nr < 3; byte_nr++){
         switch(byte_nr){
             case 0: // RIGHT
-                buttons = SPI_read(0, IO_BOARD);
+                buttons = SPI_read(IO_BOARD);
             case 1: // LEFT
-                buttons = SPI_read(0, IO_BOARD);
+                buttons = SPI_read(IO_BOARD);
             case 2: // NAV
-                buttons = SPI_read(0, IO_BOARD);
+                buttons = SPI_read(IO_BOARD);
                 if ((buttons & (1 << 4)) == 1){
                     printf("NAV-knapp trykket");
                 }
         }
-        
+        _delay_us(DELAY_DATA_DATA);
     }
-    
 }
 
 void get_io_board_directions(void){

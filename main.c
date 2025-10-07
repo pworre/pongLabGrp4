@@ -9,6 +9,7 @@
 #include "drivers/oled.h"
 #include "drivers/fonts.h"
 #include "drivers/menu.h"
+#include <util/delay.h>
 
 #define TEST_PIN 1
 
@@ -30,6 +31,45 @@ int main(){
 
     SPI_MasterInit();
     oled_init();
+
+    while(1){
+        /*
+        uint8_t buttons;
+        // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
+        SPI_MasterTransmit((0x04), IO_BOARD);
+        _delay_us(DELAY_COMMAND_DATA);
+        printf("Data\r");
+        for (int byte_nr = 0; byte_nr < 3; byte_nr++){
+            switch(byte_nr){
+                case 0: // RIGHT
+                    buttons = SPI_read(IO_BOARD);
+                case 1: // LEFT
+                    buttons = SPI_read(IO_BOARD);
+                case 2: // NAV
+                    buttons = SPI_read(IO_BOARD);
+                    if ((buttons & (1 << 4)) == 1){
+                        printf("NAV-knapp trykket");
+                    }
+            }
+        _delay_us(DELAY_DATA_DATA);
+        }
+        */
+
+        
+        SPI_MasterTransmit((0x05), IO_BOARD);
+        _delay_us(DELAY_COMMAND_DATA);
+        SPI_MasterTransmit(3, IO_BOARD);
+        _delay_us(DELAY_COMMAND_DATA);
+        SPI_MasterTransmit(1, IO_BOARD);
+        _delay_us(1000);
+        // Nytt ledd
+        SPI_MasterTransmit((0x05), IO_BOARD);
+        _delay_us(DELAY_COMMAND_DATA);
+        SPI_MasterTransmit(1, IO_BOARD);
+        _delay_us(DELAY_COMMAND_DATA);
+        SPI_MasterTransmit(1, IO_BOARD);
+        _delay_us(DELAY_COMMAND_DATA);
+    }
     
     
     /*char* text = "NEW GAME";
@@ -54,10 +94,10 @@ int main(){
 
     //oled_goto_line(2);
     //transmit_oled_data(1);
-    while(1){
+    //while(1){
         //printf("%d", get_adc_data(1)); 
         //ADC_print();
         //oled_fill_screen();
-    }
+    //}
     return 0;
 }
