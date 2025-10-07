@@ -98,6 +98,7 @@ void oled_pos(uint8_t page, uint8_t column) {
     oled_goto_page(page);
     oled_goto_column(column);
 } 
+
 void oled_write_string(char* ptr, uint8_t font_size, uint8_t page, uint8_t col){
 
     uint8_t char_count = 0;
