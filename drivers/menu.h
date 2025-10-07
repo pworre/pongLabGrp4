@@ -20,6 +20,8 @@ volatile MAIN_MENU_STATES main_menu_state;
 
 volatile SETTINGS_MENU_STATES settings_menu_state;
 
+volatile uint8_t high_scores[5] = {0}; //flyttes kanskje til main? eller slik at den kan oppdateres etter endt spill
+
 void main_menu(void);  //flytter pila
 
 void new_game_menu(void); //flytter pila
