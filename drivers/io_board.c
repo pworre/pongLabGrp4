@@ -122,7 +122,7 @@ void get_io_board_values(void){
                     printf("NAV-knapp trykket");
                 }
         }
-        
+        delay
     }
     
 }

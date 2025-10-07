@@ -48,12 +48,14 @@ int main(){
                         printf("NAV-knapp trykket");
                     }
             }
-        _delay_us(30);
+        _delay_us(DELAY_DATA_DATA);
+        /*
         SPI_MasterTransmit((0x05), IO_BOARD);
         SPI_MasterTransmit(3, IO_BOARD);
         SPI_MasterTransmit(1, IO_BOARD);
         _delay_us(20);
-    }
+        */
+        }
     }
     
     
