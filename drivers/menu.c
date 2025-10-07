@@ -149,6 +149,7 @@ void settings_menu(void){
                 //start calibartion !
                 break;
             case LEFT:
+                clear_submenu();
                 main_menu();
                 break;
             default:
@@ -213,7 +214,6 @@ void settings_menu(void){
 } //flytter pila
 
 void draw_main_menu(void){
-    oled_clear(); //fresh start
 
     char* header = "MAIN  MENU";
     oled_write_inverted_string(header, 8, 0, 23);
@@ -256,3 +256,16 @@ void draw_settings_menu(void){
     oled_write_string(Difficulty_str, 4, 6, 71);
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
+
+void clear_submenu(void){
+    printf("FJERNER SUBMENY!");
+    for (uint8_t page = 2; page < 8; page++) {
+        transmit_oled_command(0xB0 | page); // Sett page-adresse
+        transmit_oled_command(0x00 | 2);        // Kolonne laveste nibble
+        transmit_oled_command(0x10 | 10);        // Kolonne høyeste nibble
+
+        for (uint8_t col = 63; col < 128; col++) {
+            transmit_oled_data(0x00); // Sett alle piksler i kolonnen
+        }
+    }
+}
