@@ -61,7 +61,7 @@ int main(){
         SPI_MasterTransmit(3, IO_BOARD);
         _delay_us(DELAY_COMMAND_DATA);
         SPI_MasterTransmit(1, IO_BOARD);
-        _delay_us(DELAY_COMMAND_DATA);
+        _delay_us(1000);
         // Nytt ledd
         SPI_MasterTransmit((0x05), IO_BOARD);
         _delay_us(DELAY_COMMAND_DATA);
