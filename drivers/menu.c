@@ -230,7 +230,7 @@ void draw_new_game_menu(void){
 } //tegne til undermeny i nedre høyre halvdel
 
 void draw_score_menu(void){
-    char* place = 1;
+    char* place = '1' - 32;
     char* score;
     char* dot = ".";
     uint8_t i = 0;
