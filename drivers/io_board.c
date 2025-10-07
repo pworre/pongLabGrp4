@@ -129,7 +129,7 @@ void get_io_board_directions(void){
     uint8_t x = scaled_values[0];
     uint8_t y = scaled_values[1];
 
-    if (x < 20 && y < 20){
+    if (x < 10 && y < 10){
         joystick_dir = IDLE;
     }
     else if (x > y){
