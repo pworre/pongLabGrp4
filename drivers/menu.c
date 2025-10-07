@@ -95,6 +95,8 @@ void new_game_menu(void){
     oled_draw(ARROW, 2, 63);
     oled_update_screen();
     while(1){
+        get_io_board_values();
+        get_io_board_directions();
         switch (joystick_dir)
         {
         case RIGHT:
@@ -112,8 +114,11 @@ void new_game_menu(void){
 
 void score_menu(void){
     draw_score_menu();
-
+    get_io_board_values();
+    get_io_board_directions();
     while (joystick_dir != LEFT){
+        get_io_board_values();
+        get_io_board_directions();
         _delay_us(2000);
     }
     main_menu();
