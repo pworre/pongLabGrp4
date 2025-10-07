@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <avr/io.h>
+#include <util/delay>
 
 #ifndef SPI_H
 #define SPI_H
