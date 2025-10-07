@@ -113,11 +113,11 @@ void get_io_board_values(void){
     for (int byte_nr = 0; byte_nr < 3; byte_nr++){
         switch(byte_nr){
             case 0: // RIGHT
-                buttons = SPI_read(0, IO_BOARD);
+                buttons = SPI_read(IO_BOARD);
             case 1: // LEFT
-                buttons = SPI_read(0, IO_BOARD);
+                buttons = SPI_read(IO_BOARD);
             case 2: // NAV
-                buttons = SPI_read(0, IO_BOARD);
+                buttons = SPI_read(IO_BOARD);
                 if ((buttons & (1 << 4)) == 1){
                     printf("NAV-knapp trykket");
                 }
