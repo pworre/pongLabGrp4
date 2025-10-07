@@ -251,14 +251,14 @@ char* int_to_str(uint8_t num){
     uint8_t i = 0;
 
     if (num == 0){
-        string[i++] = '0';
+        string[i++] = '0' - 32;
         string[i] = '\0';
         return string;
     }
 
     while (num > 0)
     {
-        string[i++] = (num % 10) + '0';
+        string[i++] = (num % 10) + '0' - 32;
         num /= 10;
     }
     string[i] = '\0';

@@ -1,6 +1,6 @@
 #include "menu.h"
 
-volatile uint8_t high_scores[5] = {0};
+volatile uint8_t high_scores[5] = {[76], [46], [23], [3], [1]};
 
 void main_menu(void){
     printf("I Main menu");
@@ -230,16 +230,16 @@ void draw_new_game_menu(void){
 } //tegne til undermeny i nedre høyre halvdel
 
 void draw_score_menu(void){
-    uint8_t page;
-    char* place;
+    char* place = 1;
     char* score;
-    for (uint8_t i = 0; i<5; i++){
-        page = i+2;
-        *place = i;
-        score = int_to_str(high_scores[i]);
+    char* dot = ".";
+    for (uint8_t page = 2; i<7; i++){
+        
+        *score = int_to_str(high_scores[]);
         oled_write_string(place, 4, page, 63);
-        oled_write_string('.', 4, page, 67);
+        oled_write_string(dot, 4, page, 67);
         oled_write_string(score, 4, page, 71);
+        *place ++;
     }
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
