@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include "spi.h"
 
 #ifndef IO_BOARD_H
 #define IO_BOARD_H
@@ -14,7 +15,7 @@ void get_io_board_directions(void);
 
 
 typedef enum {
-    joystick_btn,
+    nav_btn,
     SL4,
     SL5,
     SL6,

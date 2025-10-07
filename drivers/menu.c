@@ -1,5 +1,6 @@
 #include "menu.h"
 
+volatile uint8_t high_scores[5] = {0};
 
 void main_menu(void){
     main_menu_state = NEW_GAME; //skal initialiseres et annet sted
@@ -8,9 +9,10 @@ void main_menu(void){
         switch (main_menu_state)
         {
         case NEW_GAME:
-            oled_draw(figures[1], 2, 0); //drawing the correct arrow
+            oled_draw(ARROW, 2, 0); //drawing the correct arrow
             oled_write_string(' ', 8, 4, 0);
             oled_write_string(' ', 8, 6, 0);
+            oled_update_screen();
 
             get_io_board_values();
             get_io_board_directions();
@@ -30,9 +32,10 @@ void main_menu(void){
             break;
 
         case SCORE:
-            oled_draw(figures[1], 4, 0); //drawing the correct arrow
+            oled_draw(ARROW, 4, 0); //drawing the correct arrow
             oled_write_string(' ', 8, 2, 0);
             oled_write_string(' ', 8, 6, 0);
+            oled_update_screen();
 
             get_io_board_values();
             get_io_board_directions();
@@ -56,9 +59,10 @@ void main_menu(void){
             break;
 
         case SETTINGS:
-            oled_draw(figures[1], 6, 0); //drawing the correct arrow
+            oled_draw(ARROW, 6, 0); //drawing the correct arrow
             oled_write_string(' ', 8, 2, 0);
             oled_write_string(' ', 8, 4, 0);
+            oled_update_screen();
 
             get_io_board_values();
             get_io_board_directions();
@@ -83,26 +87,34 @@ void main_menu(void){
     }
 }  //flytter pila
 
-void new_game_menu(void); //flytter pila
+void new_game_menu(void){
+    return;
+} //flytter pila
 
-void score_menu(void); //flytter pila
+void score_menu(void){
+    return;
+} //flytter pila
 
-void settings_menu(void); //flytter pila
+void settings_menu(void){
+    return;
+} //flytter pila
 
 void draw_main_menu(void){
     char* header = "MAIN  MENU";
     oled_write_inverted_string(header, 8, 0, 23);
     char* new_game_str = "New Game";
-    oled_write_string(new_game_str, 5, 2, 8)
+    oled_write_string(new_game_str, 5, 2, 8);
     char* Score_str = "Score";
-    oled_write_string(Score_str, 5, 4, 8)
+    oled_write_string(Score_str, 5, 4, 8);
     char* Settings_str = "Settings";
-    oled_write_string(Settings_str, 5, 6, 8)
+    oled_write_string(Settings_str, 5, 6, 8);
+    oled_update_screen();
 } //tegne til hele skjermen
 
 void draw_new_game_menu(void){
     char* start = "Start";
-    oled_write_inverted_string(Start, 4, 2, 71);
+    oled_write_inverted_string(start, 4, 2, 71);
+    oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
 
 void draw_score_menu(void){
@@ -117,6 +129,7 @@ void draw_score_menu(void){
         oled_write_string('.', 4, page, 67);
         oled_write_string(score, 4, page, 71);
     }
+    oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
 
 void draw_settings_menu(void){
@@ -126,4 +139,5 @@ void draw_settings_menu(void){
     oled_write_inverted_string(Brightness_str, 4, 4, 71);
     char* Difficulty_str = "Diffuculty";
     oled_write_inverted_string(Difficulty_str, 4, 6, 71);
+    oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel

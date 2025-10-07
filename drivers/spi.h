@@ -17,5 +17,6 @@ typedef enum {
 
 void SPI_MasterInit(void);
 void SPI_MasterTransmit(uint8_t data, SLAVES slave);
+uint8_t SPI_read(uint8_t command, SLAVES slave);
 
 #endif

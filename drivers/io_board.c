@@ -17,7 +17,6 @@ volatile uint8_t* adc_adress = (uint8_t *) 0x1000;
 static uint8_t adc_data[4];
 static int8_t scaled_values[4];
 uint8_t joystick_x_calibration, joystick_y_calibration;
-uint8_t buttons;
 
 void io_board_init(){
     // Setter PD5 som output
@@ -36,7 +35,7 @@ void io_board_init(){
     OCR1AL = 1;
 
     // Enable source clock uten prescaler
-    TCCR1B &= ~(0b111);
+    TCCR1B &= ~(0b111);uint8_t buttons = 0;
     TCCR1B |= (1 << CS10);
 
     // Setup joystick button as input
@@ -97,12 +96,31 @@ void get_io_board_values(void){
     //touch y
     scaled_values[3] = (((adc_data[2] - (touch_max-touch_min)/2)) *100)/ ((touch_max-touch_min)/2);
 
-
+    /*
     // Buttons
     if ((PINE & (1 << btn_joystick_pin)) == 0) {
-        buttons |= 1;
+        // Joystick button pressed
+        printf("Joystick Button pressed \r");
+        SPI_MasterTransmit((0x05), IO_BOARD);
+        SPI_MasterTransmit(3, IO_BOARD);
+        SPI_MasterTransmit(3, IO_BOARD);
     } else {
-        buttons &= ~1;
+        // IKKE TRYKT
+    }*/
+
+    uint8_t buttons;
+    // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
+    SPI_MasterTransmit((0x04), IO_BOARD);
+    for (int byte_nr = 0; byte_nr < 3; byte_nr++){
+        switch(byte_nr){
+            case 0: // RIGHT
+                buttons = SPI_read(0, IO_BOARD);
+            case 1: // LEFT
+                buttons = SPI_read(0, IO_BOARD);
+            case 2: // NAV
+                buttons = SPI_read(0, IO_BOARD);
+        }
+        
     }
     
 }
