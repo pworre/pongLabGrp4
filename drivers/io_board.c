@@ -110,6 +110,7 @@ void get_io_board_values(void){
     uint8_t buttons;
     // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
     SPI_MasterTransmit((0x04), IO_BOARD);
+    _delay_us(DELAY_COMMAND_DATA);
     for (int byte_nr = 0; byte_nr < 3; byte_nr++){
         switch(byte_nr){
             case 0: // RIGHT
@@ -122,7 +123,7 @@ void get_io_board_values(void){
                     printf("NAV-knapp trykket");
                 }
         }
-        delay
+        _delay_us(DELAY_DATA_DATA)
     }
     
 }
