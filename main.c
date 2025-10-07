@@ -52,6 +52,7 @@ int main(){
                     }
             }
         _delay_us(DELAY_DATA_DATA);
+        }
         */
 
         
@@ -61,8 +62,6 @@ int main(){
         _delay_us(DELAY_DATA_DATA);
         SPI_MasterTransmit(1, IO_BOARD);
         _delay_us(20);
-        
-        }
     }
     
     
