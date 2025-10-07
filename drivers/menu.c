@@ -235,7 +235,7 @@ void draw_score_menu(void){
     char* dot = ".";
     uint8_t i = 0;
 
-    for (uint8_t page = 2; i<7; i++){
+    for (uint8_t page = 2; page<7; page++){
         
         *score = int_to_str(high_scores[i]);
         oled_write_string(place, 4, page, 63);
