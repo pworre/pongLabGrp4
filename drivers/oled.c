@@ -85,8 +85,8 @@ void oled_goto_column(uint8_t column){
 void oled_clear(){
     for (uint8_t page = 0; page < 8; page++) {
         transmit_oled_command(0xB0 | page); // Sett page-adresse
-        transmit_oled_command(0x00);        // Kolonne laveste nibble
-        transmit_oled_command(0x10);        // Kolonne høyeste nibble
+        transmit_oled_command(0x00 | 2);        // Kolonne laveste nibble
+        transmit_oled_command(0x10 | 10);         // Kolonne høyeste nibble
 
         for (uint8_t col = 0; col < 128; col++) {
             transmit_oled_data(0x00); // Sett alle piksler i kolonnen
