@@ -106,7 +106,7 @@ void get_io_board_values(void){
     } else {
         // IKKE TRYKT
     }*/
-/*
+
     uint8_t buttons;
     // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
     SPI_MasterTransmit((0x04), IO_BOARD);
@@ -123,7 +123,7 @@ void get_io_board_values(void){
                 }
         }
         
-    }*/
+    }
     
 }
 
@@ -131,7 +131,7 @@ void get_io_board_directions(void){
     int8_t x = scaled_values[0];
     int8_t y = scaled_values[1];
 
-    if (abs(x) < 10 && abs(y) < 10){
+    if (abs(x) < 20 && abs(y) < 20){
         joystick_dir = IDLE;
     }
     else if (abs(x) > abs(y)){
