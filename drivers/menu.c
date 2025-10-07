@@ -127,9 +127,9 @@ void settings_menu(void){
         switch (settings_menu_state)
         {
         case CALIBRATION:
-            oled_draw(ARROW, 2, 0); //drawing the correct arrow
-            oled_draw(EMPTY, 4, 0);
-            oled_draw(EMPTY, 6, 0);
+            oled_draw(ARROW, 2, 63); //drawing the correct arrow
+            oled_draw(EMPTY, 4, 63);
+            oled_draw(EMPTY, 6, 63);
             oled_update_screen();
 
             get_io_board_values();
@@ -152,9 +152,9 @@ void settings_menu(void){
             break;
 
         case BRIGHTNESS:
-            oled_draw(EMPTY, 2, 0); //drawing the correct arrow
-            oled_draw(ARROW, 4, 0);
-            oled_draw(EMPTY, 6, 0);
+            oled_draw(EMPTY, 2, 63); //drawing the correct arrow
+            oled_draw(ARROW, 4, 63);
+            oled_draw(EMPTY, 6, 63);
             oled_update_screen();
 
             get_io_board_values();
@@ -180,9 +180,9 @@ void settings_menu(void){
             break;
 
         case DIFFICULTY:
-            oled_draw(EMPTY, 2, 0); //drawing the correct arrow
-            oled_draw(EMPTY, 4, 0);
-            oled_draw(ARROW, 6, 0);
+            oled_draw(EMPTY, 2, 63); //drawing the correct arrow
+            oled_draw(EMPTY, 4, 63);
+            oled_draw(ARROW, 6, 63);
             oled_update_screen();
 
             get_io_board_values();
