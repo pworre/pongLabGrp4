@@ -3,6 +3,7 @@
 volatile uint8_t high_scores[5] = {0};
 
 void main_menu(void){
+    printf("I Main menu");
     draw_main_menu();
     while (1){
         _delay_us(6000);
@@ -260,7 +261,7 @@ void clear_submenu(void){
         transmit_oled_command(0xB0 | page); // Sett page-adresse
         transmit_oled_command(0x00 | 2);        // Kolonne laveste nibble
         transmit_oled_command(0x10 | 10);        // Kolonne høyeste nibble
-
+        oled_goto_column(63);
         for (uint8_t col = 63; col < 128; col++) {
             transmit_oled_data(0x00); // Sett alle piksler i kolonnen
         }
