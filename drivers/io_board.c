@@ -15,7 +15,6 @@
 
 volatile uint8_t* adc_adress = (uint8_t *) 0x1000;
 static uint8_t adc_data[4];
-static int8_t scaled_values[4];
 uint8_t joystick_x_calibration, joystick_y_calibration;
 
 void io_board_init(){
