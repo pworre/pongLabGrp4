@@ -226,6 +226,9 @@ void oled_draw(FIGURES fig, uint8_t page, uint8_t col){
         case ARROW:
             width = 8;
             break;
+        case EMPTY:
+            width = 8;
+            break;
         default:
             break;
     }
