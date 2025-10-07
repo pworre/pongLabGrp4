@@ -207,7 +207,7 @@ void settings_menu(void){
 } //flytter pila
 
 void draw_main_menu(void){
-    oled_clear_line(); //fresh start
+    oled_clear(); //fresh start
 
     char* header = "MAIN  MENU";
     oled_write_inverted_string(header, 8, 0, 23);
