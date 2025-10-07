@@ -6,7 +6,7 @@ void main_menu(void){
     main_menu_state = NEW_GAME; //skal initialiseres et annet sted
     draw_main_menu();
     while (1){
-        _delay_us(2000);
+        _delay_us(6000);
         switch (main_menu_state)
         {
         case NEW_GAME:
