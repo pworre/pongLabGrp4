@@ -107,7 +107,7 @@ void get_io_board_values(void){
     } else {
         // IKKE TRYKT
     }*/
-
+/*
     uint8_t buttons;
     // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
     SPI_MasterTransmit((0x04), IO_BOARD);
@@ -124,7 +124,7 @@ void get_io_board_values(void){
                 }
         }
         
-    }
+    }*/
     
 }
 
