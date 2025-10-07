@@ -261,8 +261,9 @@ void clear_submenu(void){
         transmit_oled_command(0xB0 | page); // Sett page-adresse
         transmit_oled_command(0x00 | 2);        // Kolonne laveste nibble
         transmit_oled_command(0x10 | 10);        // Kolonne høyeste nibble
-        oled_goto_column(63);
+        
         for (uint8_t col = 63; col < 128; col++) {
+            oled_goto_column(col);
             transmit_oled_data(0x00); // Sett alle piksler i kolonnen
         }
     }
