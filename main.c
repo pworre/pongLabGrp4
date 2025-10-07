@@ -44,6 +44,7 @@ int main(){
     char* text0 = "TEST";
     oled_write_string(text0, 8, 3, 30);
     oled_draw(DIK, 5, 80);*/
+    main_menu_state = NEW_GAME;
     main_menu();
 
     //oled_fill_screen();

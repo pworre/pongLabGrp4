@@ -3,7 +3,6 @@
 volatile uint8_t high_scores[5] = {0};
 
 void main_menu(void){
-    main_menu_state = NEW_GAME; //skal initialiseres et annet sted
     draw_main_menu();
     while (1){
         _delay_us(6000);
@@ -92,18 +91,124 @@ void main_menu(void){
 }  //flytter pila
 
 void new_game_menu(void){
-    return;
+    draw_new_game_menu();
+    oled_draw(ARROW, 2, 63);
+    while(1){
+        switch (joystick_dir)
+        {
+        case RIGHT:
+            // start a new pong game!
+            break;
+        case LEFT:
+            // go back to main menu
+            main_menu();
+            break;
+        default:
+            break;
+        }
+    }
 } //flytter pila
 
 void score_menu(void){
-    return;
+    draw_score_menu();
+
+    while (joystick_dir != LEFT){
+        _delay_us(2000);
+    }
+    main_menu();
 } //flytter pila
 
 void settings_menu(void){
-    return;
+    draw_settings_menu();
+
+    while (1){
+        _delay_us(6000);
+        switch (settings_menu_state)
+        {
+        case CALIBRATION:
+            oled_draw(ARROW, 2, 0); //drawing the correct arrow
+            oled_draw(EMPTY, 4, 0);
+            oled_draw(EMPTY, 6, 0);
+            oled_update_screen();
+
+            get_io_board_values();
+            get_io_board_directions();
+
+            switch (joystick_dir)
+            {
+            case DOWN:
+                settings_menu_state = BRIGHTNESS;
+                break;
+            case RIGHT:
+                //start calibartion !
+                break;
+            case LEFT:
+                main_menu();
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case BRIGHTNESS:
+            oled_draw(EMPTY, 2, 0); //drawing the correct arrow
+            oled_draw(ARROW, 4, 0);
+            oled_draw(EMPTY, 6, 0);
+            oled_update_screen();
+
+            get_io_board_values();
+            get_io_board_directions();
+
+            switch (joystick_dir)
+            {
+            case UP:
+                settings_menu_state = CALIBRATION;
+                break;
+            case DOWN:
+                settings_menu_state = DIFFICULTY;
+                break;
+            case RIGHT:
+                // toggle brightness?
+                break;
+            case LEFT:
+                main_menu();
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DIFFICULTY:
+            oled_draw(EMPTY, 2, 0); //drawing the correct arrow
+            oled_draw(EMPTY, 4, 0);
+            oled_draw(ARROW, 6, 0);
+            oled_update_screen();
+
+            get_io_board_values();
+            get_io_board_directions();
+
+            switch (joystick_dir)
+            {
+            case UP:
+                settings_menu_state = BRIGHTNESS;
+                break;
+            case RIGHT:
+                //toggle difficulty??
+                break;
+            case LEFT:
+                main_menu();
+                break;
+            default:
+                break;
+            }
+            break;
+        }
+    }
 } //flytter pila
 
 void draw_main_menu(void){
+    oled_clear_line(); //fresh start
+
     char* header = "MAIN  MENU";
     oled_write_inverted_string(header, 8, 0, 23);
     char* new_game_str = "New Game";
