@@ -123,9 +123,8 @@ void get_io_board_values(void){
                     printf("NAV-knapp trykket");
                 }
         }
-        _delay_us(DELAY_DATA_DATA)
+        _delay_us(DELAY_DATA_DATA);
     }
-    
 }
 
 void get_io_board_directions(void){
