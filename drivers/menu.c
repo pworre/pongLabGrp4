@@ -93,6 +93,7 @@ void main_menu(void){
 void new_game_menu(void){
     draw_new_game_menu();
     oled_draw(ARROW, 2, 63);
+    oled_update_screen();
     while(1){
         switch (joystick_dir)
         {
@@ -222,7 +223,7 @@ void draw_main_menu(void){
 
 void draw_new_game_menu(void){
     char* start = "Start";
-    oled_write_inverted_string(start, 4, 2, 71);
+    oled_write_string(start, 4, 2, 71);
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
 
@@ -243,10 +244,10 @@ void draw_score_menu(void){
 
 void draw_settings_menu(void){
     char* Calinration_str = "Calibration";
-    oled_write_inverted_string(Calinration_str, 4, 2, 71);
+    oled_write_string(Calinration_str, 4, 2, 71);
     char* Brightness_str = "Brightness";
-    oled_write_inverted_string(Brightness_str, 4, 4, 71);
+    oled_write_string(Brightness_str, 4, 4, 71);
     char* Difficulty_str = "Diffuculty";
-    oled_write_inverted_string(Difficulty_str, 4, 6, 71);
+    oled_write_string(Difficulty_str, 4, 6, 71);
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
