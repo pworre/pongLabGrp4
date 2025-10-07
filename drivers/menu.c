@@ -233,13 +233,16 @@ void draw_score_menu(void){
     char* place = 1;
     char* score;
     char* dot = ".";
+    uint8_t i = 0;
+
     for (uint8_t page = 2; i<7; i++){
         
-        *score = int_to_str(high_scores[]);
+        *score = int_to_str(high_scores[i]);
         oled_write_string(place, 4, page, 63);
         oled_write_string(dot, 4, page, 67);
         oled_write_string(score, 4, page, 71);
         *place ++;
+        i++;
     }
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
