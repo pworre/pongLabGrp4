@@ -119,6 +119,9 @@ void get_io_board_values(void){
                 buttons = SPI_read(0, IO_BOARD);
             case 2: // NAV
                 buttons = SPI_read(0, IO_BOARD);
+                if ((buttons & (1 << 4)) == 1){
+                    printf("NAV-knapp trykket");
+                }
         }
         
     }
