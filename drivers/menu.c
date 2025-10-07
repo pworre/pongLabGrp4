@@ -16,7 +16,6 @@ void main_menu(void){
 
             get_io_board_values();
             get_io_board_directions();
-            printf("Joystick: %3d, %3d          Direction: %3d\r\n", scaled_values[0], scaled_values[1], joystick_dir);
 
             switch (joystick_dir)
             {
@@ -40,7 +39,6 @@ void main_menu(void){
 
             get_io_board_values();
             get_io_board_directions();
-            printf("Joystick: %3d, %3d          Direction: %3d\r\n", scaled_values[0], scaled_values[1], joystick_dir);
 
             switch (joystick_dir)
             {
@@ -68,7 +66,6 @@ void main_menu(void){
 
             get_io_board_values();
             get_io_board_directions();
-            printf("Joystick: %3d, %3d          Direction: %3d\r\n", scaled_values[0], scaled_values[1], joystick_dir);
 
             switch (joystick_dir)
             {
