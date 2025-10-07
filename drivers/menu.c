@@ -1,6 +1,6 @@
 #include "menu.h"
 
-volatile uint8_t high_scores[5] = {[76], [46], [23], [3], [1]};
+volatile uint8_t high_scores[5] = {76, 46, 23, 3, 1};
 
 void main_menu(void){
     printf("I Main menu");
