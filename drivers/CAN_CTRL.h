@@ -2,8 +2,8 @@
 #include "MCP2515_registers.h"
 #include "avr/interrupt.h"
 
-#ifndef MCP2515_H
-#define MCP2515_H
+#ifndef CAN_CTRL_H
+#define CAN_CTRL_H
 
 // Global variable:     STATUS OF TRANSMIT REGISTERS
 uint8_t tx_reg0_ready = 1;
