@@ -1,7 +1,7 @@
 #include "spi.h"
 
-#ifndef MCP2515_H
-#define MCP2515_H
+#ifndef CAN_CTRL_H
+#define CAN_CTRL_H
 
 void CAN_CTRL_init(void);
 void CAN_CTRL_reset(void); //resets the CAN controller and lets it be ready for init
