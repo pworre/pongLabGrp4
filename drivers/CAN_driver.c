@@ -1,6 +1,5 @@
 #include "CAN_driver.h"
 
-
 void can_send_msg(CAN_MESSAGE can_msg){
     //this sends a msg from buffer 0
     //set id i id high og low register
@@ -36,7 +35,7 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offeset + i);
     }
     //sett the CANINTF.RX0IF = 0 to signal that the msg is fetched
-    CAN_CTRL_write(CANINTF, 0b00000001, 0);
+    CAN_CTRL_write(CANINTF + (buffer_offset >> 4), 0b00000001, 0);
 
     return msg;
 }
