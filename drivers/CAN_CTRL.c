@@ -1,5 +1,9 @@
 #include "CAN_CTRL.h"
 
+// Global variable:     STATUS OF TRANSMIT REGISTERS
+uint8_t tx_reg0_ready = 1;
+uint8_t tx_reg1_ready = 1;
+uint8_t tx_reg2_ready = 1;
 
 void test_CAN_CTRL(void) {
     CAN_CTRL_init();
@@ -16,7 +20,7 @@ void CAN_CTRL_init(void){
     CAN_CTRL_write(RXB0CTRL, 0b01100000);
 
     //use loopback mode
-    CAN_CTRL_bit_modify(CANCTRL, 0b11100000, 0b01000000); 
+    CAN_CTRL_bit_modify(CANCTRL, 0b11100000, 0b00000000); 
 
     // Set "low level" INT0 for Interrupt
     DDRD &= ~(1 << PD2);                        // Input

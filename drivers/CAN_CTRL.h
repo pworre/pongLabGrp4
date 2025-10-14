@@ -5,10 +5,7 @@
 #ifndef CAN_CTRL_H
 #define CAN_CTRL_H
 
-// Global variable:     STATUS OF TRANSMIT REGISTERS
-uint8_t tx_reg0_ready = 1;
-uint8_t tx_reg1_ready = 1;
-uint8_t tx_reg2_ready = 1;
+
 
 void CAN_CTRL_init(void);
 void CAN_CTRL_reset(void); //resets the CAN controller and lets it be ready for init
