@@ -6,7 +6,7 @@ void main_menu(void){
     printf("I Main menu");
     draw_main_menu();
     while (1){
-        _delay_us(6000);
+        _delay_ms(50);
         switch (main_menu_state)
         {
         case NEW_GAME:
@@ -16,19 +16,14 @@ void main_menu(void){
             oled_update_screen();
 
             get_io_board_values();
-            get_io_board_directions();
 
-            switch (joystick_dir)
-            {
-            case DOWN:
-                main_menu_state = SCORE;
             
-                break;
-            case RIGHT:
+            if (buttons.ND == 1){
+                main_menu_state = SCORE;
+            }
+
+            else if (buttons.NB == 1){
                 new_game_menu();
-                break;
-            default:
-                break;
             }
             break;
 
@@ -39,23 +34,16 @@ void main_menu(void){
             oled_update_screen();
 
             get_io_board_values();
-            get_io_board_directions();
 
-            switch (joystick_dir)
-            {
-            case UP:
+            
+            if (buttons.NU == 1){
                 main_menu_state = NEW_GAME;
-            
-                break;
-            case DOWN:
+            }
+            else if (buttons.ND == 1){
                 main_menu_state = SETTINGS;
-            
-                break;
-            case RIGHT:
+            }
+            else if (buttons.NB == 1){
                 score_menu();
-                break;
-            default:
-                break;
             }
             break;
 
@@ -66,19 +54,12 @@ void main_menu(void){
             oled_update_screen();
 
             get_io_board_values();
-            get_io_board_directions();
 
-            switch (joystick_dir)
-            {
-            case UP:
+            if (buttons.NU == 1){
                 main_menu_state = SCORE;
-            
-                break;
-            case RIGHT:
+            }
+            else if (buttons.NB == 1){
                 settings_menu();
-                break;
-            default:
-                break;
             }
             break;
         
@@ -94,29 +75,23 @@ void new_game_menu(void){
     oled_update_screen();
     while(1){
         get_io_board_values();
-        get_io_board_directions();
-        switch (joystick_dir)
-        {
-        case RIGHT:
-            // start a new pong game!
-            break;
-        case LEFT:
-            // go back to main menu
-            main_menu();
-            break;
-        default:
-            break;
-        }
+
+        if (buttons.NB == 1){
+                //start new game
+            }
+
+        else if (buttons.NL == 1){
+                main_menu();
+            }
+        
     }
 } //flytter pila
 
 void score_menu(void){
     draw_score_menu();
     get_io_board_values();
-    get_io_board_directions();
-    while (joystick_dir != LEFT){
+    while (buttons.NL != 1){
         get_io_board_values();
-        get_io_board_directions();
         _delay_us(2000);
     }
     main_menu();
@@ -126,7 +101,7 @@ void settings_menu(void){
     draw_settings_menu();
 
     while (1){
-        _delay_us(6000);
+        _delay_ms(50);
         switch (settings_menu_state)
         {
         case CALIBRATION:
@@ -136,21 +111,15 @@ void settings_menu(void){
             oled_update_screen();
 
             get_io_board_values();
-            get_io_board_directions();
 
-            switch (joystick_dir)
-            {
-            case DOWN:
-                settings_menu_state = BRIGHTNESS;
-                break;
-            case RIGHT:
-                //start calibartion !
-                break;
-            case LEFT:
+            if (buttons.NB == 1){
+                //start calibration
+            }
+            else if (buttons.NL == 1){
                 main_menu();
-                break;
-            default:
-                break;
+            }
+            else if (buttons.ND == 1){
+                settings_menu_state = BRIGHTNESS;
             }
             break;
 
@@ -161,24 +130,18 @@ void settings_menu(void){
             oled_update_screen();
 
             get_io_board_values();
-            get_io_board_directions();
 
-            switch (joystick_dir)
-            {
-            case UP:
-                settings_menu_state = CALIBRATION;
-                break;
-            case DOWN:
-                settings_menu_state = DIFFICULTY;
-                break;
-            case RIGHT:
-                // toggle brightness?
-                break;
-            case LEFT:
+            if (buttons.NB == 1){
+                //start britess elns
+            }
+            else if (buttons.NL == 1){
                 main_menu();
-                break;
-            default:
-                break;
+            }
+            else if (buttons.NU == 1){
+                settings_menu_state = CALIBRATION;
+            }
+            else if (buttons.ND == 1){
+                settings_menu_state = DIFFICULTY;
             }
             break;
 
@@ -189,21 +152,15 @@ void settings_menu(void){
             oled_update_screen();
 
             get_io_board_values();
-            get_io_board_directions();
 
-            switch (joystick_dir)
-            {
-            case UP:
-                settings_menu_state = BRIGHTNESS;
-                break;
-            case RIGHT:
-                //toggle difficulty??
-                break;
-            case LEFT:
+            if (buttons.NB == 1){
+                //start difficulty elns
+            }
+            else if (buttons.NL == 1){
                 main_menu();
-                break;
-            default:
-                break;
+            }
+            else if (buttons.NU == 1){
+                settings_menu_state = BRIGHTNESS;
             }
             break;
         }

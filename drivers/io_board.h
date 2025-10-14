@@ -19,18 +19,6 @@ void get_io_board_directions(void);
 void io_board_led_power(uint8_t led_nr, uint8_t state);
 void io_board_led_pwm(uint8_t led_nr, uint8_t width);
 
-
-typedef enum {
-    nav_btn,
-    SL4,
-    SL5,
-    SL6,
-    SL7,
-    SR4, 
-    SR5,
-    SR6
-} BUTTONS;
-
 typedef enum {
     IDLE, 
     UP, 
@@ -40,5 +28,43 @@ typedef enum {
 } JOYSTICK_DIR;
 
 volatile JOYSTICK_DIR joystick_dir;
+
+typedef struct __attribute__((packed)) {
+    union {
+        uint8_t right;
+        struct {
+            uint8_t R1:1;
+            uint8_t R2:1;
+            uint8_t R3:1;
+            uint8_t R4:1;
+            uint8_t R5:1;
+            uint8_t R6:1;
+        };
+    };
+    union {
+        uint8_t left;
+        struct {
+            uint8_t L1:1;
+            uint8_t L2:1;
+            uint8_t L3:1;
+            uint8_t L4:1;
+            uint8_t L5:1;
+            uint8_t L6:1;
+            uint8_t L7:1;
+        };
+    };
+    union {
+        uint8_t nav;
+        struct {
+            uint8_t NB:1;
+            uint8_t NR:1;
+            uint8_t ND:1;
+            uint8_t NL:1;
+            uint8_t NU:1;
+        };
+    };
+} Buttons;
+
+Buttons buttons;
 
 #endif

@@ -107,24 +107,44 @@ void get_io_board_values(void){
         // IKKE TRYKT
     }*/
 
-    uint8_t buttons;
     // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
+    uint8_t right_values = 0;
+    uint8_t left_values = 0;
+    uint8_t nav_values = 0;
+
     SPI_MasterTransmit((0x04), IO_BOARD);
     _delay_us(DELAY_COMMAND_DATA);
-    for (int byte_nr = 0; byte_nr < 3; byte_nr++){
-        switch(byte_nr){
-            case 0: // RIGHT
-                buttons = SPI_read(IO_BOARD);
-            case 1: // LEFT
-                buttons = SPI_read(IO_BOARD);
-            case 2: // NAV
-                buttons = SPI_read(IO_BOARD);
-                if ((buttons & (1 << 4)) == 1){
-                    printf("NAV-knapp trykket");
-                }
-        }
-        _delay_us(DELAY_DATA_DATA);
-    }
+    right_values = SPI_read(IO_BOARD);
+    _delay_us(DELAY_DATA_DATA);    
+    left_values = SPI_read(IO_BOARD);
+    _delay_us(DELAY_DATA_DATA);
+    nav_values = SPI_read(IO_BOARD);
+    _delay_us(DELAY_DATA_DATA);
+    SPI_slave_deselect();
+
+
+   // RIGHT buttons
+    buttons.R1 = (right_values >> 0) & 0x01;
+    buttons.R2 = (right_values >> 1) & 0x01;
+    buttons.R3 = (right_values >> 2) & 0x01;
+    buttons.R4 = (right_values >> 3) & 0x01;
+    buttons.R5 = (right_values >> 4) & 0x01;
+    buttons.R6 = (right_values >> 5) & 0x01;
+
+    // LEFT buttons
+    buttons.L1 = (left_values >> 0) & 0x01;
+    buttons.L2 = (left_values >> 1) & 0x01;
+    buttons.L3 = (left_values >> 2) & 0x01;
+    buttons.L4 = (left_values >> 3) & 0x01;
+    buttons.L5 = (left_values >> 4) & 0x01;
+    buttons.L6 = (left_values >> 5) & 0x01;
+    buttons.L7 = (left_values >> 6) & 0x01;
+
+    buttons.NB = (nav_values >> 0) & 0x01;
+    buttons.NR = (nav_values >> 1) & 0x01;
+    buttons.ND = (nav_values >> 2) & 0x01;
+    buttons.NL = (nav_values >> 3) & 0x01;
+    buttons.NU = (nav_values >> 4) & 0x01;
 }
 
 void get_io_board_directions(void){
@@ -159,7 +179,7 @@ void io_board_led_power(uint8_t led_nr, uint8_t state){
     _delay_us(DELAY_COMMAND_DATA);
     SPI_MasterTransmit(state, IO_BOARD);
     _delay_us(DELAY_DATA_DATA);
-    PORTB |= ((1 << SS_OLED) | (1 << SS_ARDUINO) | (1 << SS_IO_BOARD));
+    PORTB |= ((1 << SS_OLED) | (1 << SS_CAN) | (1 << SS_IO_BOARD));
 }
 
 
@@ -170,7 +190,7 @@ void io_board_led_pwm(uint8_t led_nr, uint8_t width){
     _delay_us(DELAY_COMMAND_DATA);
     SPI_MasterTransmit(width, IO_BOARD); // 0 -> 255
     _delay_us(DELAY_DATA_DATA);
-    PORTB |= ((1 << SS_OLED) | (1 << SS_ARDUINO) | (1 << SS_IO_BOARD));
+    PORTB |= ((1 << SS_OLED) | (1 << SS_CAN) | (1 << SS_IO_BOARD));
 }
 
 /*
