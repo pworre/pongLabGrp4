@@ -10,6 +10,7 @@
 #include "drivers/oled.h"
 #include "drivers/fonts.h"
 #include "drivers/menu.h"
+#include "drivers/CAN_CTRL.h"
 #include <util/delay.h>
 
 int main(){
@@ -26,50 +27,11 @@ int main(){
     SPI_MasterInit();
     oled_init();
 
-    //while(1){
-      //  get_io_board_values();
-        /*
-        uint8_t buttons[3];
-        // Buttons consists of 3 bytes: RIGHT, LEFT, NAV
-        SPI_MasterTransmit((0x04), IO_BOARD);
-        _delay_us(DELAY_COMMAND_DATA);
-        buttons[0] = SPI_read(IO_BOARD);
-        _delay_us(DELAY_DATA_DATA);    
-        buttons[1] = SPI_read(IO_BOARD);
-        _delay_us(DELAY_DATA_DATA);
-        buttons[2] = SPI_read(IO_BOARD);
-        _delay_us(DELAY_DATA_DATA);
-        PORTB |= ((1 << SS_OLED) | (1 << SS_CAN) | (1 << SS_IO_BOARD));
-
-        printf("%d              %d              %d\r\n", buttons[0], buttons[1], buttons[2]);
-        _delay_ms(500);
-        //printf("%d\r\n", buttons);
-        _delay_us(DELAY_DATA_DATA);
-
-        io_board_led_power(2, 1);
-        io_board_led_pwm(2, 100);
-
-        */
-        
-
-       /*
-        for (uint8_t state = 0; state < 2; state++){
-            for (uint8_t i = 0; i < 5; i++){
-                io_board_led_power(i, state);
-                _delay_us(1000);
-                io_board_led_pwm(i, 255);
-                _delay_us(1000);
-            }
-            printf("LED\r\n");
-            _delay_ms(1000);
-        }
-       printf("I while\r\n");
-       io_board_led_power(2, 0b11111111);
-       */
-   // }
-
-    main_menu_state = NEW_GAME;
-    main_menu();
+    CAN_CTRL_init();
+    while (1){
+        _delay_ms(2000);
+        test_CAN_CTRL();
+    }
 
     return 0;
 }

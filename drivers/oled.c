@@ -32,26 +32,9 @@ void oled_fill_screen(void) {
 void oled_init(void){
     transmit_oled_command(0xae); //display off
     transmit_oled_command(0xa1); //segment remap
-    transmit_oled_command(0xda); //common pads hardware: alternative
-    transmit_oled_command(0x12);
     transmit_oled_command(0xc8); //common output scan dicetion:como63-com~0
-    transmit_oled_command(0xa8); //multiplex ration mode:63
-    transmit_oled_command(0x3f);
-    transmit_oled_command(0xd5); //display divide ratio/osc. freq. mode
-    transmit_oled_command(0x80);
-    transmit_oled_command(0x81); //contrast control
-    transmit_oled_command(0xff);
-    transmit_oled_command(0xd9); //set pre-charge period
-    transmit_oled_command(0x21);
-    transmit_oled_command(0x20); // | 0b10); //set memory addressing mode = Page adressing mode
-    transmit_oled_command(0x02);
-    transmit_oled_command(0xdb); //VCOM deselect level mode
-    transmit_oled_command(0x30);
-    transmit_oled_command(0xad); //master config
-    transmit_oled_command(0x00);
-    transmit_oled_command(0xa4); //ouy follows RAM contect
-    transmit_oled_command(0xa6); //set normal display
     transmit_oled_command(0xaf); //display on
+    
     for (uint8_t page = 0; page < 8; page++) {
         transmit_oled_command(0xB0 | page); // Sett page-adresse
         transmit_oled_command(0x00);        // Kolonne laveste nibble

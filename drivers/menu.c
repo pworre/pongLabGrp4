@@ -22,7 +22,7 @@ void main_menu(void){
                 main_menu_state = SCORE;
             }
 
-            else if (buttons.NB == 1){
+            else if (buttons.NR == 1){
                 new_game_menu();
             }
             break;
@@ -42,7 +42,7 @@ void main_menu(void){
             else if (buttons.ND == 1){
                 main_menu_state = SETTINGS;
             }
-            else if (buttons.NB == 1){
+            else if (buttons.NR == 1){
                 score_menu();
             }
             break;
@@ -58,7 +58,7 @@ void main_menu(void){
             if (buttons.NU == 1){
                 main_menu_state = SCORE;
             }
-            else if (buttons.NB == 1){
+            else if (buttons.NR == 1){
                 settings_menu();
             }
             break;

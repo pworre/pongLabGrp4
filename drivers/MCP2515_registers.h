@@ -43,15 +43,60 @@
 
 // Bit Timing Configuration
 #define CNF3        0x28
+// - - - - BITS
+#define PHSEG20     0
+#define PHSEG21     1
+#define PHSEG22     2
+#define WAKFIL      6
+#define SOF         7
+
 #define CNF2        0x29
+// - - - - BITS
+#define PRSEG0      0
+#define PRSEG1      1
+#define PRSEG2      2
+#define PHSEG10     3
+#define PHSEG11     4
+#define PHSEG12     5
+#define SAM         6
+#define BTLMODE     7
+
 #define CNF1        0x2A
+// - - - - BITS
+#define BRP0        0
+#define BRP1        1
+#define BRP2        2
+#define BRP3        3
+#define BRP4        4
+#define BRP5        5
+#define SJW0        6
+#define SJW1        7
+
 
 // Interrupts
 #define CANINTE     0x2B
 #define CANINTF     0x2C
+// -------- Interrupt bit values
+#define RX0IF       0
+#define RX1IF       1
+#define TX0IF       2
+#define TX1IF       3
+#define TX2IF       4
+#define ERRIF       5
+#define WAKIF       6
+#define MERRF       7
 
 // Error Flags
 #define EFLG        0x2D
+// -------- Error bit values
+#define EWARN       0
+#define RXWAR       1
+#define TXWAR       2
+#define RXEP        3
+#define TXEP        4
+#define TXBO        5
+#define RX0OWR      6
+#define RX1OWR      7
 
 // Transmit Buffers (TXB0)
 #define TXB0CTRL    0x30
