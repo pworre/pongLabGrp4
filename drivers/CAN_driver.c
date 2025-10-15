@@ -24,23 +24,25 @@ void can_send_msg(CAN_MESSAGE can_msg){
 void can_send_msg(CAN_MESSAGE can_msg){
     //this sends a msg from buffer 0
     //set id i id high og low register
-    uint8_t idH = can_msg.id >> 3;
-    uint8_t idL = (can_msg.id & 0b111);
+    uint8_t idH = (can_msg.id >> 3);
+    uint8_t idL = ((can_msg.id & 0x07) << 5);
     uint8_t id8 = 0;
     uint8_t id0 = 0;
+
 
     SPI_MasterTransmit(MCP_LOAD_TX0, CAN);
     SPI_MasterTransmit(idH, CAN);
     SPI_MasterTransmit(idL, CAN);
-    SPI_MasterTransmit(id8, CAN);
-    SPI_MasterTransmit(id0, CAN);
-    SPI_MasterTransmit(id0, CAN);
+    //SPI_MasterTransmit(id8, CAN);
+    //SPI_MasterTransmit(id0, CAN);
     SPI_MasterTransmit(can_msg.size & 0x0f, CAN);
 
     // set data
-    for (uint8_t i = 0; i < can_msg.size, i++){
+    for (uint8_t i = 0; i < can_msg.size; i++){
         SPI_MasterTransmit(can_msg.data[i], CAN);
     }
+    SPI_slave_deselect();
+    SPI_MasterTransmit(MCP_RTS_TX0, CAN);
     SPI_slave_deselect();
 }
 
@@ -70,20 +72,41 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
 
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
-    if (buffer_nr == 1){
-        SPI_MasterTransmit(MCP_READ_RX1);
-    }
-    else {
-        SPI_MasterTransmit(MCP_READ_RX1);
+
+    if (rx_reg0_full == 1){
+        SPI_MasterTransmit(MCP_READ_RX0, CAN);
+
+        uint8_t idH = SPI_read(CAN);
+        uint8_t idL = SPI_read(CAN);
+        //SPI_read(CAN);
+        //SPI_read(CAN);
+        msg.size = (SPI_read(CAN) & 0x0f);
+
+        msg.id = (idH << 3) | (idL >> 5);
+
+        for (uint8_t i = 0; i < msg.size; i++){
+            msg.data[i] = SPI_read(CAN);
+        }
+        SPI_slave_deselect();
+        return msg;
+    } else if (rx_reg1_full == 1){
+        SPI_MasterTransmit(MCP_READ_RX1, CAN);
+
+        uint8_t idH = SPI_read(CAN);
+        uint8_t idL = SPI_read(CAN);
+        //SPI_read(CAN);
+        //SPI_read(CAN);
+        msg.size = (SPI_read(CAN) & 0x0f);
+
+        msg.id = (idH << 3) | (idL >> 5);
+
+        for (uint8_t i = 0; i < msg.size; i++){
+            msg.data[i] = SPI_read(CAN);
+        }
+        SPI_slave_deselect();
+        return msg;
+    } else {
+        printf("CAN_RECEIVE_MSG:        No RX-Buffers is currently full");
     }
 
-    msg.id = (SPI_read(CAN) << 3);
-    msg.id += (SPI_read(CAN) & 0b111);
-    msg.size = (SPI_read(CAN) & 0x0f);
-
-    for (uint8_t i = 0; i < msg.size; i++){
-        msg.data[i] = SPI_read(CAN);
-    }
-    SPI_slave_deselect();
-    return msg;
 }

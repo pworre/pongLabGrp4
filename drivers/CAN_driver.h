@@ -7,6 +7,8 @@
 uint8_t tx_reg0_ready;
 uint8_t tx_reg1_ready;
 uint8_t tx_reg2_ready;
+uint8_t rx_reg0_full;
+uint8_t rx_reg1_full;
 
 typedef struct CAN_MESSAGE{
     uint16_t id;
