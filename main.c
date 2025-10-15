@@ -12,6 +12,7 @@
 #include "drivers/menu.h"
 #include "drivers/CAN_CTRL.h"
 #include <util/delay.h>
+#include "drivers/CAN_driver.h"
 
 int main(){
 
@@ -29,8 +30,17 @@ int main(){
 
     CAN_CTRL_init();
     while (1){
-        _delay_ms(2000);
-        test_CAN_CTRL();
+        
+        CAN_MESSAGE message;
+        message.data[0] = 8;
+        message.id = 2;
+        message.size = 1;
+
+        can_send_msg(message);
+        CAN_MESSAGE new_msg = can_recive_msg(1);
+        printf("msg_id = %u    msg_data = %u\r\n", new_msg.id, new_msg.data[0]); 
+
+        _delay_ms(1);
     }
 
     return 0;

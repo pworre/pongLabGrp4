@@ -3,6 +3,8 @@
 /*
 void can_send_msg(CAN_MESSAGE can_msg){
     //this sends a msg from buffer 0
+
+    CAN_CTRL_bit_modify(CANINTE, TX0IF, (1 << TX0IF));
     //set id i id high og low register
     CAN_CTRL_write(TXB0SIDH, (can_msg.id & 0x00ff));
     CAN_CTRL_write(TXB0SIDL, (can_msg.id & 0x0f00 >> 8));
@@ -11,7 +13,7 @@ void can_send_msg(CAN_MESSAGE can_msg){
     CAN_CTRL_write(TXB0DLC, can_msg.size);
 
     // set data
-    for (uint8_t i = 0; i < can_msg.size, i++){
+    for (uint8_t i = 0; i < can_msg.size; i++){
         CAN_CTRL_write(TXB0D0 + i, can_msg.data[i]);
     }
     //request to send buffer 0
@@ -57,10 +59,11 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     }
 
     for (uint8_t i = 0; i < msg.size; i++){
-        msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offeset + i);
+        msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offset + i);
     }
     //sett the CANINTF.RX0IF = 0 to signal that the msg is fetched
-    CAN_CTRL_write(CANINTF, 0b00000001, 0);
+    CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
+
 
     return msg;
 } */

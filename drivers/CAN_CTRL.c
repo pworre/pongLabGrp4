@@ -1,5 +1,9 @@
 #include "CAN_CTRL.h"
 
+// Global variable:     STATUS OF TRANSMIT REGISTERS
+uint8_t tx_reg0_ready = 1;
+uint8_t tx_reg1_ready = 1;
+uint8_t tx_reg2_ready = 1;
 
 void test_CAN_CTRL(void) {
     CAN_CTRL_init();

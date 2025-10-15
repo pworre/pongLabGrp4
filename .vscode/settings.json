@@ -8,6 +8,9 @@
         "init.h": "c",
         "fonts.h": "c",
         "oled.h": "c",
-        "clock.h": "c"
+        "clock.h": "c",
+        "interrupt.h": "c",
+        "menu.h": "c",
+        "delay.h": "c"
     }
 }
