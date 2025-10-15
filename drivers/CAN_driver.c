@@ -1,6 +1,6 @@
 #include "CAN_driver.h"
 
-
+/*
 void can_send_msg(CAN_MESSAGE can_msg){
     //this sends a msg from buffer 0
     //set id i id high og low register
@@ -17,8 +17,32 @@ void can_send_msg(CAN_MESSAGE can_msg){
     //request to send buffer 0
     CAN_CTRL_RTS(0b001)
     
+} */
+
+void can_send_msg(CAN_MESSAGE can_msg){
+    //this sends a msg from buffer 0
+    //set id i id high og low register
+    uint8_t idH = can_msg.id >> 3;
+    uint8_t idL = (can_msg.id & 0b111);
+    uint8_t id8 = 0;
+    uint8_t id0 = 0;
+
+    SPI_MasterTransmit(MCP_LOAD_TX0, CAN);
+    SPI_MasterTransmit(idH, CAN);
+    SPI_MasterTransmit(idL, CAN);
+    SPI_MasterTransmit(id8, CAN);
+    SPI_MasterTransmit(id0, CAN);
+    SPI_MasterTransmit(id0, CAN);
+    SPI_MasterTransmit(can_msg.size & 0x0f, CAN);
+
+    // set data
+    for (uint8_t i = 0; i < can_msg.size, i++){
+        SPI_MasterTransmit(can_msg.data[i], CAN);
+    }
+    SPI_slave_deselect();
 }
 
+/*
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
     uint8_t buffer_offset = 0;
@@ -38,5 +62,25 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     //sett the CANINTF.RX0IF = 0 to signal that the msg is fetched
     CAN_CTRL_write(CANINTF, 0b00000001, 0);
 
+    return msg;
+} */
+
+CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
+    CAN_MESSAGE msg = {};
+    if (buffer_nr == 1){
+        SPI_MasterTransmit(MCP_READ_RX1);
+    }
+    else {
+        SPI_MasterTransmit(MCP_READ_RX1);
+    }
+
+    msg.id = (SPI_read() << 3);
+    msg.id += (SPI_read() & 0b111);
+    msg.size = (SPI_read() & 0x0f);
+
+    for (uint8_t i = 0; i < msg.size; i++){
+        msg.data[i] = SPI_read();
+    }
+    SPI_slave_deselect();
     return msg;
 }

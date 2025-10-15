@@ -13,10 +13,10 @@ void CAN_CTRL_init(void){
     CAN_CTRL_reset();
 
     //no filters on Reseve buffer 0
-    CAN_CTRL_write(RXB0CTRL, 0b01100000);
+    CAN_CTRL_write(MCP_RXB0CTRL, 0b01100000);
 
     //use loopback mode
-    CAN_CTRL_bit_modify(CANCTRL, 0b11100000, 0b01000000); 
+    CAN_CTRL_bit_modify(MCP_CANCTRL, 0b11100000, 0b01000000); 
 
     // Set "low level" INT0 for Interrupt
     DDRD &= ~(1 << PD2);                        // Input
@@ -24,7 +24,7 @@ void CAN_CTRL_init(void){
     GICR |= (1 << INT0);                        // Activate INT0
     sei();
 
-    CAN_CTRL_write(CANINTE, 0b10111111); // All, except wake-up
+    CAN_CTRL_write(MCP_CANINTE, 0b10111111); // All, except wake-up
 
     //-------------------BIT TIMING OF CAN-BUS-------------------
     // BAUDRATE
@@ -47,25 +47,25 @@ void CAN_CTRL_init(void){
     uint8_t baud_prescaler = 1;
 
     uint8_t config1_val = (SJW1 | baud_prescaler);
-    CAN_CTRL_write(CNF1, config1_val);
+    CAN_CTRL_write(MCP_CNF1, config1_val);
 
     uint8_t config2_val = (BTLMODE | SAM | 0b00100000 | 1);
-    CAN_CTRL_write(CNF2, config2_val);
+    CAN_CTRL_write(MCP_CNF2, config2_val);
 
     uint8_t config3_val = (SOF | WAKFIL | 2);
-    CAN_CTRL_write(CNF3, config3_val);
+    CAN_CTRL_write(MCP_CNF3, config3_val);
 
 
 }
 
 void CAN_CTRL_reset(void){
-    SPI_MasterTransmit(0b11000000, CAN); //reset cmd
+    SPI_MasterTransmit(MCP_RESET, CAN); //reset cmd
     SPI_slave_deselect();
 }
 
 
 void CAN_CTRL_write(uint8_t address, uint8_t data){
-    SPI_MasterTransmit(0b00000010, CAN); //write cmd
+    SPI_MasterTransmit(MCP_WRITE, CAN); //write cmd
     SPI_MasterTransmit(address, CAN);
     SPI_MasterTransmit(data, CAN);
     SPI_slave_deselect();
@@ -73,7 +73,7 @@ void CAN_CTRL_write(uint8_t address, uint8_t data){
 
 
 uint8_t CAN_CTRL_read(uint8_t address){
-    SPI_MasterTransmit(0b00000011, CAN); //read cmd
+    SPI_MasterTransmit(MCP_READ, CAN); //read cmd
     SPI_MasterTransmit(address, CAN);
     uint8_t data = SPI_read(CAN);
     SPI_slave_deselect();
@@ -90,7 +90,7 @@ void CAN_CTRL_RTS(uint8_t buffer_nr){
 
 
 uint8_t CAN_CTRL_read_status(void){
-    SPI_MasterTransmit(0b10100000, CAN);
+    SPI_MasterTransmit(MCP_READ_STATUS, CAN);
     uint8_t data = SPI_read(CAN);
     SPI_slave_deselect();
     return data;
@@ -98,7 +98,7 @@ uint8_t CAN_CTRL_read_status(void){
 
 
 void CAN_CTRL_bit_modify(uint8_t address, uint8_t mask, uint8_t data){
-    SPI_MasterTransmit(0b00000101, CAN);
+    SPI_MasterTransmit(MCP_BITMOD, CAN);
     SPI_MasterTransmit(mask, CAN);
     SPI_MasterTransmit(data, CAN);
     SPI_slave_deselect();
