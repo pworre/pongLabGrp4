@@ -1,0 +1,8 @@
+# Build output
+/build
+
+# Environment
+.env
+
+# OS
+.DS_Store≈
