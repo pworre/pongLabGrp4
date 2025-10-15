@@ -77,12 +77,12 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         SPI_MasterTransmit(MCP_READ_RX1);
     }
 
-    msg.id = (SPI_read() << 3);
-    msg.id += (SPI_read() & 0b111);
-    msg.size = (SPI_read() & 0x0f);
+    msg.id = (SPI_read(CAN) << 3);
+    msg.id += (SPI_read(CAN) & 0b111);
+    msg.size = (SPI_read(CAN) & 0x0f);
 
     for (uint8_t i = 0; i < msg.size; i++){
-        msg.data[i] = SPI_read();
+        msg.data[i] = SPI_read(CAN);
     }
     SPI_slave_deselect();
     return msg;
