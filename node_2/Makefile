@@ -8,6 +8,10 @@ MCUTYPE = __SAM3X8E__
 SOURCE_FILES = \
 	$(BOOTUP) \
 	main.c \
+	drivers/uart.c \
+	drivers/time.c \
+	drivers/can_interrupt.c \
+	drivers/can_controller.c \
 #	../path_to/uart.c \
 #   filename1.c \
 #   filename2.c \

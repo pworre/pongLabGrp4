@@ -19,8 +19,7 @@ void CAN_CTRL_init(void){
     //no filters on Reseve buffer 0
     CAN_CTRL_write(MCP_RXB0CTRL, 0b01100000);
 
-    //use loopback mode
-    CAN_CTRL_bit_modify(MCP_CANCTRL, 0b11100000, 0b01000000); 
+
 
     // Set "low level" INT0 for Interrupt
     DDRD &= ~(1 << PD2);                        // Input
@@ -51,13 +50,17 @@ void CAN_CTRL_init(void){
     uint8_t baud_prescaler = 1;
 
     uint8_t config1_val = (SJW1 | baud_prescaler);
-    //CAN_CTRL_write(MCP_CNF1, config1_val);
+    CAN_CTRL_write(MCP_CNF1, config1_val);
 
     uint8_t config2_val = (BTLMODE | SAM | 0b00100000 | 1);
-    //CAN_CTRL_write(MCP_CNF2, config2_val);
+    CAN_CTRL_write(MCP_CNF2, config2_val);
 
     uint8_t config3_val = (SOF | WAKFIL | 2);
-    //CAN_CTRL_write(MCP_CNF3, config3_val);
+    CAN_CTRL_write(MCP_CNF3, config3_val);
+
+        //use loopback mode
+    //CAN_CTRL_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000); 
+    CAN_CTRL_write(MCP_CANCTRL, 0);
 
 
 }

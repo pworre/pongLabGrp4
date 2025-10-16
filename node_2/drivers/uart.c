@@ -1,4 +1,5 @@
 #include "sam.h"
+#include "uart.h"
 #include <stdio.h>
 
 #define F_CPU 84000000

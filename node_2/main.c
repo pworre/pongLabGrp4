@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "sam.h"
+#include "drivers/uart.h"
+#include "drivers/can_controller.h"
+//#include <util/delay.h>
 
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
@@ -26,6 +29,28 @@ int main()
     while (1)
     {
         /* code */
+        uart_init(84000000, 9600);
+
+        uint32_t can_br = 0x001c0008;
+        uint8_t num_tx_mb = 1;
+        uint8_t num_rx_mb = 2;
+        can_init(can_br, num_tx_mb, num_rx_mb);
+
+        // CAN receive info
+        uint8_t rx_mb_id = 1;
+        CAN_MESSAGE *msg;
+
+        // TEST
+        PIOB->PIO_PER |= PIO_PB13;
+        PIOB->PIO_OER |= PIO_PB13;
+        PIOB->PIO_SODR |= PIO_PB13;
+
+        while(1){
+            can_receive(msg, rx_mb_id);
+            printf("ID = %d         Data = %d\r\n", msg->id, msg->data);
+            // SJEKK CTRL_STATUS_REGISTER!!!!!!!!!!!!!!!!!!
+        }
+
     }
     
 }

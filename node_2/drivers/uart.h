@@ -1,4 +1,4 @@
-
+#include <stdint.h>
 // UART is connected to the ATmega16U2 on the Arduino, which acts as a USB serial device.
 // This module hooks into the stdio functions, by spoofing several system calls
 //

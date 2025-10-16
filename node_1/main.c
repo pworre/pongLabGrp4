@@ -31,12 +31,19 @@ int main(){
     CAN_CTRL_init();
     uint8_t i = 0;
     while (1){
-        
+        /*
         CAN_MESSAGE message;
         message.data[0] = i;
         message.id = i;
         message.size = 1;
+        */
 
+        CAN_MESSAGE message;
+        message.id = 1;
+        message.data[0] = 5;
+        message.size = 1;
+
+        
         //can_send_msg(message);
         CAN_CTRL_write(0b00110001, (message.id) >> 3);          // ID_low
         CAN_CTRL_write(0b00110010, (message.id & 0x07) << 5);   // ID_high
