@@ -12,6 +12,17 @@
 
 #include "sam.h"
 
+#define fosc 84000000 // Hz
+#define bitrate 500000 // bit/s
+#define TQ_per_bit 16
+#define TQ_time (1/(bitrate * 16))
+#define BRP ((TQ_time * fosc) - 1)
+#define synchSeg 1
+#define propSeg 2
+#define phase1 5
+#define phase2 5
+#define SJW (16 - (synchSeg + propSeg + phase1 + phase2))
+
 //#include "../uart_and_printf/printf-stdarg.h"
 
 
@@ -23,7 +34,7 @@
  * \param can_br Value to be set in CAN0->CAN_BR register to match can bus bit timing
  *
  * \retval Success(0) or failure(1)
- */
+ *//* code */
 uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
 {
 	return can_init(can_br, 1, 2);
@@ -79,7 +90,18 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	PMC->PMC_PCER1 |= 1 << (ID_CAN0 - 32);
 	
 	//Set baudrate, Phase1, phase2 and propagation delay for can bus. Must match on all nodes!
-	CAN0->CAN_BR = can_br; 
+	//CAN0->CAN_BR = can_br; 
+	// PONG_GRP4
+	// Disable Write Protection 
+	CAN0->CAN_WPMR &= ~(1 << 0);
+	for (volatile uint8_t delay = 0; delay <= 30; delay++);
+
+	// Set bit timing
+	CAN0->CAN_BR = (BRP << 16) | (SJW << 12) | (propSeg << 8) | (phase1 << 4) | (phase2);
+
+
+	CAN0->CAN_WPMR |= 1;
+
 	
 
 	/****** Start of mailbox configuration ******/
@@ -90,7 +112,8 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	for (int n = num_tx_mb; n <= num_rx_mb + num_tx_mb; n++)  //Simply one mailbox setup for all messages. You might want to apply filter for them.
 	{
 		CAN0->CAN_MB[n].CAN_MAM = 0; //Accept all messages
-		CAN0->CAN_MB[n].CAN_MID = CAN_MID_MIDE;
+		//CAN0->CAN_MB[n].CAN_MID = CAN_MID_MIDE;
+		CAN0->CAN_MB[n].CAN_MID &= ~(1 << 29); // Disable extended identifier
 		CAN0->CAN_MB[n].CAN_MMR = (CAN_MMR_MOT_MB_RX);
 		CAN0->CAN_MB[n].CAN_MCR |= CAN_MCR_MTCR;
 

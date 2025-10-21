@@ -11,6 +11,8 @@
         "clock.h": "c",
         "interrupt.h": "c",
         "menu.h": "c",
-        "delay.h": "c"
+        "delay.h": "c",
+        "can_driver.h": "c",
+        "mcp2515_registers.h": "c"
     }
 }

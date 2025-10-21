@@ -12,7 +12,6 @@
 #include "drivers/menu.h"
 #include "drivers/CAN_CTRL.h"
 #include <util/delay.h>
-#include "drivers/CAN_driver.h"
 
 int main(){
 
@@ -30,6 +29,9 @@ int main(){
 
     CAN_CTRL_init();
     uint8_t i = 0;
+
+    CAN_MESSAGE message;
+    uint8_t error_reg = 0;
     while (1){
         /*
         CAN_MESSAGE message;
@@ -38,9 +40,10 @@ int main(){
         message.size = 1;
         */
 
-        CAN_MESSAGE message;
-        message.id = 1;
-        message.data[0] = 5;
+        
+        
+        message.id = i;
+        message.data[0] = i;
         message.size = 1;
 
         
@@ -63,16 +66,24 @@ int main(){
         printf("ID = %u     size = %u    data = %u\r\n", id, size, data); 
         //printf("NEW_msg_id = %u    NEW_msg_data = %u\r\n", new_msg.id, new_msg.data[0]); 
 
+        
+
         uint8_t status_reg = CAN_CTRL_read(MCP_CANSTAT);
 
         printf("Status register (binary): ");
-        for (int i = 7; i >= 0; i--) {
-            printf("%d", (status_reg >> i) & 1);
+        for (uint8_t k = 0; k < 8; k++) {
+            printf("%d\r\n", (status_reg >> k) & 1);
         }
-        printf("\n");
+        printf("Error reg\r\n");
+        error_reg = CAN_CTRL_read(MCP_EFLG);
+        for (uint8_t k = 0; k < 8; k++) {
+            printf("%d\r\n", (error_reg >> k) & 1);
+        }
 
 
-        _delay_ms(1);
+        can_send_msg(message);
+
+        _delay_ms(1000);
         i++;
     }
 

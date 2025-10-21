@@ -17,4 +17,18 @@ void CAN_CTRL_bit_modify(uint8_t address, uint8_t mask, uint8_t data); //modifye
 
 void test_CAN_CTRL(void);
 
+uint8_t tx_reg0_ready;
+uint8_t tx_reg1_ready;
+uint8_t tx_reg2_ready;
+
+
+typedef struct{
+    uint16_t id;
+    uint8_t size;
+    uint8_t data[8];
+} CAN_MESSAGE;
+
+void can_send_msg(CAN_MESSAGE can_msg);
+CAN_MESSAGE can_recive_msg(uint8_t buffer_nr);
+
 #endif

@@ -26,31 +26,33 @@ int main()
     //uart_init(/*cpufreq*/, /*baud*/);
     //printf("Hello World\n\r");
 
-    while (1)
-    {
         /* code */
         uart_init(84000000, 9600);
 
-        uint32_t can_br = 0x001c0008;
+        //uint32_t can_br = 0x001c0008;
+        uint32_t can_br = 500000;
         uint8_t num_tx_mb = 1;
         uint8_t num_rx_mb = 2;
-        can_init(can_br, num_tx_mb, num_rx_mb);
+        can_init_def_tx_rx_mb(can_br);
+
 
         // CAN receive info
-        uint8_t rx_mb_id = 1;
+        uint8_t rx_mb_id = 2;
         CAN_MESSAGE *msg;
+        uint32_t status_reg = 0;
 
+    while (1)
+    {
+        /*
         // TEST
         PIOB->PIO_PER |= PIO_PB13;
         PIOB->PIO_OER |= PIO_PB13;
         PIOB->PIO_SODR |= PIO_PB13;
+        */
 
-        while(1){
-            can_receive(msg, rx_mb_id);
-            printf("ID = %d         Data = %d\r\n", msg->id, msg->data);
-            // SJEKK CTRL_STATUS_REGISTER!!!!!!!!!!!!!!!!!!
-        }
-
+        can_receive(&msg, rx_mb_id);
+        printf("ID = %d         Data = %d\r\n", msg->id, msg->data);
+        status_reg = CAN0->CAN_SR;
     }
     
 }
