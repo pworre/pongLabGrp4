@@ -63,6 +63,15 @@ int main(){
         printf("ID = %u     size = %u    data = %u\r\n", id, size, data); 
         //printf("NEW_msg_id = %u    NEW_msg_data = %u\r\n", new_msg.id, new_msg.data[0]); 
 
+        uint8_t status_reg = CAN_CTRL_read(MCP_CANSTAT);
+
+        printf("Status register (binary): ");
+        for (int i = 7; i >= 0; i--) {
+            printf("%d", (status_reg >> i) & 1);
+        }
+        printf("\n");
+
+
         _delay_ms(1);
         i++;
     }
