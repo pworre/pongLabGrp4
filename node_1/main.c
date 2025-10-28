@@ -33,27 +33,27 @@ int main(){
     CAN_MESSAGE message;
     uint8_t error_reg = 0;
     while (1){
+        // Set global can message to 0 to see if receive anything
+        msg_global.id = 0;
+        msg_global.data[0] = 0;
+        msg_global.size = 0;
+        
+        message.id = i;
+        message.data[0] = i;
+        message.size = 1;
+
         /*
-        CAN_MESSAGE message;
-        message.data[0] = i;
-        message.id = i;
-        message.size = 1;
-        */
-
-        
-        
-        message.id = i;
-        message.data[0] = i;
-        message.size = 1;
-
-        
         //can_send_msg(message);
         CAN_CTRL_write(0b00110001, (message.id) >> 3);          // ID_low
         CAN_CTRL_write(0b00110010, (message.id & 0x07) << 5);   // ID_high
         CAN_CTRL_write(0b00110101, (message.size));
-        CAN_CTRL_write(0b00110110, message.data[0]);
+        CAN_CTRL_write(0b00110110, message.data[0]);*/
+        can_send_msg(message);
+
 
         _delay_ms(100);
+
+        /*
         //while (! (CAN_CTRL_read(MCP_CANINTF) & (1 << RX0IF)));
         //CAN_MESSAGE new_msg = can_recive_msg(0);
         uint8_t idH = CAN_CTRL_read(0b00110001);
@@ -61,12 +61,15 @@ int main(){
         uint8_t id = ((idH << 3) | (idL >> 5));
         uint8_t size = CAN_CTRL_read(0b00110101);
         uint8_t data = CAN_CTRL_read(0b00110110);
+        */
 
+        printf("Iteration %u", i);
         printf("OLD_msg_id = %u    OLD_msg_data = %u\r\n", message.id, message.data[0]); 
-        printf("ID = %u     size = %u    data = %u\r\n", id, size, data); 
+        //printf("ID = %u     size = %u    data = %u\r\n", id, size, data); 
         //printf("NEW_msg_id = %u    NEW_msg_data = %u\r\n", new_msg.id, new_msg.data[0]); 
 
         
+        printf("G:      ID = %u     size = %u    data = %u\r\n", msg_global.id, msg_global.size, msg_global.data[0]); 
 
         uint8_t status_reg = CAN_CTRL_read(MCP_CANSTAT);
 

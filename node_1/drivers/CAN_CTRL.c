@@ -135,30 +135,30 @@ ISR(INT0_vect){
     
     if ((can_int_reg & (1 << RX0IF)) != 0){         // Receive buffer 0 full
         //CAN_CTRL_write(CANINTF, 0);
-        printf("Receive buffer 0 full!\r\n");
+        //printf("Receive buffer 0 full!\r\n");
 
         msg_global = can_recive_msg(0);
         CAN_CTRL_bit_modify(CANINTF, (1 << RX0IF), 0);
     } else if ((can_int_reg & (1 << RX1IF)) != 0){  // Receive buffer 1 full
-        printf("Receive buffer 1 full!\r\n");
+        //printf("Receive buffer 1 full!\r\n");
         
         msg_global = can_recive_msg(1);
         CAN_CTRL_bit_modify(CANINTF, (1 << RX1IF), 0);
     } else if ((can_int_reg & (1 << TX0IF)) != 0){  // Transmit buffer 0 empty
         // Clear interrupt
-        printf("Transmit buffer 0 empty!\r\n");
+        //printf("Transmit buffer 0 empty!\r\n");
         
         tx_reg0_ready = 1;
         CAN_CTRL_bit_modify(CANINTF, (1 << TX0IF), 0);
     } else if ((can_int_reg & (1 << TX1IF)) != 0){  // Transmit buffer 1 empty
         // Clear interrupt
-        printf("Transmit buffer 1 empty!\r\n");
+        //printf("Transmit buffer 1 empty!\r\n");
         
         tx_reg1_ready = 1;
         CAN_CTRL_bit_modify(CANINTF, (1 << TX1IF), 0);
     } else if ((can_int_reg & (1 << TX2IF)) != 0){  // Transmit buffer 2 empty
         // Clear interrupt
-        printf("Transmit buffer 2 empty!\r\n");
+        //printf("Transmit buffer 2 empty!\r\n");
         
         tx_reg2_ready = 1;
         CAN_CTRL_bit_modify(CANINTF, (1 << TX2IF), 0);

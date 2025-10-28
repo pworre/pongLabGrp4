@@ -31,4 +31,6 @@ typedef struct{
 void can_send_msg(CAN_MESSAGE can_msg);
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr);
 
+CAN_MESSAGE msg_global;
+
 #endif
