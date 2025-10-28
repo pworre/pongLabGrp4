@@ -266,24 +266,40 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
     uint8_t buffer_offset = 0;
     if (buffer_nr == 1){
+        msg.id = CAN_CTRL_read(MCP_RXF0SIDL) + ((CAN_CTRL_read(MCP_RXB0SIDH) & 0x0f) << 8);
+
+        msg.size = CAN_CTRL_read(RXB0DLC);
+        if (msg.size > 8){
+            msg.size = 8;
+        }
+
+        for (uint8_t i = 0; i < msg.size; i++){
+            msg.data[i] = CAN_CTRL_read(RXB0D0 + i);
+        }
+    }
+    else if (buffer_nr == 2){
         buffer_offset = 0b10000;
-    }
-    msg.id = CAN_CTRL_read(RXB0SIDL + buffer_offset) + ((CAN_CTRL_read(RXB0SIDH + buffer_offset) & 0x0f) << 8);
+        msg.id = CAN_CTRL_read(RXB0SIDL + buffer_offset) + ((CAN_CTRL_read(RXB0SIDH + buffer_offset) & 0x0f) << 8);
 
-    msg.size = CAN_CTRL_read(RXB0DLC + buffer_offset);
-    if (msg.size > 8){
-        msg.size = 8;
+        msg.size = CAN_CTRL_read(RXB0DLC + buffer_offset);
+        if (msg.size > 8){
+            msg.size = 8;
+        }
+
+        for (uint8_t i = 0; i < msg.size; i++){
+            msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offset + i);
+        }
+    }
+    else {
+        return;
     }
 
-    for (uint8_t i = 0; i < msg.size; i++){
-        msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offset + i);
-    }
     //sett the CANINTF.RX0IF = 0 to signal that the msg is fetched
     CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
 
     return msg;
 }
-
+/*
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
 
@@ -325,3 +341,4 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     }
 
 }
+    */
