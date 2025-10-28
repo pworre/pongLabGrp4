@@ -19,30 +19,32 @@
 int main()
 {
     SystemInit();
-
+    
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
 
     //Uncomment after including uart above
     //uart_init(/*cpufreq*/, /*baud*/);
     //printf("Hello World\n\r");
 
-        /* code */
-        uart_init(84000000, 9600);
+    /* code */
+    uart_init(84000000, 9600);
 
-        //uint32_t can_br = 0x001c0008;
-        uint32_t can_br = 500000;
-        uint8_t num_tx_mb = 1;
-        uint8_t num_rx_mb = 2;
-        can_init_def_tx_rx_mb(can_br);
+    
+
+    //uint32_t can_br = 0x001c0008;
+    uint32_t can_br = 500000;
+    uint8_t num_tx_mb = 1;
+    uint8_t num_rx_mb = 2;
+    can_init_def_tx_rx_mb(can_br);
 
 
-        // CAN receive info
-        CAN_MESSAGE msg;
-        uint32_t status_reg = 0;
+    // CAN receive info
+    CAN_MESSAGE msg;
+    uint32_t status_reg = 0;
 
-        msg.data[0] = 8;
-        msg.data_length=1;
-        msg.id=47;
+    msg.data[0] = 8;
+    msg.data_length=1;
+    msg.id=47;
 
     while (1)
     {
@@ -53,11 +55,14 @@ int main()
         PIOB->PIO_SODR |= PIO_PB13;
         */
         
-        //can_receive(&msg, rx_mb_id);
-        
-        can_send(&msg, 1);
+        // INTERRUPT FIKSER!!!!!!!
+        /*
+        uint8_t a  = can_receive(&msg, 1);
+        printf("can_receive1: %d\r\n", a);
+        */
+        can_send(&msg, 0);
 
-        for(volatile uint32_t i = 0; i < 10000000; i++){
+        for(volatile uint32_t i = 0; i < 7000000; i++){
             __asm__("nop");
         }
 

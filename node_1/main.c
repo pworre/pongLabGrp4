@@ -45,24 +45,27 @@ int main(){
     }
     printf("\r\n");
 
-    uint8_t i = 0;
+    uint8_t i = 3;
 
     CAN_MESSAGE message;
     uint8_t error_reg = 0;
-    /*
+    
     message.id = 6;
     message.data[0] = 7;
     message.size = 1;
-    */
+    
 
     while (1){
         // Set global can message to 0 to see if receive anything
         msg_global.id = 0;
         msg_global.data[0] = 0;
         msg_global.size = 0;
+        /*
+        message.id = i;
+        message.data[0] = (i + 1);
+        message.size = 1;
+        */
         
-        
-
         /*
         //can_send_msg(message);
         CAN_CTRL_write(0b00110001, (message.id) >> 3);          // ID_low
@@ -71,8 +74,8 @@ int main(){
         CAN_CTRL_write(0b00110110, message.data[0]);*/
         //can_send_msg(message);
 
-
-        message = can_recive_msg(0);
+        //can_send_msg(message);
+        message = can_recive_msg(1);
         _delay_ms(100);
 
         /*
