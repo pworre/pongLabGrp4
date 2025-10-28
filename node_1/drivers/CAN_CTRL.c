@@ -121,6 +121,7 @@ uint8_t CAN_CTRL_read_status(void){
 
 void CAN_CTRL_bit_modify(uint8_t address, uint8_t mask, uint8_t data){
     SPI_MasterTransmit(MCP_BITMOD, CAN);
+    SPI_MasterTransmit(address, CAN);
     SPI_MasterTransmit(mask, CAN);
     SPI_MasterTransmit(data, CAN);
     SPI_slave_deselect();
@@ -296,7 +297,7 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
 
-    if (buffer_nr == 1){
+    if (buffer_nr == 0){
         SPI_MasterTransmit(MCP_READ_RX0, CAN);
 
         uint8_t idH = SPI_read(CAN);
@@ -312,7 +313,7 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         }
         SPI_slave_deselect();
         return msg;
-    } else if (buffer_nr == 2){
+    } else if (buffer_nr == 1){
         SPI_MasterTransmit(MCP_READ_RX1, CAN);
 
         uint8_t idH = SPI_read(CAN);
@@ -330,6 +331,7 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         return msg;
     } else {
         printf("CAN_RECEIVE_MSG:        No RX-Buffers is currently full");
+        return 0;
     }
 
 }
