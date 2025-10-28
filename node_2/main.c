@@ -66,6 +66,16 @@ int main()
         uint8_t a  = can_receive(&msg, 1);
         printf("can_receive1: %d\r\n", a);
         */
+
+        uint32_t msr = CAN0->CAN_MB[tx_mb_id].CAN_MSR;
+        uint32_t mmr = CAN0->CAN_MB[tx_mb_id].CAN_MMR;
+        uint32_t mot = (mmr & CAN_MMR_MOT_Msk) >> CAN_MMR_MOT_Pos;
+        uint32_t sr  = CAN0->CAN_SR;
+
+        printf("TX_MB[%d]: MSR=0x%08lX MMR=0x%08lX MOT=%lu SR=0x%08lX\n\r", 
+                tx_mb_id, msr, mmr, mot, sr);
+
+
         if (can_send(&msg, 0) == 1){
             printf("ikke sender\r\n");
         } else {

@@ -130,6 +130,10 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 		CAN0->CAN_MB[n].CAN_MID = CAN_MID_MIDE;
 		//CAN0->CAN_MB[n].CAN_MID = 0;
 		CAN0->CAN_MB[n].CAN_MMR = (CAN_MMR_MOT_MB_TX);
+
+		// "Mark ready" — gjør TX-mailboxen klar for første send
+    	CAN0->CAN_MB[n].CAN_MCR = CAN_MCR_MTCR;
+
 	}
 	
 	/****** End of mailbox configuraion ******/
