@@ -37,9 +37,12 @@ int main()
 
 
         // CAN receive info
-        uint8_t rx_mb_id = 2;
-        CAN_MESSAGE *msg;
+        CAN_MESSAGE msg;
         uint32_t status_reg = 0;
+
+        msg.data[0] = 8;
+        msg.data_length=1;
+        msg.id=47;
 
     while (1)
     {
@@ -49,10 +52,22 @@ int main()
         PIOB->PIO_OER |= PIO_PB13;
         PIOB->PIO_SODR |= PIO_PB13;
         */
+        
+        //can_receive(&msg, rx_mb_id);
+        
+        can_send(&msg, 1);
 
-        can_receive(&msg, rx_mb_id);
-        printf("ID = %d         Data = %d\r\n", msg->id, msg->data);
+        for(volatile uint32_t i = 0; i < 10000000; i++){
+            __asm__("nop");
+        }
+
+        printf("ID = %d         Data = %d\r\n", msg.id, msg.data[0]);
+
         status_reg = CAN0->CAN_SR;
+        for (uint32_t p = 32; p >= 1; p--){
+            printf("%d", (status_reg >> (p-1)) & 1);
+        }
+        printf("\r\n");
+
     }
-    
 }

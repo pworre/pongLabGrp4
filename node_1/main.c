@@ -22,25 +22,46 @@ int main(){
     //SRAM_test();
     
     io_board_init();
-    io_board_calibration();
+    //io_board_calibration();
 
     SPI_MasterInit();
     oled_init();
 
     CAN_CTRL_init();
+
+    uint8_t CNF1_data = CAN_CTRL_read(MCP_CNF1); 
+    uint8_t CNF2_data = CAN_CTRL_read(MCP_CNF2); 
+    uint8_t CNF3_data = CAN_CTRL_read(MCP_CNF3); 
+    for (uint8_t k = 8; k >= 1; k--) {
+            printf("%d", (CNF1_data >> (k-1)) & 1);
+    }
+    printf("\r\n");
+    for (uint8_t k = 8; k >= 1; k--) {
+        printf("%d", (CNF2_data >> (k-1)) & 1);
+    }
+    printf("\r\n");
+    for (uint8_t k = 8; k >= 1; k--) {
+        printf("%d", (CNF3_data >> (k-1)) & 1);
+    }
+    printf("\r\n");
+
     uint8_t i = 0;
 
     CAN_MESSAGE message;
     uint8_t error_reg = 0;
+    /*
+    message.id = 6;
+    message.data[0] = 7;
+    message.size = 1;
+    */
+
     while (1){
         // Set global can message to 0 to see if receive anything
         msg_global.id = 0;
         msg_global.data[0] = 0;
         msg_global.size = 0;
         
-        message.id = i;
-        message.data[0] = i;
-        message.size = 1;
+        
 
         /*
         //can_send_msg(message);
@@ -48,9 +69,10 @@ int main(){
         CAN_CTRL_write(0b00110010, (message.id & 0x07) << 5);   // ID_high
         CAN_CTRL_write(0b00110101, (message.size));
         CAN_CTRL_write(0b00110110, message.data[0]);*/
-        can_send_msg(message);
+        //can_send_msg(message);
 
 
+        message = can_recive_msg(0);
         _delay_ms(100);
 
         /*
@@ -63,28 +85,27 @@ int main(){
         uint8_t data = CAN_CTRL_read(0b00110110);
         */
 
-        printf("Iteration %u", i);
+        printf("Iteration %u\r\n", i);
         printf("OLD_msg_id = %u    OLD_msg_data = %u\r\n", message.id, message.data[0]); 
         //printf("ID = %u     size = %u    data = %u\r\n", id, size, data); 
         //printf("NEW_msg_id = %u    NEW_msg_data = %u\r\n", new_msg.id, new_msg.data[0]); 
 
         
-        printf("G:      ID = %u     size = %u    data = %u\r\n", msg_global.id, msg_global.size, msg_global.data[0]); 
+        //printf("G:      ID = %u     size = %u    data = %u\r\n", msg_global.id, msg_global.size, msg_global.data[0]); 
 
         uint8_t status_reg = CAN_CTRL_read(MCP_CANSTAT);
 
-        printf("Status register (binary): ");
-        for (uint8_t k = 0; k < 8; k++) {
-            printf("%d\r\n", (status_reg >> k) & 1);
+        printf("Status reg:     ");
+        for (uint8_t k = 8; k >= 1; k--) {
+            printf("%d", (status_reg >> (k-1)) & 1);
         }
-        printf("Error reg\r\n");
+        printf("\r\n");
+        printf("Error reg:      ");
         error_reg = CAN_CTRL_read(MCP_EFLG);
-        for (uint8_t k = 0; k < 8; k++) {
-            printf("%d\r\n", (error_reg >> k) & 1);
+        for (uint8_t k = 8; k >= 1; k--) {
+            printf("%d", (error_reg >> (k-1)) & 1);
         }
-
-
-        can_send_msg(message);
+        printf("\r\n");
 
         _delay_ms(1000);
         i++;

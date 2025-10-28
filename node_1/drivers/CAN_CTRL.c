@@ -10,13 +10,13 @@ CAN_MESSAGE msg_global;
 #define fosc 16000000 // Hz
 #define bitrate 500000 // bit/s
 #define TQ_per_bit 16
-#define TQ_time (1/(bitrate * 16))
+#define TQ_time (1.0f/(bitrate * TQ_per_bit))
 #define BRP 1
 #define synchSeg 1
-#define propSeg 3
-#define phase1 6
-#define phase2 4
-#define SJW (16 - (synchSeg + propSeg + phase1 + phase2))
+#define propSeg 2
+#define phase1 7
+#define phase2 6
+#define SJW 3
 
 void test_CAN_CTRL(void) {
     CAN_CTRL_init();
@@ -24,7 +24,6 @@ void test_CAN_CTRL(void) {
     uint8_t data = CAN_CTRL_read(0b00000000);
     printf("Value: %u\r\n", (unsigned int)data);
 }
-
 
 void CAN_CTRL_init(void){
     CAN_CTRL_reset();
@@ -51,33 +50,31 @@ void CAN_CTRL_init(void){
     //  -   TQ per bit = 16
     //  -   TQ time = 1 / bitrate / TQ per bit = 
     //  -   fosc = 16 MHz
-    //  -   baudrate_prescaler = TQ time * fosc / 2 - 1 = 1 
+    //  -   baudrate_prescaler = TQ time * fosc / 2 = 1 
 
     // TIMING       (PSn = Phase segment n)
     //  -   PropagationSegment + PS1 >= PS2
     //  -   PropagationSegment + PS1 >= Tdelay, Tdelay (1->2 TQ)
 
-    // 75% sampling point (8 TQ : Time Quantum)
+    // 75% sampling point (8 TQ : Time Quantum) feil
     //  -   1 TQ for sychronize segment
     //  -   1 TQ for propagation segment
     //  -   4 TQ for PS1
     //  -   2 TQ for PS2
     // SJW bits = 0 to synch jump width length = 1 x TQ
 
-    uint8_t config1_val = ((SJW << SJW0) | (BRP - 1));
-    CAN_CTRL_write(MCP_CNF1, config1_val);
+    uint8_t config3_val = (((phase2 - 1) << PHSEG20) | (1 << 5));
+    CAN_CTRL_write(MCP_CNF3, config3_val);
 
-    uint8_t config2_val = ((1 << BTLMODE) | ((phase1 - 1) << PHSEG10) | ((propSeg - 1) << PRSEG0));
+    uint8_t config2_val = ((1 << 7) | ((phase1 - 1) << PHSEG10) | ((propSeg - 1) << PRSEG0));
     CAN_CTRL_write(MCP_CNF2, config2_val);
 
-    uint8_t config3_val = ((phase2 - 1) << PHSEG20);
-    CAN_CTRL_write(MCP_CNF3, config3_val);
+    uint8_t config1_val = (((SJW - 1) << SJW0) | (BRP-1));
+    CAN_CTRL_write(MCP_CNF1, config1_val);
 
         //use loopback mode
     //CAN_CTRL_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000); 
     CAN_CTRL_write(MCP_CANCTRL, 0);
-
-
 }
 
 void CAN_CTRL_reset(void){
@@ -85,14 +82,12 @@ void CAN_CTRL_reset(void){
     SPI_slave_deselect();
 }
 
-
 void CAN_CTRL_write(uint8_t address, uint8_t data){
     SPI_MasterTransmit(MCP_WRITE, CAN); //write cmd
     SPI_MasterTransmit(address, CAN);
     SPI_MasterTransmit(data, CAN);
     SPI_slave_deselect();
 }
-
 
 uint8_t CAN_CTRL_read(uint8_t address){
     SPI_MasterTransmit(MCP_READ, CAN); //read cmd
@@ -102,14 +97,12 @@ uint8_t CAN_CTRL_read(uint8_t address){
     return data;
 }
 
-
 void CAN_CTRL_RTS(uint8_t buffer_nr){
     uint8_t number = buffer_nr & 0b00000111;
     uint8_t command = 0b10000000 | number;
-    SPI_MasterTransmit(command, CAN);
+    SPI_MasterTransmit(MCP_RTS_TX0, CAN);
     SPI_slave_deselect();
 }
-
 
 uint8_t CAN_CTRL_read_status(void){
     SPI_MasterTransmit(MCP_READ_STATUS, CAN);
@@ -117,7 +110,6 @@ uint8_t CAN_CTRL_read_status(void){
     SPI_slave_deselect();
     return data;
 }
-
 
 void CAN_CTRL_bit_modify(uint8_t address, uint8_t mask, uint8_t data){
     SPI_MasterTransmit(MCP_BITMOD, CAN);
@@ -225,14 +217,14 @@ ISR(INT0_vect){
     }
 }
 
-/*
+
 void can_send_msg(CAN_MESSAGE can_msg){
     //this sends a msg from buffer 0
 
     CAN_CTRL_bit_modify(CANINTE, TX0IF, (1 << TX0IF));
     //set id i id high og low register
-    CAN_CTRL_write(TXB0SIDH, (can_msg.id & 0x00ff));
-    CAN_CTRL_write(TXB0SIDL, (can_msg.id & 0x0f00 >> 8));
+    CAN_CTRL_write(TXB0SIDH, (can_msg.id >> 3));
+    CAN_CTRL_write(TXB0SIDL, (can_msg.id << 5));
 
     // set data lengt
     CAN_CTRL_write(TXB0DLC, can_msg.size);
@@ -242,10 +234,9 @@ void can_send_msg(CAN_MESSAGE can_msg){
         CAN_CTRL_write(TXB0D0 + i, can_msg.data[i]);
     }
     //request to send buffer 0
-    CAN_CTRL_RTS(0b001)
-    
-} */
-
+    CAN_CTRL_RTS(0b001);
+} 
+/*
 void can_send_msg(CAN_MESSAGE can_msg){
     //this sends a msg from buffer 0
     //set id i id high og low register
@@ -268,9 +259,9 @@ void can_send_msg(CAN_MESSAGE can_msg){
     SPI_slave_deselect();
     SPI_MasterTransmit(MCP_RTS_TX0, CAN);
     SPI_slave_deselect();
-}
+}*/
 
-/*
+
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
     uint8_t buffer_offset = 0;
@@ -290,9 +281,8 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     //sett the CANINTF.RX0IF = 0 to signal that the msg is fetched
     CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
 
-
     return msg;
-} */
+}
 
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
@@ -331,7 +321,7 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         return msg;
     } else {
         printf("CAN_RECEIVE_MSG:        No RX-Buffers is currently full");
-        return 0;
+        return;
     }
 
 }

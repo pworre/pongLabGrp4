@@ -15,13 +15,14 @@
 #define fosc 84000000 // Hz
 #define bitrate 500000 // bit/s
 #define TQ_per_bit 16
-#define TQ_time (1/(bitrate * 16))
-#define BRP ((TQ_time * fosc) - 1)
+#define TQ_time (1.0f/(bitrate * TQ_per_bit))
+#define BRP ((uint32_t)(fosc/(TQ_per_bit*bitrate)) - 1)
 #define synchSeg 1
 #define propSeg 2
-#define phase1 5
-#define phase2 5
-#define SJW (16 - (synchSeg + propSeg + phase1 + phase2))
+#define phase1 7
+#define phase2 6
+//#define SJW (16 - (synchSeg + propSeg + phase1 + phase2))
+#define SJW 3
 
 //#include "../uart_and_printf/printf-stdarg.h"
 
@@ -97,7 +98,7 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	for (volatile uint8_t delay = 0; delay <= 30; delay++);
 
 	// Set bit timing
-	CAN0->CAN_BR = (BRP << 16) | (SJW << 12) | (propSeg << 8) | (phase1 << 4) | (phase2);
+	CAN0->CAN_BR = (BRP << 16) | ((SJW - 1)<< 12) | ((propSeg - 1) << 8) | ((phase1 - 1) << 4) | (phase2 - 1);
 
 
 	CAN0->CAN_WPMR |= 1;
@@ -113,7 +114,8 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	{
 		CAN0->CAN_MB[n].CAN_MAM = 0; //Accept all messages
 		//CAN0->CAN_MB[n].CAN_MID = CAN_MID_MIDE;
-		CAN0->CAN_MB[n].CAN_MID &= ~(1 << 29); // Disable extended identifier
+		//CAN0->CAN_MB[n].CAN_MID &= ~(1 << 29); // Disable extended identifier
+		CAN0->CAN_MB[n].CAN_MID = 0;
 		CAN0->CAN_MB[n].CAN_MMR = (CAN_MMR_MOT_MB_RX);
 		CAN0->CAN_MB[n].CAN_MCR |= CAN_MCR_MTCR;
 
@@ -123,7 +125,8 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	/*Configure transmit mailboxes */
 	for (int n = 0; n < num_tx_mb; n++)
 	{
-		CAN0->CAN_MB[n].CAN_MID = CAN_MID_MIDE;
+		//CAN0->CAN_MB[n].CAN_MID = CAN_MID_MIDE;
+		CAN0->CAN_MB[n].CAN_MID = 0;
 		CAN0->CAN_MB[n].CAN_MMR = (CAN_MMR_MOT_MB_TX);
 	}
 	
@@ -156,7 +159,7 @@ uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t tx_mb_id)
 	if(CAN0->CAN_MB[tx_mb_id].CAN_MSR & CAN_MSR_MRDY)
 	{
 		//Set message ID and use CAN 2.0B protocol
-		CAN0->CAN_MB[tx_mb_id].CAN_MID = CAN_MID_MIDvA(can_msg->id) | CAN_MID_MIDE ;
+		CAN0->CAN_MB[tx_mb_id].CAN_MID = CAN_MID_MIDvA(can_msg->id); // CAN_MID_MIDE ;
 		
 		//Make sure message is not to long
 		if(can_msg->data_length > 7){
