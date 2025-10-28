@@ -103,7 +103,7 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 	CAN0->CAN_BR = (BRP << 16) | ((SJW - 1)<< 12) | ((propSeg - 1) << 8) | ((phase1 - 1) << 4) | (phase2 - 1);
 
 
-	CAN0->CAN_WPMR |= 1;
+	
 
 	
 
@@ -136,13 +136,16 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 
 	//Enable interrupt on receive mailboxes
 	CAN0->CAN_IER = can_ier;
+	//CAN0->CAN_IMR = can_ier;
 
 	//Enable interrupt in NVIC 
 	NVIC_EnableIRQ(ID_CAN0);
-	__enable_irq();
+
+	CAN0->CAN_WPMR |= 1;
 
 	//enable CAN
 	CAN0->CAN_MR |= CAN_MR_CANEN;
+	
 
 	return 0;
 }
@@ -159,7 +162,7 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
 uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t tx_mb_id)
 {
 	//Check that mailbox is ready
-	if(CAN0->CAN_MB[tx_mb_id].CAN_MSR & CAN_MSR_MRDY)
+	if((CAN0->CAN_MB[tx_mb_id].CAN_MSR & CAN_MSR_MRDY != 0))
 	{
 		//Set message ID and use CAN 2.0B protocol
 		CAN0->CAN_MB[tx_mb_id].CAN_MID = CAN_MID_MIDvA(can_msg->id) | CAN_MID_MIDE; // CAN_MID_MIDE ;

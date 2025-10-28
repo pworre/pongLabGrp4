@@ -36,6 +36,12 @@ int main()
     uint8_t num_tx_mb = 1;
     uint8_t num_rx_mb = 2;
     can_init_def_tx_rx_mb(can_br);
+    __enable_irq();
+
+    uint32_t primask = __get_PRIMASK();
+    if (primask == 0){
+        printf("Global interrupt enabled\r\n");
+    }
 
 
     // CAN receive info
@@ -60,7 +66,11 @@ int main()
         uint8_t a  = can_receive(&msg, 1);
         printf("can_receive1: %d\r\n", a);
         */
-        can_send(&msg, 0);
+        if (can_send(&msg, 0) == 1){
+            printf("ikke sender\r\n");
+        } else {
+            printf("SENDER :)");
+        }
 
         for(volatile uint32_t i = 0; i < 7000000; i++){
             __asm__("nop");
