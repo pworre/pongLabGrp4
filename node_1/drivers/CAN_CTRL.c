@@ -266,7 +266,7 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
     uint8_t buffer_offset = 0;
     if (buffer_nr == 1){
-        msg.id = CAN_CTRL_read(MCP_RXF0SIDL) + ((CAN_CTRL_read(MCP_RXB0SIDH) & 0x0f) << 8);
+        msg.id = CAN_CTRL_read(RXB0SIDL + buffer_offset) + ((CAN_CTRL_read(RXB0SIDH + buffer_offset) & 0x0f) << 8);
 
         msg.size = CAN_CTRL_read(RXB0DLC);
         if (msg.size > 8){
