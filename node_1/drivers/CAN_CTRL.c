@@ -264,9 +264,12 @@ void can_send_msg(CAN_MESSAGE can_msg){
 
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     CAN_MESSAGE msg = {};
-    uint8_t buffer_offset = 0;
+    uint8_t idH = 0;
+    uint8_t idL = 0;
     if (buffer_nr == 1){
-        msg.id = CAN_CTRL_read(RXB0SIDL + buffer_offset) + ((CAN_CTRL_read(RXB0SIDH + buffer_offset) & 0x0f) << 8);
+        idH = CAN_CTRL_read(RXB0SIDH);
+        idL = CAN_CTRL_read(RXB0SIDL);
+        msg.id = (idH << 3) + (idL >> 5);
 
         msg.size = CAN_CTRL_read(RXB0DLC);
         if (msg.size > 8){
@@ -276,27 +279,31 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         for (uint8_t i = 0; i < msg.size; i++){
             msg.data[i] = CAN_CTRL_read(RXB0D0 + i);
         }
+        //sett CANINTF.RX0IF = 0 to signal that the msg is fetched at buffer RX0
+        CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
     }
     else if (buffer_nr == 2){
-        buffer_offset = 0b10000;
-        msg.id = CAN_CTRL_read(RXB0SIDL + buffer_offset) + ((CAN_CTRL_read(RXB0SIDH + buffer_offset) & 0x0f) << 8);
 
-        msg.size = CAN_CTRL_read(RXB0DLC + buffer_offset);
+        idH = CAN_CTRL_read(RXB1SIDH);
+        idL = CAN_CTRL_read(RXB1SIDL);
+        msg.id = (idH << 3) + (idL >> 5);
+
+        msg.size = CAN_CTRL_read(RXB1DLC);
         if (msg.size > 8){
             msg.size = 8;
         }
 
         for (uint8_t i = 0; i < msg.size; i++){
-            msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offset + i);
+            msg.data[i] = CAN_CTRL_read(RXB1D0 + i);
         }
+
+        //sett CANINTF.RX1IF = 0 to signal that the msg is fetched at buffer RX1
+        CAN_CTRL_bit_modify(CANINTF, 0b00000010, 0);
     }
     else {
+        printf("Ikke gyldig bufferverdi!");
         return;
     }
-
-    //sett the CANINTF.RX0IF = 0 to signal that the msg is fetched
-    CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
-
     return msg;
 }
 /*
