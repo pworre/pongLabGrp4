@@ -24,8 +24,9 @@
 //#define SJW (16 - (synchSeg + propSeg + phase1 + phase2))
 #define SJW 3
 
-//#include "../uart_and_printf/printf-stdarg.h"
-
+// ACTIVE MAILBOXES
+#define tx_mb_id 0
+#define rx_mb_id 1
 
 /**
  * \brief Initialize can bus with predefined number of rx and tx mailboxes, 
@@ -52,9 +53,7 @@ uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
  *
  * \retval Success(0) or failure(1)
  */
-
-
-uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb)
+uint8_t can_init(uint8_t num_tx_mb, uint8_t num_rx_mb)
 {
 	
 	//Make sure num_rx_mb and num_tx_mb is valid
