@@ -63,6 +63,29 @@ void recive_can_msg_test(uint8_t decode){
     }
 }
 
+void send_joystick_with_can(void){
+    CAN_MESSAGE message;
+    message.data[0] = 0;
+    message.data[1] = 0;
+    message.size = 2;
+    message.id = 0x0f;
+
+    while (1)
+    {   
+        get_io_board_values();
+        message.data[0] = scaled_values[0];
+        message.data[1] = scaled_values[1];
+
+        can_send_msg(message);
+        _delay_ms(100);
+        
+        printf("\r\nSEND JOYSTICK: Iteration %u\r\n", i);
+        printf("msg_id = %u    msg_size = %u    X = %u    Y = %u\r\n", message.id, message.size, message.data[0], message.data[1]); 
+        i++;
+        _delay_ms(1000);
+    }
+}
+
 
 void print_byte(uint8_t number){
     for (uint8_t k = 8; k >= 1; k--) {
