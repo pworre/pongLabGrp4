@@ -3,6 +3,7 @@
 #include "sam.h"
 #include "drivers/uart.h"
 #include "drivers/can_controller.h"
+#include "drivers/tests.h"
 //#include <util/delay.h>
 
 /*
@@ -29,8 +30,6 @@ int main()
     /* code */
     uart_init(84000000, 9600);
 
-    
-
     //uint32_t can_br = 0x001c0008;
     uint32_t can_br = 500000;
     uint8_t num_tx_mb = 2;
@@ -44,35 +43,16 @@ int main()
         printf("Global interrupt enabled\r\n");
     }
 
-
-    // CAN receive info
-    CAN_MESSAGE msg;
-    uint32_t status_reg = 0;
-
-    msg.data[0] = 8;
-    msg.data_length=1;
-    msg.id=47;
-
     while (1)
     {
         // NESTE GANG ! ! ! ! !
         // TEST NODE 2 LOOPBACKMODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // CAN0->CAN_MR |= CAN_MR_LPM;  // Loopback Mode
-
-
-        /*
-        // TEST
-        PIOB->PIO_PER |= PIO_PB13;
-        PIOB->PIO_OER |= PIO_PB13;
-        PIOB->PIO_SODR |= PIO_PB13;
-        */
+        //send_can_msg_test(1);
+        //recive_can_msg_test(1);
         
-        // INTERRUPT FIKSER!!!!!!!
-        /*
-        uint8_t a  = can_receive(&msg, 1);
-        printf("can_receive1: %d\r\n", a);
-        */
 
+        //usikker på hva dette gjør, rører ikke når jeg skriver tests
         uint32_t msr = CAN0->CAN_MB[0].CAN_MSR;
         uint32_t mmr = CAN0->CAN_MB[0].CAN_MMR;
         uint32_t mot = (mmr & CAN_MMR_MOT_Msk) >> CAN_MMR_MOT_Pos;
@@ -83,25 +63,12 @@ int main()
 
         CAN0->CAN_MB[1].CAN_MCR = CAN_MCR_MTCR;
 
-        can_send(&msg, 1);
-        
-        if (can_send(&msg, 1) == 1){
-            printf("ikke sender\r\n");
-        } else {
-            printf("SENDER :)");
-        }
-
-        for(volatile uint32_t i = 0; i < 7000000; i++){
-            __asm__("nop");
-        }
-
-        printf("ID = %d         Data = %d\r\n", msg.id, msg.data[0]);
-
-        status_reg = CAN0->CAN_SR;
-        for (uint32_t p = 32; p >= 1; p--){
-            printf("%d", (status_reg >> (p-1)) & 1);
-        }
-        printf("\r\n");
-
     }
+
+    /*
+        // TEST
+        PIOB->PIO_PER |= PIO_PB13;
+        PIOB->PIO_OER |= PIO_PB13;
+        PIOB->PIO_SODR |= PIO_PB13;
+        */
 }

@@ -17,7 +17,7 @@ void send_can_msg_test(uint8_t decode){
         _delay_ms(100);
         
         printf("\r\nSEND: Iteration %u\r\n", i);
-        printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", message.id, message.size message.data[0], message.data[1]); 
+        printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", message.id, message.size, message.data[0], message.data[1]); 
 
         status_reg = CAN_CTRL_read(MCP_CANSTAT);
         error_reg = CAN_CTRL_read(MCP_EFLG);
@@ -48,7 +48,7 @@ void recive_can_msg_test(uint8_t decode){
         _delay_ms(100);
         
         printf("\r\nRECIVE: Iteration %u\r\n", i);
-        printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", message.id, message.size message.data[0], message.data[1]); 
+        printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", message.id, message.size, message.data[0], message.data[1]); 
 
         status_reg = CAN_CTRL_read(MCP_CANSTAT);
         error_reg = CAN_CTRL_read(MCP_EFLG);
