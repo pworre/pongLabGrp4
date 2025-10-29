@@ -37,9 +37,9 @@
  *
  * \retval Success(0) or failure(1)
  *//* code */
-uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
+uint8_t can_init_def_tx_rx_mb(CanInit can_init)
 {
-	return can_init(can_br, 1, 2);
+	return can_init(can_init, 1, 2);
 }
 
 /**
@@ -53,7 +53,7 @@ uint8_t can_init_def_tx_rx_mb(uint32_t can_br)
  *
  * \retval Success(0) or failure(1)
  */
-uint8_t can_init(uint8_t num_tx_mb, uint8_t num_rx_mb)
+uint8_t can_init(canInit can_init, uint8_t num_tx_mb, uint8_t num_rx_mb)
 {
 	
 	//Make sure num_rx_mb and num_tx_mb is valid
@@ -92,19 +92,12 @@ uint8_t can_init(uint8_t num_tx_mb, uint8_t num_rx_mb)
 	PIOA->PIO_PUER = (PIO_PA1A_CANRX0 | PIO_PA0A_CANTX0);
 	
 	//Set baudrate, Phase1, phase2 and propagation delay for can bus. Must match on all nodes!
-	//CAN0->CAN_BR = can_br; 
-	// PONG_GRP4
-	// Disable Write Protection 
 	CAN0->CAN_WPMR &= ~(1 << 0);
 	for (volatile uint8_t delay = 0; delay <= 30; delay++);
 
 	// Set bit timing
-	CAN0->CAN_BR = (BRP << 16) | ((SJW - 1)<< 12) | ((propSeg - 1) << 8) | ((phase1 - 1) << 4) | (phase2 - 1);
-
-
-	
-
-	
+	//CAN0->CAN_BR = (BRP << 16) | ((SJW - 1)<< 12) | ((propSeg - 1) << 8) | ((phase1 - 1) << 4) | (phase2 - 1);
+	CAN0->CAN_BR = can_init.reg;
 
 	/****** Start of mailbox configuration ******/
 
@@ -134,7 +127,6 @@ uint8_t can_init(uint8_t num_tx_mb, uint8_t num_rx_mb)
 
 		can_ier |= 1 << n; //Enable interrupt on rx mailbox
 	}
-	
 	
 	
 	/****** End of mailbox configuraion ******/

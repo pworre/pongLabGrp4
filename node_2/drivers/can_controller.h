@@ -14,6 +14,21 @@
 
 #include <stdint.h>
 
+typedef struct CanInit CanInit;
+__attribute__((packed)) struct CanInit {
+    union {						// Lar dem dele minneområdet
+        struct {
+            uint32_t phase2:4;  // Phase 2 segment
+            uint32_t propag:4;  // Propagation time segment
+            uint32_t phase1:4;  // Phase 1 segment
+            uint32_t sjw:4;     // Synchronization jump width
+            uint32_t brp:8;     // Baud rate prescaler
+            uint32_t smp:8;     // Sampling mode
+        };
+        uint32_t reg;
+    };
+};
+
 typedef struct can_message_t
 {
 	uint16_t id;
@@ -22,7 +37,7 @@ typedef struct can_message_t
 } CAN_MESSAGE;
 
 uint8_t can_init_def_tx_rx_mb(uint32_t can_br);
-uint8_t can_init(uint8_t num_tx_mb, uint8_t num_rx_mb);
+uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb);
 
 uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t mailbox_id);
 uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t mailbox_id);

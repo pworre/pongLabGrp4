@@ -29,14 +29,24 @@ int main()
     /* code */
     uart_init(84000000, 9600);
 
-    
 
-    //uint32_t can_br = 0x001c0008;
-    uint32_t can_br = 500000;
-    uint8_t num_tx_mb = 2;
-    uint8_t num_rx_mb = 2;
+    CanInit canInitParam = {
+        .brp    = 41,
+        .smp    = 0,
+        .phase1 = 6,
+        .phase2 = 5,
+        .sjw    = 0,
+        .propag = 1
+    };
+    // PRINT CAN_INIT to set REGISTER
+    printf("CanInit: ");
+    for (uint32_t bit = 32; bit >= 1; bit--){
+        printf("%d", (canInitParam.reg >> (bit - 1)));
+    } 
+    printf("\r\n");
+
     //can_init_def_tx_rx_mb(can_br);
-    can_init(can_br, num_tx_mb, num_rx_mb);
+    can_init_def_tx_rx_mb(canInitParam)
     __enable_irq();
 
     uint32_t primask = __get_PRIMASK();
@@ -59,19 +69,6 @@ int main()
         // TEST NODE 2 LOOPBACKMODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // CAN0->CAN_MR |= CAN_MR_LPM;  // Loopback Mode
 
-
-        /*
-        // TEST
-        PIOB->PIO_PER |= PIO_PB13;
-        PIOB->PIO_OER |= PIO_PB13;
-        PIOB->PIO_SODR |= PIO_PB13;
-        */
-        
-        // INTERRUPT FIKSER!!!!!!!
-        /*
-        uint8_t a  = can_receive(&msg, 1);
-        printf("can_receive1: %d\r\n", a);
-        */
 
         uint32_t msr = CAN0->CAN_MB[0].CAN_MSR;
         uint32_t mmr = CAN0->CAN_MB[0].CAN_MMR;
