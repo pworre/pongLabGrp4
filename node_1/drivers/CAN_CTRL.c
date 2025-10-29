@@ -72,8 +72,9 @@ void CAN_CTRL_init(void){
     uint8_t config1_val = (((SJW - 1) << SJW0) | (BRP-1));
     CAN_CTRL_write(MCP_CNF1, config1_val);
 
-        //use loopback mode
+    //use loopback mode
     //CAN_CTRL_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000); 
+    //use normal mode
     CAN_CTRL_write(MCP_CANCTRL, 0);
 }
 
@@ -97,9 +98,7 @@ uint8_t CAN_CTRL_read(uint8_t address){
     return data;
 }
 
-void CAN_CTRL_RTS(uint8_t buffer_nr){
-    uint8_t number = buffer_nr & 0b00000111;
-    uint8_t command = 0b10000000 | number;
+void CAN_CTRL_RTS(){
     SPI_MasterTransmit(MCP_RTS_TX0, CAN);
     SPI_slave_deselect();
 }
@@ -234,7 +233,22 @@ void can_send_msg(CAN_MESSAGE can_msg){
         CAN_CTRL_write(TXB0D0 + i, can_msg.data[i]);
     }
     //request to send buffer 0
-    CAN_CTRL_RTS(0b001);
+    CAN_CTRL_RTS();
+
+    // Check for errors
+    uint8_t reg = MCP2515_Read(TXB0CTRL);
+    if (reg & (1 << TXREQ))
+    {
+        if (reg & (1 << 4)) //TXERR
+        {
+        printf("CAN_ERROR: msg error detected \n\r");
+        }
+        else if (reg & (1 << 5))//MLOA
+        {
+        printf("CAN_ERROR: MSG lost\n\r");
+        }
+    }
+
 } 
 /*
 void can_send_msg(CAN_MESSAGE can_msg){
@@ -267,6 +281,10 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
     uint8_t idH = 0;
     uint8_t idL = 0;
     if (buffer_nr == 1){
+        if (!(MCP2515_Read(MCP_CANINTF) & (1 << RX0IF))){
+        printf("ikke interrupt flag på at noe er mottat\r\n");
+        return 0;
+        }
         idH = CAN_CTRL_read(RXB0SIDH);
         idL = CAN_CTRL_read(RXB0SIDL);
         msg.id = (idH << 3) + (idL >> 5);
@@ -283,6 +301,10 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
     }
     else if (buffer_nr == 2){
+        if (!(MCP2515_Read(MCP_CANINTF) & (1 << RX1IF))){
+        printf("ikke interrupt flag på at noe er mottat\r\n");
+        return 0;
+        }
 
         idH = CAN_CTRL_read(RXB1SIDH);
         idL = CAN_CTRL_read(RXB1SIDL);
