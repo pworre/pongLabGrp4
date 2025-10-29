@@ -63,6 +63,7 @@ void recive_can_msg_test(uint8_t decode){
     }
 }
 
+
 void print_byte(uint8_t number){
     for (uint8_t k = 8; k >= 1; k--) {
             printf("%d", (number >> (k-1)) & 1);
