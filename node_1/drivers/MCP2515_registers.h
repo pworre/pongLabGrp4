@@ -347,6 +347,8 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_WAKIF		0x40
 #define MCP_MERRF		0x80
 
-
+#define TXREQ 3
+#define TXERR 4
+#define MLOA 5
 
 #endif

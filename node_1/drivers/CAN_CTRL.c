@@ -7,6 +7,26 @@ uint8_t tx_reg2_ready = 1;
 
 CAN_MESSAGE msg_global;
 
+//-------------------BIT TIMING OF CAN-BUS-------------------
+// BAUDRATE
+//  -   Bit rate = 500 kbits/sek
+//  -   TQ per bit = 16
+//  -   TQ time = 1 / bitrate / TQ per bit = 
+//  -   fosc = 16 MHz
+//  -   baudrate_prescaler = TQ time * fosc / 2 = 1 
+
+// TIMING       (PSn = Phase segment n)
+//  -   PropagationSegment + PS1 >= PS2
+//  -   PropagationSegment + PS1 >= Tdelay, Tdelay (1->2 TQ)
+
+// 75% sampling point (8 TQ : Time Quantum) feil
+//  -   1 TQ for sychronize segment
+//  -   1 TQ for propagation segment
+//  -   4 TQ for PS1
+//  -   2 TQ for PS2
+// SJW bits = 0 to synch jump width length = 1 x TQ
+
+
 #define fosc 16000000 // Hz
 #define bitrate 500000 // bit/s
 #define TQ_per_bit 16
@@ -18,6 +38,10 @@ CAN_MESSAGE msg_global;
 #define phase2 6
 #define SJW 3
 
+// Normal mode if (1) and Loopback if (0)
+#define normalMode 1
+
+
 void test_CAN_CTRL(void) {
     CAN_CTRL_init();
     CAN_CTRL_write(0b00000000, 0b00000011);
@@ -28,11 +52,41 @@ void test_CAN_CTRL(void) {
 void CAN_CTRL_init(void){
     CAN_CTRL_reset();
 
+    // Check if in CONFIG MODE after reset
+    uint8_t status = CAN_CTRL_read(MCP_CANSTAT);
+    if ((status & MODE_MASK) != MODE_CONFIG) 
+    {
+        printf("MCP2515_ERROR: not in configuration mode after reset, status: %x\n\r", status);
+    }
+
     //no filters on Reseve buffer 0
     CAN_CTRL_write(MCP_RXB0CTRL, 0b01100000);
 
+    /*
+    uint8_t config3_val = (((phase2 - 1) << PHSEG20) | (1 << 5));
+    CAN_CTRL_write(MCP_CNF3, config3_val);
 
+    uint8_t config2_val = ((1 << 7) | ((phase1 - 1) << PHSEG10) | ((propSeg - 1) << PRSEG0));
+    CAN_CTRL_write(MCP_CNF2, config2_val);
 
+    uint8_t config1_val = (((SJW - 1) << SJW0) | (BRP-1));
+    CAN_CTRL_write(MCP_CNF1, config1_val);
+    */
+
+    // SETUP CONFIG REGISTERS
+    // Setup CNF1  
+    MCP2515_BitModify(MCP_CNF1, 0b00111111, BRP);
+    MCP2515_BitModify(MCP_CNF1, 0b11000000, 0x0);
+    //Setup CNF2
+    MCP2515_BitModify(MCP_CNF2, 0b00111000, (6 << PHSEG10));
+    MCP2515_BitModify(MCP_CNF2, 0b00000111, (1 << PRSEG0));
+    MCP2515_BitModify(MCP_CNF2, 0b01000000, (0 << SAM));
+    MCP2515_BitModify(MCP_CNF2, 0b10000000, (1 << BTLMODE));
+    //Setup CNF3
+    MCP2515_BitModify(MCP_CNF3, 0b00000111, PS2);
+
+    // Enable CAN-INTERRUPT
+    CAN_CTRL_write(MCP_CANINTE, 0b10111111); // All, except wake-up
     // Set "low level" INT0 for Interrupt
     DDRD &= ~(1 << PD2);                        // Input
     PORTD |= (1 << PD2);                        // Intern pull-up
@@ -42,39 +96,19 @@ void CAN_CTRL_init(void){
     GICR |= (1 << INT0);                        // Activate INT0
     sei();
 
-    CAN_CTRL_write(MCP_CANINTE, 0b10111111); // All, except wake-up
-
-    //-------------------BIT TIMING OF CAN-BUS-------------------
-    // BAUDRATE
-    //  -   Bit rate = 500 kbits/sek
-    //  -   TQ per bit = 16
-    //  -   TQ time = 1 / bitrate / TQ per bit = 
-    //  -   fosc = 16 MHz
-    //  -   baudrate_prescaler = TQ time * fosc / 2 = 1 
-
-    // TIMING       (PSn = Phase segment n)
-    //  -   PropagationSegment + PS1 >= PS2
-    //  -   PropagationSegment + PS1 >= Tdelay, Tdelay (1->2 TQ)
-
-    // 75% sampling point (8 TQ : Time Quantum) feil
-    //  -   1 TQ for sychronize segment
-    //  -   1 TQ for propagation segment
-    //  -   4 TQ for PS1
-    //  -   2 TQ for PS2
-    // SJW bits = 0 to synch jump width length = 1 x TQ
-
-    uint8_t config3_val = (((phase2 - 1) << PHSEG20) | (1 << 5));
-    CAN_CTRL_write(MCP_CNF3, config3_val);
-
-    uint8_t config2_val = ((1 << 7) | ((phase1 - 1) << PHSEG10) | ((propSeg - 1) << PRSEG0));
-    CAN_CTRL_write(MCP_CNF2, config2_val);
-
-    uint8_t config1_val = (((SJW - 1) << SJW0) | (BRP-1));
-    CAN_CTRL_write(MCP_CNF1, config1_val);
-
-        //use loopback mode
+    //use loopback mode
     //CAN_CTRL_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000); 
-    CAN_CTRL_write(MCP_CANCTRL, 0);
+    //CAN_CTRL_write(MCP_CANCTRL, 0);
+
+    // CAN NORMAL MODE
+    uint8_t mode_mask = (1 << REQOP2) | (1 << REQOP1) | (1 << REQOP0);
+    uint8_t data;
+    if (normalMode)[
+        data = 0;
+    ] else {
+        data = 2;
+    }
+    CAN_CTRL_bit_modify(MCP_CANCTRL, mode_mask, data);
 }
 
 void CAN_CTRL_reset(void){
@@ -98,8 +132,8 @@ uint8_t CAN_CTRL_read(uint8_t address){
 }
 
 void CAN_CTRL_RTS(uint8_t buffer_nr){
-    uint8_t number = buffer_nr & 0b00000111;
-    uint8_t command = 0b10000000 | number;
+    uint8_t number = (buffer_nr & 0b00000111);
+    uint8_t command = (0b10000000 | number);
     SPI_MasterTransmit(MCP_RTS_TX0, CAN);
     SPI_slave_deselect();
 }
@@ -221,7 +255,9 @@ ISR(INT0_vect){
 void can_send_msg(CAN_MESSAGE can_msg){
     //this sends a msg from buffer 0
 
-    CAN_CTRL_bit_modify(CANINTE, TX0IF, (1 << TX0IF));
+    // - - - - - KOMMENTERTE UT DA DET IKKE SÅ UT SOM ANDRE BRUKTE DET - - - -
+    //CAN_CTRL_bit_modify(CANINTE, TX0IF, (1 << TX0IF));
+
     //set id i id high og low register
     CAN_CTRL_write(TXB0SIDH, (can_msg.id >> 3));
     CAN_CTRL_write(TXB0SIDL, (can_msg.id << 5));
@@ -233,8 +269,22 @@ void can_send_msg(CAN_MESSAGE can_msg){
     for (uint8_t i = 0; i < can_msg.size; i++){
         CAN_CTRL_write(TXB0D0 + i, can_msg.data[i]);
     }
-    //request to send buffer 0
-    CAN_CTRL_RTS(0b001);
+    //request to send buffer 0=(1), 1=(2), 2=(4)
+    CAN_CTRL_RTS(1);
+
+    // check error
+    uint8_t tx0_reg = CAN_CTRL_read(TXB0CTRL);
+    if (tx0_reg & (1 << TXREQ))
+    {
+        if (tx0_reg & (1 << TXERR))
+        {
+        printf("CAN_ERROR: msg error detected \n\r");
+        }
+        else if (tx0_reg & (1 << MLOA))
+        {
+        printf("CAN_ERROR: MSG lost\n\r");
+        }
+    }
 } 
 /*
 void can_send_msg(CAN_MESSAGE can_msg){
