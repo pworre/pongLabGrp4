@@ -5,7 +5,7 @@
 #include "sam.h"
 
 void send_can_msg_test(uint32_t decode); //sends a constant can_msg every second, decode != 0 prints status reg
-void recive_can_msg_test(uint32_t decode); //revices a can_msg and prints it, same behavior for decode
+void recive_can_msg_test(uint32_t decode); //revices a can_msg and prints it, same behavior for decode, NB: uses rx as reg 1! so only 1 tx reg.
 void loop_back_mode_test(void); //loopback mode: sends and recives 2 bytes of data where data and id increases
 void print_reg(uint32_t number); //prints a byte: 01101100
 

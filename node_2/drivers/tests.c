@@ -11,7 +11,7 @@ void send_can_msg_test(uint32_t decode){
     uint32_t i = 0;
     
     while(1){
-        if (can_send(&message, 1) == 1){
+        if (can_send(&message, 0) == 1){
             printf("ikke sender\r\n");
         } else {
             printf("SENDER :)");
@@ -44,7 +44,7 @@ void recive_can_msg_test(uint32_t decode){
     uint32_t i = 0;
     
     while(1){
-        if (can_receive(&message, 2) == 1){
+        if (can_receive(&message, 1) == 1){
             printf("ikke mottar\r\n");
         } else {
             printf("MOTTAR :)");
