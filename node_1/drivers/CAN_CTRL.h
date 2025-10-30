@@ -25,7 +25,7 @@ uint8_t tx_reg2_ready;
 typedef struct{
     uint16_t id;
     uint8_t size;
-    uint8_t data[8];
+    int8_t data[8];
 } CAN_MESSAGE;
 
 void can_send_msg(CAN_MESSAGE can_msg);

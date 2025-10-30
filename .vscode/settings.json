@@ -13,7 +13,8 @@
         "menu.h": "c",
         "delay.h": "c",
         "can_driver.h": "c",
-        "mcp2515_registers.h": "c"
+        "mcp2515_registers.h": "c",
+        "can_controller.h": "c"
     },
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda",

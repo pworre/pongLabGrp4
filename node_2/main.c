@@ -4,6 +4,7 @@
 #include "drivers/uart.h"
 #include "drivers/can_controller.h"
 #include "drivers/tests.h"
+#include "drivers/pwm.h"
 //#include <util/delay.h>
 
 /*
@@ -28,6 +29,7 @@ int main()
     //printf("Hello World\n\r");
 
     /* code */
+    pwm_init();
     uart_init(84000000, 9600);
 
     //uint32_t can_br = 0x001c0008;
@@ -38,37 +40,17 @@ int main()
     can_init(can_br, num_tx_mb, num_rx_mb);
     //__enable_irq();
 
-    uint32_t primask = __get_PRIMASK();
-    if (primask == 0){
-        printf("Global interrupt enabled\r\n");
-    }
+    // uint32_t primask = __get_PRIMASK();
+    // if (primask == 0){
+    //     printf("Global interrupt enabled\r\n");
+    // }
 
+    
     while (1)
     {
-        // NESTE GANG ! ! ! ! !
-        // TEST NODE 2 LOOPBACKMODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // CAN0->CAN_MR |= CAN_MR_LPM;  // Loopback Mode
         //send_can_msg_test(1);
-        recive_can_msg_test(0);
+        //recive_can_msg_test(0);
+
         
-
-        //usikker på hva dette gjør, rører ikke når jeg skriver tests
-        uint32_t msr = CAN0->CAN_MB[0].CAN_MSR;
-        uint32_t mmr = CAN0->CAN_MB[0].CAN_MMR;
-        uint32_t mot = (mmr & CAN_MMR_MOT_Msk) >> CAN_MMR_MOT_Pos;
-        uint32_t sr  = CAN0->CAN_SR;
-
-        printf("TX_MB[%d]: MSR=0x%08lX MMR=0x%08lX MOT=%lu SR=0x%08lX\n\r", 
-                0, msr, mmr, mot, sr);
-
-        CAN0->CAN_MB[1].CAN_MCR = CAN_MCR_MTCR;
-
     }
-
-    /*
-        // TEST
-        PIOB->PIO_PER |= PIO_PB13;
-        PIOB->PIO_OER |= PIO_PB13;
-        PIOB->PIO_SODR |= PIO_PB13;
-        */
 }
