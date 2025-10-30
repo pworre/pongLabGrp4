@@ -355,5 +355,6 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define REQOP1          6
 #define REQOP0          5
 
+#define PS2 0x06 - 1
 
 #endif
