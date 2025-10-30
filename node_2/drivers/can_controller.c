@@ -53,7 +53,7 @@ uint8_t can_init_def_tx_rx_mb(CanInit can_init)
  *
  * \retval Success(0) or failure(1)
  */
-uint8_t can_init(canInit can_init, uint8_t num_tx_mb, uint8_t num_rx_mb)
+uint8_t can_init(CanInit can_init, uint8_t num_tx_mb, uint8_t num_rx_mb)
 {
 	
 	//Make sure num_rx_mb and num_tx_mb is valid
