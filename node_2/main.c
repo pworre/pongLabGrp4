@@ -46,7 +46,7 @@ int main()
     printf("\r\n");
 
     //can_init_def_tx_rx_mb(can_br);
-    can_init_def_tx_rx_mb(canInitParam)
+    can_init_def_tx_rx_mb(canInitParam);
     __enable_irq();
 
     uint32_t primask = __get_PRIMASK();
