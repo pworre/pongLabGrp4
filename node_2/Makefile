@@ -12,7 +12,7 @@ SOURCE_FILES = \
 	drivers/time.c \
 	drivers/can_interrupt.c \
 	drivers/can_controller.c \
-	drivers/tests.s \
+	drivers/tests.c \
 #	../path_to/uart.c \
 #   filename1.c \
 #   filename2.c \

@@ -49,7 +49,7 @@ int main()
         // TEST NODE 2 LOOPBACKMODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // CAN0->CAN_MR |= CAN_MR_LPM;  // Loopback Mode
         //send_can_msg_test(1);
-        //recive_can_msg_test(1);
+        recive_can_msg_test(1);
         
 
         //usikker på hva dette gjør, rører ikke når jeg skriver tests

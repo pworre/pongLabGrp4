@@ -129,12 +129,12 @@ ISR(INT0_vect){
         //CAN_CTRL_write(CANINTF, 0);
         //printf("Receive buffer 0 full!\r\n");
 
-        msg_global = can_recive_msg(0);
+        can_recive_msg(&msg_global, 0);
         CAN_CTRL_bit_modify(CANINTF, (1 << RX0IF), 0);
     } else if ((can_int_reg & (1 << RX1IF)) != 0){  // Receive buffer 1 full
         //printf("Receive buffer 1 full!\r\n");
         
-        msg_global = can_recive_msg(1);
+        can_recive_msg(&msg_global, 1);
         CAN_CTRL_bit_modify(CANINTF, (1 << RX1IF), 0);
     } else if ((can_int_reg & (1 << TX0IF)) != 0){  // Transmit buffer 0 empty
         // Clear interrupt
@@ -236,8 +236,8 @@ void can_send_msg(CAN_MESSAGE can_msg){
     CAN_CTRL_RTS();
 
     // Check for errors
-    uint8_t reg = MCP2515_Read(TXB0CTRL);
-    if (reg & (1 << TXREQ))
+    uint8_t reg = CAN_CTRL_read(TXB0CTRL);
+    if (reg & (1 << 3)) //TXREQ
     {
         if (reg & (1 << 4)) //TXERR
         {
@@ -276,47 +276,46 @@ void can_send_msg(CAN_MESSAGE can_msg){
 }*/
 
 
-CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
-    CAN_MESSAGE msg = {};
+int can_recive_msg(CAN_MESSAGE *msg, uint8_t buffer_nr){
     uint8_t idH = 0;
     uint8_t idL = 0;
     if (buffer_nr == 1){
-        if (!(MCP2515_Read(MCP_CANINTF) & (1 << RX0IF))){
+        if (!(CAN_CTRL_read(MCP_CANINTF) & (1 << RX0IF))){
         printf("ikke interrupt flag på at noe er mottat\r\n");
         return 0;
         }
         idH = CAN_CTRL_read(RXB0SIDH);
         idL = CAN_CTRL_read(RXB0SIDL);
-        msg.id = (idH << 3) + (idL >> 5);
+        msg->id = (idH << 3) + (idL >> 5);
 
-        msg.size = CAN_CTRL_read(RXB0DLC);
-        if (msg.size > 8){
-            msg.size = 8;
+        msg->size = CAN_CTRL_read(RXB0DLC);
+        if (msg->size > 8){
+            msg->size = 8;
         }
 
-        for (uint8_t i = 0; i < msg.size; i++){
-            msg.data[i] = CAN_CTRL_read(RXB0D0 + i);
+        for (uint8_t i = 0; i < msg->size; i++){
+            msg->data[i] = CAN_CTRL_read(RXB0D0 + i);
         }
         //sett CANINTF.RX0IF = 0 to signal that the msg is fetched at buffer RX0
         CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
     }
     else if (buffer_nr == 2){
-        if (!(MCP2515_Read(MCP_CANINTF) & (1 << RX1IF))){
+        if (!(CAN_CTRL_read(MCP_CANINTF) & (1 << RX1IF))){
         printf("ikke interrupt flag på at noe er mottat\r\n");
         return 0;
         }
 
         idH = CAN_CTRL_read(RXB1SIDH);
         idL = CAN_CTRL_read(RXB1SIDL);
-        msg.id = (idH << 3) + (idL >> 5);
+        msg->id = (idH << 3) + (idL >> 5);
 
-        msg.size = CAN_CTRL_read(RXB1DLC);
-        if (msg.size > 8){
-            msg.size = 8;
+        msg->size = CAN_CTRL_read(RXB1DLC);
+        if (msg->size > 8){
+            msg->size = 8;
         }
 
-        for (uint8_t i = 0; i < msg.size; i++){
-            msg.data[i] = CAN_CTRL_read(RXB1D0 + i);
+        for (uint8_t i = 0; i < msg->size; i++){
+            msg->data[i] = CAN_CTRL_read(RXB1D0 + i);
         }
 
         //sett CANINTF.RX1IF = 0 to signal that the msg is fetched at buffer RX1

@@ -29,7 +29,7 @@ typedef struct{
 } CAN_MESSAGE;
 
 void can_send_msg(CAN_MESSAGE can_msg);
-CAN_MESSAGE can_recive_msg(uint8_t buffer_nr);
+int can_recive_msg(CAN_MESSAGE *msg, uint8_t buffer_nr);
 
 CAN_MESSAGE msg_global;
 

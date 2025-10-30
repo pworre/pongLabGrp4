@@ -18,6 +18,10 @@ int main(){
 
     USART0_Init(MYUBRR);
     fdevopen(USART0_send, USART0_read);
+    while (1)
+    {
+        printf("HEI");
+    }
     sram_init();
     //SRAM_test();
     //io_board_init();
@@ -29,7 +33,7 @@ int main(){
     print_CNx_registers();
     
     while (1){
-        //send_can_msg_test(1);
+        send_can_msg_test(1);
         //recive_can_msg_test(1);
     }
 
