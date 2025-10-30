@@ -103,9 +103,9 @@ void CAN_CTRL_init(void){
     // CAN NORMAL MODE
     uint8_t mode_mask = (1 << REQOP2) | (1 << REQOP1) | (1 << REQOP0);
     uint8_t data;
-    if (normalMode)[
+    if (normalMode){
         data = 0;
-    ] else {
+    } else {
         data = 2;
     }
     CAN_CTRL_bit_modify(MCP_CANCTRL, mode_mask, data);
