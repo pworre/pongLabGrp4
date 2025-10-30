@@ -8,10 +8,10 @@ uint8_t tx_reg2_ready = 1;
 CAN_MESSAGE msg_global;
 
 #define fosc 16000000 // Hz
-#define bitrate 500000 // bit/s
+#define bitrate 250000 // bit/s
 #define TQ_per_bit 16
 #define TQ_time (1.0f/(bitrate * TQ_per_bit))
-#define BRP 1
+#define BRP ((uint32_t)(fosc/(TQ_per_bit*bitrate))/2) // 1
 #define synchSeg 1
 #define propSeg 2
 #define phase1 7

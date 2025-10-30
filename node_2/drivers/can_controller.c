@@ -13,7 +13,7 @@
 #include "sam.h"
 
 #define fosc 84000000 // Hz
-#define bitrate 500000 // bit/s
+#define bitrate 250000 // bit/s
 #define TQ_per_bit 16
 #define TQ_time (1.0f/(bitrate * TQ_per_bit))
 #define BRP ((uint32_t)(fosc/(TQ_per_bit*bitrate)) - 1)

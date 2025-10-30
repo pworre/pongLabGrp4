@@ -3,8 +3,8 @@
 
 void send_can_msg_test(uint8_t decode){
     CAN_MESSAGE message;
-    message.data[0] = 6;
-    message.data[1] = 7;
+    message.data[0] = 10;
+    message.data[1] = 11;
     message.size = 2;
     message.id = 9;
 
@@ -44,7 +44,7 @@ void recive_can_msg_test(uint8_t decode){
     uint8_t i = 0;
 
     while (1){
-        can_recive_msg(&message, 0);
+        can_recive_msg(&message, 1);
         _delay_ms(100);
         
         // printf("\r\nRECIVE: Iteration %u\r\n", i);
