@@ -13,6 +13,7 @@
         "menu.h": "c",
         "delay.h": "c",
         "can_driver.h": "c",
-        "mcp2515_registers.h": "c"
+        "mcp2515_registers.h": "c",
+        "can_ctrl.h": "c"
     }
 }

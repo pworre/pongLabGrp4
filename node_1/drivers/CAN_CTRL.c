@@ -75,15 +75,15 @@ void CAN_CTRL_init(void){
 
     // SETUP CONFIG REGISTERS
     // Setup CNF1  
-    MCP2515_BitModify(MCP_CNF1, 0b00111111, BRP);
-    MCP2515_BitModify(MCP_CNF1, 0b11000000, 0x0);
+    CAN_CTRL_bit_modify(MCP_CNF1, 0b00111111, BRP);
+    CAN_CTRL_bit_modify(MCP_CNF1, 0b11000000, 0x0);
     //Setup CNF2
-    MCP2515_BitModify(MCP_CNF2, 0b00111000, (6 << PHSEG10));
-    MCP2515_BitModify(MCP_CNF2, 0b00000111, (1 << PRSEG0));
-    MCP2515_BitModify(MCP_CNF2, 0b01000000, (0 << SAM));
-    MCP2515_BitModify(MCP_CNF2, 0b10000000, (1 << BTLMODE));
+    CAN_CTRL_bit_modify(MCP_CNF2, 0b00111000, (6 << PHSEG10));
+    CAN_CTRL_bit_modify(MCP_CNF2, 0b00000111, (1 << PRSEG0));
+    CAN_CTRL_bit_modify(MCP_CNF2, 0b01000000, (0 << SAM));
+    CAN_CTRL_bit_modify(MCP_CNF2, 0b10000000, (1 << BTLMODE));
     //Setup CNF3
-    MCP2515_BitModify(MCP_CNF3, 0b00000111, PS2);
+    CAN_CTRL_bit_modify(MCP_CNF3, 0b00000111, PS2);
 
     // Enable CAN-INTERRUPT
     CAN_CTRL_write(MCP_CANINTE, 0b10111111); // All, except wake-up
