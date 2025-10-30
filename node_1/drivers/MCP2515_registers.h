@@ -351,4 +351,9 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define TXERR 4
 #define MLOA 5
 
+#define REQOP2          7
+#define REQOP1          6
+#define REQOP0          5
+
+
 #endif
