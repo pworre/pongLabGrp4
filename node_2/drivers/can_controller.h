@@ -37,7 +37,7 @@ typedef struct can_message_t
 } CAN_MESSAGE;
 
 uint8_t can_init_def_tx_rx_mb(CanInit can_init);
-uint8_t can_init(CanInit can_init), uint8_t num_tx_mb, uint8_t num_rx_mb);
+uint8_t can_init(CanInit can_init, uint8_t num_tx_mb, uint8_t num_rx_mb);
 
 uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t mailbox_id);
 uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t mailbox_id);
