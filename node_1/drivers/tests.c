@@ -47,17 +47,17 @@ void recive_can_msg_test(uint8_t decode){
         can_recive_msg(&message, 0);
         _delay_ms(100);
         
-        printf("\r\nRECIVE: Iteration %u\r\n", i);
-        printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", message.id, message.size, message.data[0], message.data[1]); 
+        // printf("\r\nRECIVE: Iteration %u\r\n", i);
+        // printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", message.id, message.size, message.data[0], message.data[1]); 
 
-        status_reg = CAN_CTRL_read(MCP_CANSTAT);
-        error_reg = CAN_CTRL_read(MCP_EFLG);
-        if (decode){
-            printf("Status reg:     ");
-            print_byte(status_reg);
-            printf("Error reg:      ");
-            print_byte(error_reg);
-        }
+        // status_reg = CAN_CTRL_read(MCP_CANSTAT);
+        // error_reg = CAN_CTRL_read(MCP_EFLG);
+        // if (decode){
+        //     printf("Status reg:     ");
+        //     print_byte(status_reg);
+        //     printf("Error reg:      ");
+        //     print_byte(error_reg);
+        // }
         i++;
         _delay_ms(1000);
     }
@@ -80,8 +80,8 @@ void send_joystick_with_can(void){
         can_send_msg(message);
         _delay_ms(100);
         
-        printf("\r\nSEND JOYSTICK: Iteration %u\r\n", i);
-        printf("msg_id = %u    msg_size = %u    X = %u    Y = %u\r\n", message.id, message.size, message.data[0], message.data[1]); 
+        // printf("\r\nSEND JOYSTICK: Iteration %u\r\n", i);
+        // printf("msg_id = %u    msg_size = %u    X = %u    Y = %u\r\n", message.id, message.size, message.data[0], message.data[1]); 
         i++;
         _delay_ms(1000);
     }

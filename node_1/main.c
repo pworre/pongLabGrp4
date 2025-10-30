@@ -26,6 +26,7 @@ int main(){
     oled_init();
     CAN_CTRL_init();
 
+
     print_CNx_registers();
     
     while (1){
