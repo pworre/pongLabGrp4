@@ -36,7 +36,7 @@ int main()
     uint8_t num_rx_mb = 2;
     //can_init_def_tx_rx_mb(can_br);
     can_init(can_br, num_tx_mb, num_rx_mb);
-    __enable_irq();
+    //__enable_irq();
 
     uint32_t primask = __get_PRIMASK();
     if (primask == 0){
@@ -49,7 +49,7 @@ int main()
         // TEST NODE 2 LOOPBACKMODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // CAN0->CAN_MR |= CAN_MR_LPM;  // Loopback Mode
         //send_can_msg_test(1);
-        recive_can_msg_test(1);
+        recive_can_msg_test(0);
         
 
         //usikker på hva dette gjør, rører ikke når jeg skriver tests

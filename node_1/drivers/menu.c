@@ -3,7 +3,6 @@
 volatile uint8_t high_scores[5] = {76, 46, 23, 3, 1};
 
 void main_menu(void){
-    printf("I Main menu");
     draw_main_menu();
     while (1){
         _delay_ms(50);
@@ -248,7 +247,6 @@ void draw_settings_menu(void){
 } //tegne til undermeny i nedre høyre halvdel
 
 void clear_submenu(void){
-    printf("FJERNER SUBMENY!");
     for (uint8_t page = 2; page < 8; page++){
         for (int col = 63; col < 128; col++){ // OBS!!!
             oled_write_byte(page, col, 0x00);

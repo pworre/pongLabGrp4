@@ -50,7 +50,7 @@ void recive_can_msg_test(uint32_t decode){
             printf("MOTTAR :)");
         }
         
-        printf("\r\nRecive: Iteration %u\r\n", i);
+        //printf("\r\nRecive: Iteration %u\r\n", i);
         printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", message.id, message.data_length, message.data[0], message.data[1]); 
 
         if (decode){
@@ -60,7 +60,7 @@ void recive_can_msg_test(uint32_t decode){
         }
         i++;
         //delay
-        for(volatile uint32_t i = 0; i < 7000000; i++){
+        for(volatile uint32_t i = 0; i < 1000000; i++){
             __asm__("nop");
         }
     }

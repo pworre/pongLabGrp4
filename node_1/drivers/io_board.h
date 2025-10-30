@@ -7,7 +7,7 @@
 #ifndef IO_BOARD_H
 #define IO_BOARD_H
 
-static int8_t scaled_values[4];
+volatile int8_t scaled_values[4];
 
 void io_board_init();
 void ADC_read(void);
