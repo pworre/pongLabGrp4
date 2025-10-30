@@ -18,16 +18,12 @@ int main(){
 
     USART0_Init(MYUBRR);
     fdevopen(USART0_send, USART0_read);
-    while (1)
-    {
-        printf("HEI");
-    }
     sram_init();
     //SRAM_test();
-    //io_board_init();
+    io_board_init();
     //io_board_calibration();
     SPI_MasterInit();
-    //oled_init();
+    oled_init();
     CAN_CTRL_init();
 
     print_CNx_registers();
