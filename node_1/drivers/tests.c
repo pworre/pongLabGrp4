@@ -25,7 +25,7 @@ void send_can_msg_test(uint8_t decode){
             printf("Status reg:     ");
             print_byte(status_reg);
             printf("Error reg:      ");
-            print_bytee(error_reg);
+            print_byte(error_reg);
         }
         i++;
         _delay_ms(1000);
@@ -44,7 +44,7 @@ void recive_can_msg_test(uint8_t decode){
     uint8_t i = 0;
 
     while (1){
-        message = can_recive_msg(0);
+        can_recive_msg(&message, 0);
         _delay_ms(100);
         
         printf("\r\nRECIVE: Iteration %u\r\n", i);
@@ -56,7 +56,7 @@ void recive_can_msg_test(uint8_t decode){
             printf("Status reg:     ");
             print_byte(status_reg);
             printf("Error reg:      ");
-            print_bytee(error_reg);
+            print_byte(error_reg);
         }
         i++;
         _delay_ms(1000);
@@ -69,6 +69,7 @@ void send_joystick_with_can(void){
     message.data[1] = 0;
     message.size = 2;
     message.id = 0x0f;
+    uint8_t i = 0;
 
     while (1)
     {   
