@@ -12,6 +12,9 @@
 #ifndef CAN_CONTROLLER_H_
 #define CAN_CONTROLLER_H_
 
+#define can_id_io_board 0x0f
+#define can_id_game_logic 0xf0
+
 #include <stdint.h>
 
 typedef struct can_message_t

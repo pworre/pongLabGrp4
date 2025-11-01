@@ -13,7 +13,7 @@ void pwm_init(){
     
     // motor shield "Servo SIG" uses PB13
     PMC->PMC_PCER0 |= PMC_PCER0_PID12;
-    PIOB->PIO_PDR = PIO_PDR_P13;
+    PIOB->PIO_PDR |= PIO_PDR_P13;
     PIOB->PIO_ABSR |= PIO_ABSR_P13;
     PIOB->PIO_MDDR |= (1 << SIG_pin);   // output write
 

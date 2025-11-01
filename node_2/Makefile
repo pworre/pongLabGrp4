@@ -13,7 +13,9 @@ SOURCE_FILES = \
 	drivers/can_interrupt.c \
 	drivers/can_controller.c \
 	drivers/tests.c \
-	drivers/pwm.c
+	drivers/pwm.c\
+	drivers/adc.c\
+	drivers/timer_counter.c\
 #	../path_to/uart.c \
 #   filename1.c \
 #   filename2.c \

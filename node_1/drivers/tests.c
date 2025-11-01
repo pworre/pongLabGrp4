@@ -89,9 +89,9 @@ void send_joystick_with_can(void){
         can_send_msg(message);
         _delay_ms(100);
         
-        printf("\r\nSEND JOYSTICK: Iteration %u\r\n", i);
-        printf("msg_id = %u    msg_size = %u    X = %d    Y = %d\r\n", message.id, message.size, message.data[0], message.data[1]); 
-        i++;
+        // printf("\r\nSEND JOYSTICK: Iteration %u\r\n", i);
+        // printf("msg_id = %u    msg_size = %u    X = %d    Y = %d\r\n", message.id, message.size, message.data[0], message.data[1]); 
+        // i++;
         _delay_ms(100);
     }
 }
