@@ -68,8 +68,13 @@ void send_joystick_with_can(void){
     CAN_MESSAGE message;
     message.data[0] = 0;
     message.data[1] = 0;
-    message.size = 2;
+    message.data[2] = 0;
+    message.data[3] = 0;
+    message.data[4] = 0;
+    message.data[5] = 0;
+    message.size = 6;
     message.id = 0x0f;
+
     uint8_t i = 0;
 
     while (1)
@@ -77,6 +82,9 @@ void send_joystick_with_can(void){
         get_io_board_values();
         message.data[0] = scaled_values[0];
         message.data[1] = scaled_values[1];
+        message.data[2] = buttons.right;
+        message.data[3] = buttons.left;
+        message.data[4] = buttons.nav;
 
         can_send_msg(message);
         _delay_ms(100);
@@ -84,7 +92,7 @@ void send_joystick_with_can(void){
         printf("\r\nSEND JOYSTICK: Iteration %u\r\n", i);
         printf("msg_id = %u    msg_size = %u    X = %d    Y = %d\r\n", message.id, message.size, message.data[0], message.data[1]); 
         i++;
-        _delay_ms(200);
+        _delay_ms(100);
     }
 }
 

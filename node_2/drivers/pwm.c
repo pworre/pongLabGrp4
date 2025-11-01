@@ -5,10 +5,6 @@
 // PWM freq 50 Hz or 20 ms
 // Dutycycle 0.9 -> 2.1 ms
 
-// Period
-#define CPRD 13125
-#define dutycycle_percentage_lower_bound 5
-#define dutycycle_percentage_upper_bound 10
 
 
 void pwm_init(){
@@ -57,12 +53,12 @@ void pwm_init(){
     return;
 }
 
-void pwm_set_dutycycle(uint32_t dutycycle_percentage){
-    if (dutycycle_percentage > dutycycle_percentage_upper_bound){
-        dutycycle_percentage = dutycycle_percentage_upper_bound;
+void pwm_set_dutycycle(uint32_t dutycycle){
+    if (dutycycle > dutycycle_upper_bound){
+        dutycycle = dutycycle_upper_bound;
     }
-    else if ( dutycycle_percentage < dutycycle_percentage_lower_bound){
-        dutycycle_percentage = dutycycle_percentage_lower_bound;
+    else if ( dutycycle < dutycycle_lower_bound){
+        dutycycle = dutycycle_lower_bound;
     }
-    PWM->PWM_CH_NUM[1].PWM_CDTYUPD = (dutycycle_percentage * CPRD) / 100;
+    PWM->PWM_CH_NUM[1].PWM_CDTYUPD = dutycycle;
 }

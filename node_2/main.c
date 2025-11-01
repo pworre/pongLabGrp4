@@ -48,8 +48,8 @@ int main()
     
     while (1)
     {
-        pwm_set_dutycycle(3);
-        __asm__("nop");
+        controll_servo_with_io_board_test();
+        
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
     }

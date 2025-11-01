@@ -66,61 +66,36 @@ void recive_can_msg_test(uint32_t decode){
     }
 }
 
-
-void loop_back_mode_test(void){
-
-    //initialliser looback mode!!!
-
-    CAN_MESSAGE send_message;
-    send_message.data[0] = 6;
-    send_message.data[1] = 7;
-    send_message.data_length = 2;
-    send_message.id = 9;
-    CAN_MESSAGE recive_message;
-    recive_message.data[0] = 0;
-    recive_message.data[1] = 0;
-    recive_message.data_length = 2;
-    recive_message.id = 0;
-    uint32_t i = 0;
-
-    uint32_t status_reg = 0;
+void controll_servo_with_io_board_test(void){
+    CAN_MESSAGE message;
+    message.data[0] = 0; //joystick -x
+    message.data[1] = 0; //joystick -y
+    message.data[2] = 0; //right buttons
+    message.data[3] = 0; //left buttons
+    message.data[4] = 0; //nav buttons
+    message.data[5] = 0;
+    message.data_length= 6;
+    message.id = 0x0f;
 
     while(1){
+        can_receive(&message, 1);
 
-        if (can_send(&send_message, 1) == 1){
-            printf("ikke sender\r\n");
-        } else {
-            printf("SENDER :)");
-            printf("\r\nSEND: Iteration %u\r\n", i);
-            printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", send_message.id, send_message.data_length, send_message.data[0], send_message.data[1]); 
+        if ((message.data[2] & 1) == 1){ //steer servo to the rigth if SR1 is pressed
+            pwm_set_dutycycle(dutycycle_upper_bound);
+        }
+        else if ((message.data[3] & 1) == 1){ //steer servo to the left if SL1 is pressed
+            pwm_set_dutycycle(dutycycle_lower_bound);
+        }
+        else{ //steer servo to the middle if nothning is pressed
+            pwm_set_dutycycle(dutycycle_middle);
         }
 
-        for(volatile uint32_t i = 0; i < 70000; i++){
-            __asm__("nop");
-        }
-
-        if (can_receive(&recive_message, 2) == 1){
-            printf("ikke mottar\r\n");
-        } else {
-            printf("MOTTAR :)");
-            printf("\r\nRecive: Iteration %u\r\n", i);
-            printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", recive_message.id, recive_message.data_length, recive_message.data[0], recive_message.data[1]); 
-        }
-
-        status_reg = CAN0->CAN_SR;
-        printf("Satus reg = ");
-        print_reg(status_reg);
-
-        send_message.data[0]++;
-        send_message.data[1]++;
-        send_message.id++;
-
-        for(volatile uint32_t i = 0; i < 7000000; i++){
+        for(volatile uint32_t i = 0; i < 1000000; i++){
             __asm__("nop");
         }
     }
-    
 }
+
 
 void print_reg(uint32_t number){
     for (uint32_t p = 32; p >= 1; p--){

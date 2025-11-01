@@ -21,13 +21,10 @@ int main(){
     sram_init();
     //SRAM_test();
     io_board_init();
-    //io_board_calibration();
+    io_board_calibration();
     SPI_MasterInit();
     oled_init();
     CAN_CTRL_init();
-
-
-    print_CNx_registers();
     
     while (1){
         //send_can_msg_test(1);
