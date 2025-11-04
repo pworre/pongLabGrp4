@@ -23,33 +23,32 @@
 int main()
 {
     SystemInit();
-    
-    
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
     pwm_init();
     uart_init(84000000, 9600);
 
-    //uint32_t can_br = 0x001c0008;
-    uint32_t can_br = 500000;
+    uint32_t can_br = 250000; //not used
     uint8_t num_tx_mb = 2;
     uint8_t num_rx_mb = 2;
     //can_init_def_tx_rx_mb(can_br);
-    //can_init(can_br, num_tx_mb, num_rx_mb);
+    can_init(can_br, num_tx_mb, num_rx_mb);
     
 
     // uint32_t primask = __get_PRIMASK();
     // if (primask == 0){
     //     printf("Global interrupt enabled\r\n");
     // }
-    timer_counter_init(0, 656250);
+    timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
     __enable_irq();
     
     while (1)
     {
         //controll_servo_with_io_board_test();
-        printf("Score: %u\r\n", score);
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
+
+        uint32_t adc_value = ADC->ADC_LCDR;
+        printf("adc value = %u\r\n", adc_value);
 
         for(volatile uint32_t i = 0; i < 1000000; i++){
             __asm__("nop");

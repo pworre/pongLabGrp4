@@ -42,7 +42,7 @@ void pwm_init(){
     PWM->PWM_CH_NUM[1].PWM_CPRD = CPRD;
 
     // Channdel dutycycle 50% for now
-    PWM->PWM_CH_NUM[1].PWM_CDTY = ((CPRD) / 2);
+    PWM->PWM_CH_NUM[1].PWM_CDTY = dutycycle_middle;
 
     // PWM Enable
     PWM->PWM_ENA = PWM_ENA_CHID1;

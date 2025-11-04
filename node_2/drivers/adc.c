@@ -6,16 +6,16 @@ void adc_init_freerun(void){//setting up the A6pin for ADC
     //Reset ADC, ready for init
     ADC->ADC_CR |= ADC_CR_SWRST;
 
-    // Enable peripheral clock for ADC for PID36
+    // Enable peripheral clock for ADC for PID37
     PMC->PMC_PCER1 |= (1 << 5);
 
     //disable PIO for pin A6 
-    PMC->PMC_PCER0 |= PMC_PCER0_PID11;
+    PMC->PMC_PCER0 |= PMC_PCDR0_PID11;
     PIOA->PIO_PDR |= PIO_PA24X1_AD6;
     PIOA->PIO_ABSR |= PIO_PA24X1_AD6;
     
     //disable write protection, kode: "ADC" in ascii
-    ADC->ADC_WPMR |= (0x414443 << ADC_WPMR_WPKEY_Pos);
+    ADC->ADC_WPMR = (0x414443 << ADC_WPMR_WPKEY_Pos);
     ADC->ADC_WPMR &= ~(1 << ADC_WPMR_WPEN);
 
     //select channel 6 as a ADC periferal (A6) i hope
@@ -23,7 +23,7 @@ void adc_init_freerun(void){//setting up the A6pin for ADC
 
     //emable hardware trigger, freerun mode and ADC clock = MCL/32
     ADC->ADC_MR |= (ADC_MR_TRGEN_EN) | (ADC_MR_FREERUN_ON) | (ADC_MR_PRESCAL(32));
-    ADC->ADC_MR &= ~(ADC_MR_SLEEP) | (ADC_MR_LOWRES);
+    ADC->ADC_MR &= ~(ADC_MR_SLEEP | ADC_MR_LOWRES);
     
     //enable comparison event interrupt
     ADC->ADC_IER |= ADC_IER_COMPE;
@@ -35,7 +35,7 @@ void adc_init_freerun(void){//setting up the A6pin for ADC
     ADC->ADC_EMR |= (6 << ADC_EMR_CMPSEL_Pos);
 
     //setting low threshold
-    ADC->ADC_CWR |= ADC_LOWER_TRESHHOLD; //THIS MUST DE TESTED AND CHANGED!!!!
+    ADC->ADC_CWR |= ADC_LOWER_TRESHHOLD; //THIS VALUE MUST DE TESTED AND CHANGED!!!!
 }
 
 void ADC_Handler(void){

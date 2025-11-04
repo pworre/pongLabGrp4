@@ -1,7 +1,7 @@
-#ifndef ADC_H_
+#ifndef ADC_H
 #define ADC_H
 
-#define ADC_LOWER_TRESHHOLD 1000 //change to make it make sence
+#define ADC_LOWER_TRESHHOLD 0 //change to make it make sence
 
 void adc_init_freerun(void);
 
