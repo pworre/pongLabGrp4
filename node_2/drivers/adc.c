@@ -22,8 +22,8 @@ void adc_init_freerun(void){//setting up the A6pin for ADC
     ADC->ADC_CHER |= ADC_CHER_CH6;
 
     //emable hardware trigger, freerun mode and ADC clock = MCL/32
-    ADC->ADC_MR |= (ADC_MR_TRGEN_EN) | (ADC_MR_FREERUN_ON) | (ADC_MR_PRESCAL(32));
-    ADC->ADC_MR &= ~(ADC_MR_SLEEP | ADC_MR_LOWRES);
+    ADC->ADC_MR |= (ADC_MR_FREERUN_ON) | (ADC_MR_PRESCAL(32));
+    ADC->ADC_MR &= ~(ADC_MR_SLEEP | ADC_MR_LOWRES | ADC_MR_TRGEN);
     
     //enable comparison event interrupt
     ADC->ADC_IER |= ADC_IER_COMPE;
