@@ -43,12 +43,12 @@ int main()
     
     while (1)
     {
-        //controll_servo_with_io_board_test();
+        controll_servo_with_io_board_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
 
-        uint32_t adc_value = ADC->ADC_LCDR;
-        printf("adc value = %u\r\n", adc_value);
+        // uint32_t adc_value = ADC->ADC_LCDR;
+        // printf("adc value = %u\r\n", adc_value);
 
         for(volatile uint32_t i = 0; i < 1000000; i++){
             __asm__("nop");
