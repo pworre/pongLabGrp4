@@ -66,7 +66,7 @@ void recive_can_msg_test(uint32_t decode){
     }
 }
 
-void controll_servo_with_io_board_test(void){
+void controll_servo_with_buttons_test(void){
     CAN_MESSAGE message;
     message.data[0] = 0; //joystick -x
     message.data[1] = 0; //joystick -y
@@ -91,6 +91,32 @@ void controll_servo_with_io_board_test(void){
         }
 
         for(volatile uint32_t i = 0; i < 1000000; i++){
+            __asm__("nop");
+        }
+    }
+}
+
+void controll_servo_with_joystick_test(void){
+    CAN_MESSAGE message;
+    message.data[0] = 0; //joystick -x
+    message.data[1] = 0; //joystick -y
+    message.data[2] = 0; //right buttons
+    message.data[3] = 0; //left buttons
+    message.data[4] = 0; //nav buttons
+    message.data[5] = 0;
+    message.data_length= 6;
+    message.id = 0x0f;
+
+    uint32_t duty_cycle = 0;
+
+    while(1){
+        can_receive(&message, 1);
+
+        duty_cycle = (((dutycycle_upper_bound - dutycycle_lower_bound ) * message.data[1]) / 200) + dutycycle_middle;
+
+        pwm_set_dutycycle(duty_cycle);
+
+        for(volatile uint32_t i = 0; i < 10000; i++){
             __asm__("nop");
         }
     }
