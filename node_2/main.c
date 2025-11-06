@@ -7,6 +7,7 @@
 #include "drivers/pwm.h"
 #include "drivers/adc.h"
 #include "drivers/timer_counter.h"
+#include "drivers/encoder.h"
 //#include <util/delay.h>
 
 /*
@@ -20,6 +21,11 @@
  */
 //#include "../path_to/uart.h"
 
+    // uint32_t primask = __get_PRIMASK();
+    // if (primask == 0){
+    //     printf("Global interrupt enabled\r\n");
+    // }
+
 int main()
 {
     SystemInit();
@@ -30,21 +36,24 @@ int main()
     uint32_t can_br = 250000; //not used
     uint8_t num_tx_mb = 2;
     uint8_t num_rx_mb = 2;
-    //can_init_def_tx_rx_mb(can_br);
     can_init(can_br, num_tx_mb, num_rx_mb);
+    
     adc_init_freerun();
     
-    // uint32_t primask = __get_PRIMASK();
-    // if (primask == 0){
-    //     printf("Global interrupt enabled\r\n");
-    // }
+
     timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
     __enable_irq();
+
+    init_encoder();
     
     while (1)
     {
         controll_servo_with_joystick_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
+
+        uint32_t encoder_value = read_encoder();
+        printf("Encoder value: %d\r\n", encoder_value);
+
     }
 }

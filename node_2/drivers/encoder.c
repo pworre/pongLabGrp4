@@ -1,0 +1,34 @@
+#include "encoder.h"
+
+// Pins PC25-26
+// Timer-counter 2
+
+void init_encoder(void){
+    PMC->PMC_PCER0 |= PMC_PCER0_PID29; //enable clock for TC2
+    PIOC->PIO_PDR |= (PIO_PC25 | PIO_PC26); //disable periferal
+    PIOC-> PIO_ABSR |= (PIO_PC25 | PIO_PC26); //select periferal B
+
+    // disable Write-protection
+    TC2->TC_WPMR = (0x54494D << TC_WPMR_WPKEY_Pos);
+
+    TC2->TC_CHANNEL[0].TC_CMR &= ~TC_CMR_WAVE; // enable capture mode
+    TC2->TC_CHANNEL[0].TC_CMR |= TC_CMR_TCCLKS_XC0; // Sets XC0 as clock
+    TC2->TC_CHANNEL[0].TC_CMR |= TC_CMR_ETRGEDG_RISING; // Trigger edge selection
+    TC2->TC_CHANNEL[0].TC_CMR |= TC_CMR_ABETRG; // TIOA as external trigger
+
+    // Quadratic Mode
+    TC2->TC_BMR = 0;
+    TC2->TC_BMR |= TC_BMR_QDEN;
+    TC2->TC_BMR |= TC_BMR_POSEN;
+    TC2->TC_BMR |= TC_BMR_EDGPHA;
+    PMC->PMC_PCER0 |= PMC_PCER0_PID12;
+    // Starts TC2
+    TC2->TC_CHANNEL[0].TC_CCR |= (TC_CCR_CLKEN | TC_CCR_SWTRG);
+
+    // enable write-protection
+    TC2->TC_WPMR |= 1;
+}
+
+uint32_t read_encoder(void){
+    return (TC2->TC_CHANNEL[0].TC_CV);
+}

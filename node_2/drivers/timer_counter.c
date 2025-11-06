@@ -22,6 +22,9 @@ void timer_counter_init(uint32_t tc_channel, uint32_t period){
         break;
     }
 
+    // Disable write-protection
+    TC0->TC_WPMR = (0x54494D << TC_WPMR_WPKEY_Pos);
+
     TC0->TC_CHANNEL[tc_channel].TC_CMR |= TC_CMR_WAVE; //sets waveform mode
     TC0->TC_CHANNEL[tc_channel].TC_CMR |= TC_CMR_TCCLKS_TIMER_CLOCK4; //prescaled the TC clock by 128
     TC0->TC_CHANNEL[tc_channel].TC_CMR |= TC_CMR_WAVSEL_UP_RC; // sets wavemode to UP_RC
@@ -42,6 +45,9 @@ void timer_counter_init(uint32_t tc_channel, uint32_t period){
     else {
         printf("not a used timer counter!");
     }
+
+    // enable write-protection
+    TC0->TC_WPMR |= 1;
 }
 
 //write the interrupts handlers

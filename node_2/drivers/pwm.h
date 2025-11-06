@@ -7,7 +7,7 @@
 #define CPRD 13125
 #define dutycycle_lower_bound 657
 #define dutycycle_upper_bound 1312
-#define dutycycle_middle 984
+#define dutycycle_middle 990
 
 
 void pwm_init(void);

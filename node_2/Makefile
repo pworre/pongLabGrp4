@@ -16,6 +16,8 @@ SOURCE_FILES = \
 	drivers/pwm.c\
 	drivers/adc.c\
 	drivers/timer_counter.c\
+	drivers/encoder.c\
+	drivers/motor.c\
 #	../path_to/uart.c \
 #   filename1.c \
 #   filename2.c \
