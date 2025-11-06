@@ -108,18 +108,25 @@ void controll_servo_with_joystick_test(void){
     message.id = 0x0f;
 
     int32_t duty_cycle = 0;
+    uint32_t i = 0;
 
     while(1){
         can_receive(&message, 1);
-        printf("y-axis: %d\r\n", message.data[1]);
+        //printf("y-axis: %d\r\n", message.data[1]);
 
         duty_cycle = (((dutycycle_upper_bound - dutycycle_lower_bound ) * message.data[1]) / 200) + dutycycle_middle;
 
         pwm_set_dutycycle(duty_cycle);
 
-        for(volatile uint32_t i = 0; i < 10000; i++){
+        int32_t adc_value = (ADC->ADC_CDR[6]) & 0xfff;
+        if (i%1000 == 0){
+            printf("adc value = %u\r\n", adc_value);
+            printf("score: %d\r\n", score);
+        }
+        for(volatile uint32_t i = 0; i < 1000; i++){
             __asm__("nop");
         }
+        i++;
     }
 }
 

@@ -65,7 +65,7 @@ void ADC_Handler(void){
         uint32_t adc_value = ADC->ADC_LCDR;
         //global value lives??
         if(adc_value < ADC_LOWER_TRESHHOLD ){
-            printf("You missed the ball!");
+            printf("You missed the ball!\r\n");
         }
     }else{
         __asm__("nop");
