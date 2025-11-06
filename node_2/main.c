@@ -8,7 +8,6 @@
 #include "drivers/adc.h"
 #include "drivers/timer_counter.h"
 //#include <util/delay.h>
-
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
  * This starter code will not compile until the UART file has been included in the Makefile. 
@@ -34,7 +33,6 @@ int main()
     can_init(can_br, num_tx_mb, num_rx_mb);
     //adc_init_freerun();
     
-
     // uint32_t primask = __get_PRIMASK();
     // if (primask == 0){
     //     printf("Global interrupt enabled\r\n");
@@ -47,8 +45,5 @@ int main()
         controll_servo_with_joystick_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
-
-
-        
     }
 }

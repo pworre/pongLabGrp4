@@ -50,7 +50,8 @@ void adc_init_freerun(void){
     ADC->ADC_EMR &= ~(1 << ADC_EMR_CMPMODE_Pos);
     //compare on channel 6 / A6
     ADC->ADC_EMR |= (6 << ADC_EMR_CMPSEL_Pos);
-    //set CH6 for LCDR
+    //must have 5 consecutive comp interrupts to generate ine interrupt
+    ADC->ADC_EMR |= (2 << ADC_EMR_CMPFILTER);
 
     //setting low threshold
     ADC->ADC_CWR |= ADC_LOWER_TRESHHOLD; //THIS VALUE MUST DE TESTED AND CHANGED!!!!
