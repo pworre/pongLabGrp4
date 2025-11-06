@@ -1,10 +1,10 @@
 #include "encoder.h"
 
 // Pins PC25-26
-// Timer-counter 2
+// Timer-counter 6
 
 void init_encoder(void){
-    PMC->PMC_PCER0 |= PMC_PCER0_PID29; //enable clock for TC2
+    PMC->PMC_PCER1 |= PMC_PCER1_PID33; //enable clock for TC6
     PIOC->PIO_PDR |= (PIO_PC25 | PIO_PC26); //disable periferal
     PIOC-> PIO_ABSR |= (PIO_PC25 | PIO_PC26); //select periferal B
 
@@ -26,7 +26,7 @@ void init_encoder(void){
     TC2->TC_CHANNEL[0].TC_CCR |= (TC_CCR_CLKEN | TC_CCR_SWTRG);
 
     // enable write-protection
-    TC2->TC_WPMR |= 1;
+    TC2->TC_WPMR = ((0x54494D << TC_WPMR_WPKEY_Pos) | (1 << 0));
 }
 
 uint32_t read_encoder(void){
