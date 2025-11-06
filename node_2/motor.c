@@ -36,10 +36,10 @@ void motor_init(void){
     PWM->PWM_CH_NUM[1].PWM_CMR &= ~(1 << 10);
 
     // Channel period
-    //PWM->PWM_CH_NUM[1].PWM_CPRD = CPRD;
+    PWM->PWM_CH_NUM[1].PWM_CPRD = CPRD;
 
     // Channdel dutycycle 50% for now
-    //PWM->PWM_CH_NUM[1].PWM_CDTY = dutycycle_middle;
+    PWM->PWM_CH_NUM[1].PWM_CDTY = dutycycle_middle;
 
     // PWM Enable
     PWM->PWM_ENA = PWM_ENA_CHID1;
