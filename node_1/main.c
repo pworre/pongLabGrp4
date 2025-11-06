@@ -29,7 +29,7 @@ int main(){
     while (1){
         //send_can_msg_test(1);
         //recive_can_msg_test(1);
-        send_joystick_with_can();
+        send_io_board_with_can();
     }
 
     return 0;

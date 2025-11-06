@@ -107,10 +107,11 @@ void controll_servo_with_joystick_test(void){
     message.data_length= 6;
     message.id = 0x0f;
 
-    uint32_t duty_cycle = 0;
+    int32_t duty_cycle = 0;
 
     while(1){
         can_receive(&message, 1);
+        printf("y-axis: %d\r\n", message.data[1]);
 
         duty_cycle = (((dutycycle_upper_bound - dutycycle_lower_bound ) * message.data[1]) / 200) + dutycycle_middle;
 

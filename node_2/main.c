@@ -43,7 +43,7 @@ int main()
     
     while (1)
     {
-        controll_servo_with_io_board_test();
+        controll_servo_with_joystick_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
 
