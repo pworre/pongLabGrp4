@@ -32,6 +32,7 @@ int main()
     uint8_t num_rx_mb = 2;
     //can_init_def_tx_rx_mb(can_br);
     can_init(can_br, num_tx_mb, num_rx_mb);
+    adc_init_freerun();
     
 
     // uint32_t primask = __get_PRIMASK();
@@ -43,12 +44,15 @@ int main()
     
     while (1)
     {
-        controll_servo_with_joystick_test();
+        //controll_servo_with_joystick_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
 
-        // uint32_t adc_value = ADC->ADC_LCDR;
-        // printf("adc value = %u\r\n", adc_value);
+
+        int32_t adc_value = (ADC->ADC_CDR[6]) & 0xfff;
+        printf("adc value = %u\r\n", adc_value);
+
+        ADC->ADC_CR = ADC_CR_START;
 
         for(volatile uint32_t i = 0; i < 1000000; i++){
             __asm__("nop");
