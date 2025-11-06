@@ -57,8 +57,8 @@ int main()
         // uint32_t encoder_value = read_encoder();
         // printf("Encoder value: %d\r\n", encoder_value);
 
-        motor_setdir(RIGHT);
-        motor_setpower(50);
+        motor_setdir(LEFT);
+        motor_setpower(30);
 
     }
 }

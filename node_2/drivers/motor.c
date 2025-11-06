@@ -6,13 +6,13 @@
 
 void motor_init(void){
     // Sets direction pin (PC23) as output
-    PMC->PMC_PCER0 |= PMC_PCER0_PID11;
+    PMC->PMC_PCER0 |= PMC_PCER0_PID13;
     PIOC->PIO_PER |= (1 << PWM_PIN);
     PIOC->PIO_OER |= (PIO_OER_P23);
     PIOC->PIO_CODR |= (PIO_CODR_P23);
 
     // PWM
-        // Enable peripheral clock for PWM for PID36
+    // Enable peripheral clock for PWM for PID36
     PMC->PMC_PCER1 |= (1 << 4);
     
     // motor shield "PWM SIG" uses PB12
@@ -51,7 +51,7 @@ void motor_init(void){
     PWM->PWM_CH_NUM[0].PWM_CDTY = 0;
 
     // PWM Enable
-    PWM->PWM_ENA = PWM_ENA_CHID1;
+    PWM->PWM_ENA = PWM_ENA_CHID0;
 
     // Write protection enabled except WPVS
     PWM->PWM_WPCR |= 1;
