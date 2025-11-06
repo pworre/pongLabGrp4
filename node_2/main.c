@@ -8,6 +8,7 @@
 #include "drivers/adc.h"
 #include "drivers/timer_counter.h"
 //#include <util/delay.h>
+
 /*
  * Remember to update the Makefile with the (relative) path to the uart.c file.
  * This starter code will not compile until the UART file has been included in the Makefile. 
@@ -31,7 +32,7 @@ int main()
     uint8_t num_rx_mb = 2;
     //can_init_def_tx_rx_mb(can_br);
     can_init(can_br, num_tx_mb, num_rx_mb);
-    //adc_init_freerun();
+    adc_init_freerun();
     
     // uint32_t primask = __get_PRIMASK();
     // if (primask == 0){

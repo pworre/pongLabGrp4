@@ -51,7 +51,7 @@ void adc_init_freerun(void){
     //compare on channel 6 / A6
     ADC->ADC_EMR |= (6 << ADC_EMR_CMPSEL_Pos);
     //must have 5 consecutive comp interrupts to generate ine interrupt
-    ADC->ADC_EMR |= (2 << ADC_EMR_CMPFILTER);
+    //ADC->ADC_EMR |= (ADC_EMR_CMPFILTER((1)));
 
     //setting low threshold
     ADC->ADC_CWR |= ADC_LOWER_TRESHHOLD; //THIS VALUE MUST DE TESTED AND CHANGED!!!!
