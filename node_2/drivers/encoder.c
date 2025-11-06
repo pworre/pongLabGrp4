@@ -3,6 +3,8 @@
 // Pins PC25-26
 // Timer-counter 6
 
+// RANGE = 5612
+
 void init_encoder(void){
     PMC->PMC_PCER1 |= PMC_PCER1_PID33; //enable clock for TC6
     PIOC->PIO_PDR |= (PIO_PC25 | PIO_PC26); //disable periferal

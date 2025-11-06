@@ -8,6 +8,7 @@
 #include "drivers/adc.h"
 #include "drivers/timer_counter.h"
 #include "drivers/encoder.h"
+#include "drivers/motor.h"
 //#include <util/delay.h>
 
 /*
@@ -38,13 +39,14 @@ int main()
     uint8_t num_rx_mb = 2;
     can_init(can_br, num_tx_mb, num_rx_mb);
     
-    adc_init_freerun();
+    //adc_init_freerun();
     
 
     timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
     __enable_irq();
 
     init_encoder();
+    motor_init();
     
     while (1)
     {
@@ -52,8 +54,11 @@ int main()
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
 
-        uint32_t encoder_value = read_encoder();
-        printf("Encoder value: %d\r\n", encoder_value);
+        // uint32_t encoder_value = read_encoder();
+        // printf("Encoder value: %d\r\n", encoder_value);
+
+        motor_setdir(RIGHT);
+        motor_setpower(50);
 
     }
 }

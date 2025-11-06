@@ -16,5 +16,7 @@ typedef enum {
 void motor_init(void);
 void motor_setdir(DC_DIRECTIONS dir);
 
+// Set power in percentage
+void motor_setpower(uint32_t power);
 
 #endif
