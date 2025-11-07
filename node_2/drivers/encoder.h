@@ -1,6 +1,8 @@
 #ifndef ENCODER_H
 #define ENCODER_H
 
+#define ENCODER_MAX 5612
+
 #include <stdint.h>
 #include"sam.h"
 
