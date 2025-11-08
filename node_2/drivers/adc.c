@@ -1,14 +1,14 @@
 #include "adc.h"
 
-#include "sam.h"
+extern uint32_t goals = 0;
 
-    // // Enable peripheral clock for PWM for PID36
-    // PMC->PMC_PCER1 |= (1 << 4);
-    
-    // // motor shield "Servo SIG" uses PB13
-    // PMC->PMC_PCER0 |= PMC_PCER0_PID12;
-    // PIOB->PIO_PDR |= PIO_PDR_P13;
-    // PIOB->PIO_ABSR |= PIO_ABSR_P13;
+// Enable peripheral clock for PWM for PID36
+// PMC->PMC_PCER1 |= (1 << 4);
+
+// motor shield "Servo SIG" uses PB13
+// PMC->PMC_PCER0 |= PMC_PCER0_PID12;
+// PIOB->PIO_PDR |= PIO_PDR_P13;
+// PIOB->PIO_ABSR |= PIO_ABSR_P13;
 static void delay(volatile uint32_t n) {
     while(n--) __asm__("nop");
 }
@@ -35,9 +35,9 @@ void adc_init_freerun(void){
     ADC->ADC_WPMR = (0x414443u << ADC_WPMR_WPKEY_Pos);
     //ADC->ADC_WPMR &= ~(1 << ADC_WPMR_WPEN);
 
-    //emable hardware trigger, freerun mode and ADC clock = MCL/32
+    //emable hardware trigger, freerun mode and ADC clock = MCL/128
     ADC->ADC_MR = 0;
-    ADC->ADC_MR |= ((ADC_MR_FREERUN_ON) | (ADC_MR_PRESCAL(32)));
+    ADC->ADC_MR |= ((ADC_MR_FREERUN_ON) | (ADC_MR_PRESCAL(128)));
     ADC->ADC_MR &= ~(ADC_MR_SLEEP | ADC_MR_LOWRES | ADC_MR_TRGEN);
     ADC->ADC_MR |= ADC_MR_STARTUP_SUT64;
     ADC->ADC_MR |= ADC_MR_SETTLING_AST9;
@@ -47,7 +47,7 @@ void adc_init_freerun(void){
     NVIC_EnableIRQ(ADC_IRQn);
 
     //set compare mode to give interrupt when converted data is lower than threshold
-    ADC->ADC_EMR &= ~(1 << ADC_EMR_CMPMODE_Pos);
+    ADC->ADC_EMR |= (3 << ADC_EMR_CMPMODE_Pos);
     //compare on channel 6 / A6
     ADC->ADC_EMR |= (6 << ADC_EMR_CMPSEL_Pos);
     //must have 5 consecutive comp interrupts to generate ine interrupt
@@ -55,6 +55,7 @@ void adc_init_freerun(void){
 
     //setting low threshold
     ADC->ADC_CWR |= ADC_LOWER_TRESHHOLD; //THIS VALUE MUST DE TESTED AND CHANGED!!!!
+    ADC->ADC_CWR |= (ADC_HIGER_TRESHHOLd << ADC_CWR_HIGHTHRES_Pos);
     //ADC->ADC_CR = ADC_CR_START;
 
     //select channel 6 as a ADC periferal (A6) i hope
@@ -62,14 +63,24 @@ void adc_init_freerun(void){
 }
 
 void ADC_Handler(void){
+    static uint32_t should_count_goal = 1;
+
     if (ADC->ADC_ISR & ADC_ISR_COMPE){
+
         uint32_t adc_value = ADC->ADC_LCDR;
-        //global value lives??
-        if(adc_value < ADC_LOWER_TRESHHOLD ){
-            printf("You missed the ball!\r\n");
+
+        if (adc_value > ADC_HIGER_TRESHHOLd){
+            //printf("higher than treshhold");
+            should_count_goal = 1;
         }
-    }else{
-        __asm__("nop");
+        
+        else if(adc_value < ADC_LOWER_TRESHHOLD && should_count_goal){
+            //printf("lower than treshhold and should count miss");
+            should_count_goal = 0;
+            goals ++;
+            printf("Goals scored: %d\r\n", goals);
+            //end game if you lost
+        }
     }
     NVIC_ClearPendingIRQ(ADC_IRQn);
 }
