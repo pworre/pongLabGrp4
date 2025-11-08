@@ -34,3 +34,22 @@ void init_encoder(void){
 uint32_t read_encoder(void){
     return (TC2->TC_CHANNEL[0].TC_CV);
 }
+
+void encoder_calibrate(void){
+    //drives the motor to whatever side is the minumum value, and starts the encoder counter from there
+    //now we only get positive values, and since we know many encoder steps there is, we now the pos. 
+    motor_setdir(LEFT);
+    motor_setpower(50); //TODO: set an apropriate motor power
+    int32_t last_encoder_val = 10000;
+    int32_t encoder_val = 0;
+    while (last_encoder_val > encoder_val){
+        for(volatile uint32_t i = 0; i < 10000; i++){
+            __asm__("nop");
+        }
+        last_encoder_val = encoder_val;
+        encoder_val = read_encoder();
+    }
+    //stop motor and reset the TC2 counter / encoder counter
+    motor_setpower(0);
+    TC2->TC_CHANNEL[0].TC_CCR |= TC_CCR_SWTRG;
+}

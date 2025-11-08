@@ -11,11 +11,10 @@ typedef struct {
     float K_i;
     float K_d;
     float T;
-    float measurement;
-    float previous_measurement;
-    float referance;
-    float error;
-    float previous_error;
+    int32_t measurement;
+    int32_t referance;
+    int32_t error;
+    int32_t previous_error;
     float integral;
     float derivate;
     float controller_output;
@@ -29,6 +28,7 @@ void pid_update_integral(PID_CONTROLER *pid_ctrl);
 void pid_update_derivate(PID_CONTROLER *pid_ctrl);
 void pid_calculate_controller_output(PID_CONTROLLER *pid_ctrl);
 void pid_set_motor_power(PID_CONTROLLER *pid_ctrl);
+void pid_use_controller(PID_CONTROLLER *pid_ctrl);
 
 
 #endif
