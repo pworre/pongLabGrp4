@@ -27,6 +27,8 @@
     //     printf("Global interrupt enabled\r\n");
     // }
 
+
+    
 int main()
 {
     SystemInit();
@@ -50,6 +52,7 @@ int main()
     
     while (1)
     {
+        //TODO: check if the 5v pin for servo is live when the 4mm banana is connected
         //controll_servo_with_joystick_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
