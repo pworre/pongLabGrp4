@@ -87,7 +87,7 @@ void send_io_board_with_can(void){
         message.data[4] = buttons.nav;
 
         can_send_msg(message);
-        _delay_ms(100);
+        _delay_ms(10);
         
         printf("\r\nSEND JOYSTICK: Iteration %u\r\n", i);
         printf("msg_id = %u    msg_size = %u    X = %d    Y = %d\r\n", message.id, message.size, message.data[0], message.data[1]); 

@@ -9,6 +9,7 @@
 #include "drivers/timer_counter.h"
 #include "drivers/encoder.h"
 #include "drivers/motor.h"
+#include "drivers/solenoide.h"
 //#include <util/delay.h>
 
 /*
@@ -29,8 +30,15 @@
 
 
     
-int main()
-{
+    
+
+
+
+
+
+
+
+    
     SystemInit();
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
     pwm_init();
@@ -41,7 +49,9 @@ int main()
     uint8_t num_rx_mb = 2;
     can_init(can_br, num_tx_mb, num_rx_mb);
     
-    //adc_init_freerun();
+    adc_init_freerun();
+    solenoide_init();
+    
     
 
     timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
@@ -53,15 +63,21 @@ int main()
     while (1)
     {
         //TODO: check if the 5v pin for servo is live when the 4mm banana is connected
-        //controll_servo_with_joystick_test();
+        controll_servo_and_solenoide_with_joystick_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
 
         // uint32_t encoder_value = read_encoder();
         // printf("Encoder value: %d\r\n", encoder_value);
 
-        motor_setdir(LEFT);
-        motor_setpower(30);
+        // motor_setdir(LEFT);
+        // motor_setpower(50);
+
+        // int32_t adc_value = (ADC->ADC_CDR[6]) & 0xfff;
+        // printf("ADC value: %d\r\n", adc_value);
+        // for(volatile uint32_t i = 0; i < 1000000; i++){
+        //     __asm__("nop");
+        // }
 
     }
 }

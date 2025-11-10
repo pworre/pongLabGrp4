@@ -96,7 +96,7 @@ void controll_servo_with_buttons_test(void){
     }
 }
 
-void controll_servo_with_joystick_test(void){
+void controll_servo_and_solenoide_with_joystick_test(void){
     CAN_MESSAGE message;
     message.data[0] = 0; //joystick -x
     message.data[1] = 0; //joystick -y
@@ -110,6 +110,8 @@ void controll_servo_with_joystick_test(void){
     int32_t duty_cycle = 0;
     uint32_t i = 0;
 
+    uint32_t is_R5_pressed = 1;
+
     while(1){
         can_receive(&message, 1);
         //printf("y-axis: %d\r\n", message.data[1]);
@@ -118,12 +120,16 @@ void controll_servo_with_joystick_test(void){
 
         pwm_set_dutycycle(duty_cycle);
 
-        int32_t adc_value = (ADC->ADC_CDR[6]) & 0xfff;
-        if (i%1000 == 0){
-            printf("adc value = %u\r\n", adc_value);
-            printf("score: %d\r\n", score);
+        if ((message.data[2] & (1 << 4)) && is_R5_pressed){// if SR% is pressed
+            solenoide_activate();
+            is_R5_pressed = 0;
+        } else if (message.data[2] & (1 << 4)){
+            is_R5_pressed = 0;
+        } else {
+            is_R5_pressed = 1;
         }
-        for(volatile uint32_t i = 0; i < 1000; i++){
+
+        for(volatile uint32_t i = 0; i < 100; i++){
             __asm__("nop");
         }
         i++;

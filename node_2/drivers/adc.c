@@ -73,22 +73,23 @@ void ADC_Handler(void){
 
         uint32_t adc_value = ADC->ADC_LCDR;
 
-        switch (should_count_goal) 
-        case 0:
-            if (adc_value > ADC_HIGER_TRESHHOLd){
-                //printf("higher than treshhold");
-                should_count_goal = 1;
+        switch (should_count_goal) {
+            case 0:
+                if (adc_value > ADC_HIGER_TRESHHOLd){
+                    //printf("higher than treshhold");
+                    should_count_goal = 1;
+                }
+                break;
+            case 1:
+                if (adc_value < ADC_LOWER_TRESHHOLD){
+                    //printf("lower than treshhold and should count miss");
+                    should_count_goal = 0;
+                    goals ++;
+                    printf("Goals scored: %d\r\n", goals);
+                    //end game if you lost
+                }
+                break;
             }
-            break;
-        case 1:
-            if (adc_value < ADC_LOWER_TRESHHOLD){
-                //printf("lower than treshhold and should count miss");
-                should_count_goal = 0;
-                goals ++;
-                printf("Goals scored: %d\r\n", goals);
-                //end game if you lost
-            }
-            break;
-    }
+        }
     NVIC_ClearPendingIRQ(ADC_IRQn);
 }

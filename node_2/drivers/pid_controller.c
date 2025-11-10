@@ -19,7 +19,7 @@ void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T
 }
 
 void pid_update_referance(PID_CONTROLLER *pid_ctrl){
-    int8_t x_axis = can_message[0]
+    int8_t x_axis = can_message.data[0];
     //removes the stickdrift
     if (x_axis > 10){
         pid_ctrl->reference += (x_axis * ENCODER_MAX) / 2000; //can cange the reference 5% of the max value at a time step
@@ -37,10 +37,10 @@ void pid_update_error(PID_CONTROLLER *pid_ctrl){
     pid_ctrl->previous_error = pid_ctrl->error;
     pid_ctrl->error = pid_ctrl->reference - pid_ctrl->measurement;
 } 
-void pid_update_integral(PID_CONTROLER *pid_ctrl){
+void pid_update_integral(PID_CONTROLLER *pid_ctrl){
     pid_ctrl->integral += pid_ctrl->error;
 }
-void pid_update_derivate(PID_CONTROLER *pid_ctrl){
+void pid_update_derivate(PID_CONTROLLER *pid_ctrl){
     //TODO: maybe we need a better derivate calculation
     pid_ctrl->derivate = (pid_ctrl->error - pid_ctrl->previous_error) / pid_ctrl->T;
 }
@@ -53,7 +53,7 @@ void pid_set_motor_power(PID_CONTROLLER *pid_ctrl){
     if (pid_ctrl->controller_output < 0){
         motor_setdir(LEFT);
         motor_setpower(pid_ctrl->controller_output);
-    } else (pid->controller_output >= 0){
+    } else (pid_ctrl->controller_output >= 0){
         motor_setdir(RIGHT);
         motor_setpower(pid_ctrl->controller_output);
     }
@@ -61,7 +61,6 @@ void pid_set_motor_power(PID_CONTROLLER *pid_ctrl){
 void pid_use_controller(PID_CONTROLLER *pid_ctrl){
     pid_update_referance(pid_ctrl);
     pid_update_measurement(pid_ctrl);
-    pid_update_derivate(pid_ctrl);
     pid_update_derivate(pid_ctrl);
     pid_update_integral(pid_ctrl);
     pid_calculate_controller_output(pid_ctrl);
