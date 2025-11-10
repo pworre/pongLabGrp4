@@ -1,5 +1,7 @@
 #include "pid_controller.h"
 
+CAN_MESSAGE io_can_message;
+
 void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T){
 
     pid_ctrl->K_p = K_p;
@@ -11,22 +13,34 @@ void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T
     pid_ctrl->previous_error = 0;
 
     pid_ctrl->measurement = read_encoder();
-    pid_ctrl->reference = pid_ctrl->measurement;
+    pid_ctrl->reference = ENCODER_MAX/2;
 
     pid_ctrl->integral = 0;
     pid_ctrl->derivate = 0;
     pid_ctrl->controller_output = 0;
+
+    io_can_message.data[0] = 0; //joystick -x
+    io_can_message.data[1] = 0; //joystick -y
+    io_can_message.data[2] = 0; //right buttons
+    io_can_message.data[3] = 0; //left buttons
+    io_can_message.data[4] = 0; //nav buttons
+    io_can_message.data[5] = 0;
+    io_can_message.data_length= 6;
+    io_can_message.id = 0x0f;
 }
 
 void pid_update_referance(PID_CONTROLLER *pid_ctrl){
-    int8_t x_axis = can_message.data[0];
+    int8_t x_axis = io_can_message.data[0];
     //removes the stickdrift
-    if (x_axis > 10){
-        pid_ctrl->reference += (x_axis * ENCODER_MAX) / 2000; //can cange the reference 5% of the max value at a time step
-    } else if( x_axis < -10){
-        pid_ctrl->reference += (x_axis * ENCODER_MAX) / 2000;
-    } else {
-        return;
+    if (x_axis < 10){
+        pid_ctrl->reference += (x_axis / 3); //can cange the reference 5% of the max value at a time step
+    } else if( x_axis > -10){
+        pid_ctrl->reference += (x_axis / 3);
+    } 
+    if (pid_ctrl->reference < 5){
+        pid_ctrl->reference = 5;
+    } else if (abs(pid_ctrl->reference) > ENCODER_MAX){
+        pid_ctrl->reference = ENCODER_MAX;
     }
 }
 void pid_update_measurement(PID_CONTROLLER *pid_ctrl){
@@ -45,22 +59,24 @@ void pid_update_derivate(PID_CONTROLLER *pid_ctrl){
     pid_ctrl->derivate = (pid_ctrl->error - pid_ctrl->previous_error) / pid_ctrl->T;
 }
 void pid_calculate_controller_output(PID_CONTROLLER *pid_ctrl){
-    pid_ctrl->controller_output = (uint32_t)((pid_ctrl->K_p * pid_ctrl->error) 
+    pid_ctrl->controller_output = (int32_t)((pid_ctrl->K_p * pid_ctrl->error) 
                                 + (pid_ctrl->K_i * pid_ctrl->T * pid_ctrl->integral) 
                                 + ((pid_ctrl->K_d / pid_ctrl->T) * pid_ctrl->derivate));
 }
 void pid_set_motor_power(PID_CONTROLLER *pid_ctrl){
     if (pid_ctrl->controller_output < 0){
-        motor_setdir(LEFT);
-        motor_setpower(pid_ctrl->controller_output);
-    } else (pid_ctrl->controller_output >= 0){
         motor_setdir(RIGHT);
-        motor_setpower(pid_ctrl->controller_output);
+        motor_setpower(abs(pid_ctrl->controller_output));
+    } else {
+        motor_setdir(LEFT);
+        motor_setpower(abs(pid_ctrl->controller_output));
     }
 }
+
 void pid_use_controller(PID_CONTROLLER *pid_ctrl){
     pid_update_referance(pid_ctrl);
     pid_update_measurement(pid_ctrl);
+    pid_update_error(pid_ctrl);
     pid_update_derivate(pid_ctrl);
     pid_update_integral(pid_ctrl);
     pid_calculate_controller_output(pid_ctrl);

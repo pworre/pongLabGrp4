@@ -4,6 +4,7 @@
 #include "sam.h"
 #include "motor.h"
 #include "encoder.h"
+#include "can_controller.h"
 
 typedef struct {
     //TODO: go over the types
@@ -11,16 +12,18 @@ typedef struct {
     float K_i;
     float K_d;
     float T;
-    int32_t measurement;
-    int32_t reference;
+    uint32_t measurement;
+    uint32_t reference;
     int32_t error;
     int32_t previous_error;
     float integral;
     float derivate;
-    float controller_output;
+    int32_t controller_output;
 } PID_CONTROLLER;
 
-void pid_init(PID_CONTROLLER *pid_ctrl, uint32_t K_p, uint32_t K_i, uint32_t K_d);
+extern CAN_MESSAGE io_can_message;
+
+void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T);
 void pid_update_referance(PID_CONTROLLER *pid_ctrl);
 void pid_update_measurement(PID_CONTROLLER *pid_ctrl);
 void pid_update_error(PID_CONTROLLER *pid_ctrl);

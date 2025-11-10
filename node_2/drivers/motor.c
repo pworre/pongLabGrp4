@@ -1,7 +1,7 @@
 #include "motor.h"
 
 #define PWM_PIN 12 // PB12
-#define CPRD 13125
+#define CPRD 6000 //13125
 
 
 void motor_init(void){
@@ -20,8 +20,6 @@ void motor_init(void){
     PIOB->PIO_PDR |= PIO_PDR_P12;
     PIOB->PIO_ABSR |= PIO_ABSR_P12;
     PIOB->PIO_MDDR |= (1 << PWM_PIN);   // output write
-
-
 
 
     // Disable write-protection
@@ -73,11 +71,11 @@ void motor_setdir(DC_DIRECTIONS dir){
 // Set power in percentage
 void motor_setpower(uint32_t power){
     if (power > 100){
-        printf("Power setting not within limits!");
+        //printf("Power setting not within limits!\r\n");
         power = 100;
     }
 
     uint32_t motor_cdty = (CPRD * power) / 100;
     PWM->PWM_CH_NUM[0].PWM_CDTYUPD = motor_cdty;
-    printf("motor cdty: %d\r\n", motor_cdty);
+    //printf("motor cdty: %d\r\n", motor_cdty);
 }

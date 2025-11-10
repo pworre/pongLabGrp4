@@ -10,6 +10,8 @@
 #include "drivers/encoder.h"
 #include "drivers/motor.h"
 #include "drivers/solenoide.h"
+#include "drivers/time.h"
+#include "drivers/pid_controller.h"
 //#include <util/delay.h>
 
 /*
@@ -30,15 +32,8 @@
 
 
     
-    
-
-
-
-
-
-
-
-    
+int main()
+{
     SystemInit();
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
     pwm_init();
@@ -54,16 +49,28 @@
     
     
 
-    timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
-    __enable_irq();
-
     init_encoder();
     motor_init();
     
+    encoder_calibrate();
+
+    timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
+    timer_counter_init(1, 656250 / 100); 
+    float T = 0.01;
+    float K_p = 0.1;
+    float K_i = 0.01;
+    float K_d = 0;
+
+
+    pid_init(&pid_ctrl, K_p,  K_i, K_d, T);
+    __enable_irq();
+
     while (1)
     {
+        can_receive(&io_can_message, 1);
+        printf("PID ref: %d       PID meas: %d     PID_output: %d       PID_e: %d\r\n", pid_ctrl.reference, pid_ctrl.measurement, pid_ctrl.controller_output, pid_ctrl.error);
         //TODO: check if the 5v pin for servo is live when the 4mm banana is connected
-        controll_servo_and_solenoide_with_joystick_test();
+        //controll_servo_and_solenoide_with_joystick_test();
         //send_can_msg_test(1);
         //recive_can_msg_test(0);
 
@@ -71,13 +78,18 @@
         // printf("Encoder value: %d\r\n", encoder_value);
 
         // motor_setdir(LEFT);
-        // motor_setpower(50);
+        // motor_setpower(40);
+        // time_spinFor(msecs(500));
+        // motor_setdir(RIGHT);
+        // motor_setpower(40);
+        // time_spinFor(msecs(500));
+        
 
         // int32_t adc_value = (ADC->ADC_CDR[6]) & 0xfff;
-        // printf("ADC value: %d\r\n", adc_value);
-        // for(volatile uint32_t i = 0; i < 1000000; i++){
-        //     __asm__("nop");
-        // }
+        // printf("ADC value: %d\r\n", adc_value)
 
+        for(volatile uint32_t i = 0; i < 300000; i++){
+            __asm__("nop");
+        }
     }
 }

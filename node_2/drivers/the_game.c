@@ -7,11 +7,11 @@ void play_the_game(void){
         switch (game_state)
         {
         case MENU:
-            /* code */
+            
             break;
 
         case PLAY:
-        
+
         break;
         
         default:

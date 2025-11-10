@@ -1,5 +1,7 @@
 #include "timer_counter.h"
 
+PID_CONTROLLER pid_ctrl;
+
 uint32_t score = 0;
 
 void timer_counter_init(uint32_t tc_channel, uint32_t period){
@@ -58,7 +60,7 @@ void TC0_Handler(void){//TC0 is used for counting the score while playing, updat
     NVIC_ClearPendingIRQ(TC0_IRQn);
 }
 void TC1_Handler(void){//TC1 is used for updating the PID control for the motor in consistant time steps. 
-    //set new PID control on motor
+    pid_use_controller(&pid_ctrl);
     uint32_t reg = TC0->TC_CHANNEL[1].TC_SR;
     NVIC_ClearPendingIRQ(TC1_IRQn);
 }

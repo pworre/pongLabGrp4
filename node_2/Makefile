@@ -19,7 +19,7 @@ SOURCE_FILES = \
 	drivers/encoder.c\
 	drivers/motor.c\
 	drivers/solenoide.c\
-#	drivers/pid_controller.c\
+	drivers/pid_controller.c\
 #	../path_to/uart.c \
 #   filename1.c \
 #   filename2.c \
