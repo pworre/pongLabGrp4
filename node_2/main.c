@@ -35,10 +35,11 @@
 int main(){
     SystemInit();
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
-    printf("MAIN\r\n");
-
+    
     pwm_init();
     uart_init(84000000, 9600);
+
+    printf("MAIN\r\n");
 
     uint32_t can_br = 250000;
     uint8_t num_tx_mb = 2;
@@ -47,7 +48,28 @@ int main(){
 
     PID_CONTROLLER pid_ctrl;
 
+    adc_init_freerun();
+    solenoide_init();
+    encoder_init();
+    motor_init();
+    encoder_calibrate();
+    timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
+    timer_counter_init(1, 656250 / 100); 
+
+
+    int32_t duty_cycle = 0;
+    uint32_t is_R5_pressed = 1;
+    uint32_t i = 0;
+
+    // PID
+    float T = 0.01;
+    float K_p = 0.15;
+    float K_i = 0.02;
+    float K_d = 0;
+    pid_init(&pid_ctrl, K_p,  K_i, K_d, T);
+
     game_init(&pid_ctrl);
+    __enable_irq();
     printf("Ready to start PONG!\r\n");
     play_the_game(&pid_ctrl);
 }

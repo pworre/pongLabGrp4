@@ -55,13 +55,14 @@ void timer_counter_init(uint32_t tc_channel, uint32_t period){
 //write the interrupts handlers
 
 void TC0_Handler(void){//TC0 is used for counting the score while playing, updates a global value
+    //printf("TC0\r\n");
     score++;
     uint32_t reg = TC0->TC_CHANNEL[0].TC_SR;
     NVIC_ClearPendingIRQ(TC0_IRQn);
 }
 void TC1_Handler(void){//TC1 is used for updating the PID control for the motor in consistant time steps. 
-    CAN_MESSAGE msg;
-    pid_use_controller(&pid_ctrl, &msg);
+    //printf("TC1\r\n");
+    pid_use_controller(&pid_ctrl);
     uint32_t reg = TC0->TC_CHANNEL[1].TC_SR;
     NVIC_ClearPendingIRQ(TC1_IRQn);
 }

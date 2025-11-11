@@ -9,7 +9,7 @@
 #include "timer_counter.h"
 #include "pwm.h"
 
-typedef enum  {
+typedef enum {
     MENU, 
     PLAY
 } GAME_STATES;
@@ -68,6 +68,7 @@ typedef struct joystick {
 
 void play_the_game(PID_CONTROLLER *pid_ctrl);
 void game_init(PID_CONTROLLER *pid_ctrl);
-void score_init(void);
+
+extern JOYSTICK joystick;
 
 #endif

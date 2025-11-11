@@ -3,6 +3,7 @@
 CAN_MESSAGE can_message;
 
 void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T){
+    printf("PID-init\r\n");
 
     pid_ctrl->K_p = K_p;
     pid_ctrl->K_i = K_i;
@@ -20,12 +21,12 @@ void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T
     pid_ctrl->controller_output = 0;
 }
 
-void pid_update_referance(PID_CONTROLLER *pid_ctrl, JOYSTICK *joystick){
+void pid_update_referance(PID_CONTROLLER *pid_ctrl){
     //removes the stickdrift
-    if (joystick->x_axis < 10){
-        pid_ctrl->reference -= (joystick->x_axis / 2);
-    } else if(joystick->x_axis > -10){
-        pid_ctrl->reference -= (joystick->x_axis / 2);
+    if (joystick.x_axis < 10){
+        pid_ctrl->reference -= (joystick.x_axis / 2);
+    } else if(joystick.x_axis > -10){
+        pid_ctrl->reference -= (joystick.x_axis / 2);
     } 
     if (pid_ctrl->reference < 5){
         pid_ctrl->reference = 5;
@@ -63,8 +64,8 @@ void pid_set_motor_power(PID_CONTROLLER *pid_ctrl){
     }
 }
 
-void pid_use_controller(PID_CONTROLLER *pid_ctrl, JOYSTICK *joystick){
-    pid_update_referance(pid_ctrl, joystick);
+void pid_use_controller(PID_CONTROLLER *pid_ctrl){
+    pid_update_referance(pid_ctrl);
     pid_update_measurement(pid_ctrl);
     pid_update_error(pid_ctrl);
     pid_update_derivate(pid_ctrl);
