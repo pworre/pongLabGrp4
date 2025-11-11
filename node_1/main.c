@@ -107,7 +107,6 @@ int main(){
             goals = msg_global.data[0]; //get number of goals scored
             lives = 6 - goals; 
             score = msg_global.data[1];
-            printf("goals: %d    score: %d\r\n", goals, score);
             update_gameplay(score, goals);
 
             //turn on light representing lives
@@ -120,7 +119,6 @@ int main(){
             }
 
             if (goals == 6){ //change state when reviced game over signal. 
-                printf("No more lives\r\n");
                 node_1_state = MENU;
                 update_highscore(score);
                 lives = 6;
