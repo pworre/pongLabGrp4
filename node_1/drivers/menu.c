@@ -275,3 +275,15 @@ void update_gameplay(uint8_t timerCounter, uint8_t goals) {
     oled_write_string(timer_str, 4, 2, 29);
     oled_write_string(goal_str, 4, 5, 29);
 } //oppdatere score-counter under spill
+
+
+void print_gameover(uint8_t timerCounter) {
+    oled_clear();
+    char* game_over = "GAME OVER!";
+    char* final_time = "Final Score: ";
+    char time_string[10];
+    snprintf(time_string, sizeof(time_string), "%d", timerCounter);
+    oled_write_string(game_over, 5, 3, 25);
+    oled_write_string(final_time, 4, 5, 23);
+    oled_write_string(time_string, 4, 5, 35);
+}
