@@ -14,7 +14,7 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
     while (1){
         // RECEIVES CAN_MESSAGE
         can_receive(&can_message, 1);
-        printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", can_message.id, can_message.data_length, can_message.data[0], can_message.data[1]);
+        //printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", can_message.id, can_message.data_length, can_message.data[0], can_message.data[1]);
         can_sort_message(&game, &can_message);
         printf("STATE: %d\r\n", game.state);
 
@@ -27,6 +27,7 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
             printf("ENTERED PLAY-STATE\r\n");
             uint32_t is_R5_pressed = 0;
             uint32_t duty_cycle = 0;
+            uint32_t i = 0;
 
             while(game.state == PLAY){
                 // RECEIVES CAN_MESSAGE
@@ -47,13 +48,18 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
                     is_R5_pressed = 1;
                 }
 
-                // SEND GAME_INFO TO NODE_1
-                can_msg_send.id = 2;
-                can_msg_send.data_length = 2;
-                can_msg_send.data[0] = goals;
-                can_msg_send.data[1] = score;
-                can_send(&can_msg_send, 0);
+                printf("PID-output: %d\r\n", pid_ctrl->controller_output);
+                if (i % 1000){
+                    // SEND GAME_INFO TO NODE_1
+                    can_msg_send.id = 2;
+                    can_msg_send.data_length = 2;
+                    can_msg_send.data[0] = goals;
+                    can_msg_send.data[1] = score;
+                    can_send(&can_msg_send, 0);
+                }
+                i++;
             }
+            goals = 0;
             break;
         
         default:

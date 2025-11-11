@@ -46,8 +46,6 @@ int main(){
     uint8_t num_rx_mb = 2;
     can_init(can_br, num_tx_mb, num_rx_mb);
 
-    PID_CONTROLLER pid_ctrl;
-
     adc_init_freerun();
     solenoide_init();
     encoder_init();
