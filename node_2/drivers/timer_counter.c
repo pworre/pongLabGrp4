@@ -60,7 +60,8 @@ void TC0_Handler(void){//TC0 is used for counting the score while playing, updat
     NVIC_ClearPendingIRQ(TC0_IRQn);
 }
 void TC1_Handler(void){//TC1 is used for updating the PID control for the motor in consistant time steps. 
-    pid_use_controller(&pid_ctrl);
+    CAN_MESSAGE msg;
+    pid_use_controller(&pid_ctrl, &msg);
     uint32_t reg = TC0->TC_CHANNEL[1].TC_SR;
     NVIC_ClearPendingIRQ(TC1_IRQn);
 }

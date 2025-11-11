@@ -7,6 +7,7 @@
 #include "adc.h"
 #include "pid_controller.h"
 #include "timer_counter.h"
+#include "pwm.h"
 
 typedef enum  {
     MENU, 
@@ -16,9 +17,8 @@ typedef enum  {
 // x x x x x x x S (1st byte)
 // G G G G G G G G (2nd byte)
 // T T T T T T T T (3rd byte)
-typedef struct {
+typedef struct game {
     GAME_STATES state;
-    GAME_MODE mode;
     uint32_t goal;
     uint32_t elapsed_time;
 } GAME;
@@ -60,14 +60,14 @@ typedef struct {
 } BUTTONS;
 
 
-typedef struct {
+typedef struct joystick {
     int32_t x_axis;
     int32_t y_axis;
     BUTTONS buttons;
 } JOYSTICK;
 
-void play_the_game(void);
-void game_init(void);
+void play_the_game(PID_CONTROLLER *pid_ctrl);
+void game_init(PID_CONTROLLER *pid_ctrl);
 void score_init(void);
 
 #endif

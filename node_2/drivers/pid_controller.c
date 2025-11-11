@@ -23,9 +23,9 @@ void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T
 void pid_update_referance(PID_CONTROLLER *pid_ctrl, JOYSTICK *joystick){
     //removes the stickdrift
     if (joystick->x_axis < 10){
-        pid_ctrl->reference -= (x_axis / 2);
+        pid_ctrl->reference -= (joystick->x_axis / 2);
     } else if(joystick->x_axis > -10){
-        pid_ctrl->reference -= (x_axis / 2);
+        pid_ctrl->reference -= (joystick->x_axis / 2);
     } 
     if (pid_ctrl->reference < 5){
         pid_ctrl->reference = 5;

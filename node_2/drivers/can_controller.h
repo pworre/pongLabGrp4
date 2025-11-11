@@ -15,6 +15,9 @@
 #define can_id_io_board 0x0f
 #define can_id_game_logic 0xf0
 
+typedef struct game GAME;
+typedef struct joystick JOYSTICK;
+
 #include <stdint.h>
 #include "the_game.h"
 
@@ -33,6 +36,6 @@ uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb);
 
 uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t mailbox_id);
 uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t mailbox_id);
-void can_sort_message(GAME *game, JOYSTICK *joystick);
+void can_sort_message(GAME *game, JOYSTICK *joystick, CAN_MESSAGE *can_msg);
 
 #endif /* CAN_CONTROLLER_H_ */

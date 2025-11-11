@@ -35,6 +35,7 @@
 int main(){
     SystemInit();
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
+    printf("MAIN\r\n");
 
     pwm_init();
     uart_init(84000000, 9600);
@@ -43,8 +44,12 @@ int main(){
     uint8_t num_tx_mb = 2;
     uint8_t num_rx_mb = 2;
     can_init(can_br, num_tx_mb, num_rx_mb);
-    
-    play_the_game();
+
+    PID_CONTROLLER pid_ctrl;
+
+    game_init(&pid_ctrl);
+    printf("Ready to start PONG!\r\n");
+    play_the_game(&pid_ctrl);
 }
 
     // for(volatile uint32_t i = 0; i < 3000; i++){

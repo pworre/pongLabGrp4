@@ -20,6 +20,7 @@ SOURCE_FILES = \
 	drivers/motor.c\
 	drivers/solenoide.c\
 	drivers/pid_controller.c\
+	drivers/the_game.c\
 #	../path_to/uart.c \
 #   filename1.c \
 #   filename2.c \

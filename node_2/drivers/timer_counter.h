@@ -1,6 +1,8 @@
 #ifndef TIMER_COUNTER_H
 #define TIMER_COUNTER_H
 
+typedef struct pid_controller PID_CONTROLLER;
+
 #include "sam.h"
 #include "pid_controller.h"
 

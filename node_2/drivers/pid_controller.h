@@ -1,12 +1,16 @@
 #ifndef PID_CONTROLLER_H
 #define PID_CONTROLLER_H
 
+typedef struct joystick JOYSTICK;
+
+
 #include "sam.h"
+#include "the_game.h"
 #include "motor.h"
 #include "encoder.h"
 #include "can_controller.h"
 
-typedef struct {
+typedef struct pid_controller{
     //TODO: go over the types
     float K_p;
     float K_i;
@@ -21,10 +25,8 @@ typedef struct {
     int32_t controller_output;
 } PID_CONTROLLER;
 
-extern CAN_MESSAGE io_can_message;
-
 void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T);
-void pid_update_referance(PID_CONTROLLER *pid_ctrl);
+void pid_update_referance(PID_CONTROLLER *pid_ctrl, JOYSTICK *joystick);
 void pid_update_measurement(PID_CONTROLLER *pid_ctrl);
 void pid_update_error(PID_CONTROLLER *pid_ctrl);
 void pid_update_integral(PID_CONTROLLER *pid_ctrl);
