@@ -5,7 +5,7 @@
 
 // RANGE = 5612
 
-void init_encoder(void){
+void encoder_init(void){
     PMC->PMC_PCER1 |= PMC_PCER1_PID33; //enable clock for TC6
     PIOC->PIO_PDR |= (PIO_PC25 | PIO_PC26); //disable periferal
     PIOC-> PIO_ABSR |= (PIO_PC25 | PIO_PC26); //select periferal B

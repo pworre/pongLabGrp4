@@ -61,21 +61,20 @@ void play_the_game(void){
 void game_init(PID_CONTROLLER *pid_ctrl){
     adc_init_freerun();
     solenoide_init();
-    init_encoder();
+    encoder_init();
     motor_init();
     encoder_calibrate();
     score_init();
 
-    float T = 0.01;
-    float K_p = 0.15;
-    float K_i = 0.02;
-    float K_d = 0;
 
     int32_t duty_cycle = 0;
     uint32_t is_R5_pressed = 1;
     uint32_t i = 0;
 
-
+    float T = 0.01;
+    float K_p = 0.15;
+    float K_i = 0.02;
+    float K_d = 0;
     pid_init(&pid_ctrl, K_p,  K_i, K_d, T);
     __enable_irq();
 

@@ -8,7 +8,7 @@
 #include "motor.h"
 
 
-void init_encoder(void);
+void encoder_init(void);
 uint32_t read_encoder(void);
 void encoder_calibrate(void);
 
