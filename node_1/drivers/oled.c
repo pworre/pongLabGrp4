@@ -228,3 +228,11 @@ void oled_draw(FIGURES fig, uint8_t page, uint8_t col){
         oled_write_byte(page, (col + i), oled_current_page[col + i]);
     }
 }
+
+void oled_clear_buffer(void){
+    for (int page = 0; page < 8; page++) { // OBS!!!
+        for (int col = 0; col < 128; col++) {
+            oled_write_byte(page, col, 0);
+        }
+    }
+}

@@ -45,7 +45,6 @@ void io_board_init(){
 
 void ADC_read(void){
 
-    
     //adc_adress[0] = 0xff;
     adc_adress[0] = 0;
 

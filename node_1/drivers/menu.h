@@ -25,7 +25,7 @@ volatile SETTINGS_MENU_STATES settings_menu_state;
 
 void main_menu(void);  //flytter pila
 
-void new_game_menu(void); //flytter pila
+uint8_t new_game_menu(void); //flytter pila
 
 void score_menu(void); //flytter pila
 

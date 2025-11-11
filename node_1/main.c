@@ -30,6 +30,7 @@ int main(){
     SPI_MasterInit();
     oled_init();
     CAN_CTRL_init();
+    printf("Initialized \r\n");
 
     io_board_led_pwm(0, 70);
     io_board_led_pwm(1, 70);
@@ -37,6 +38,12 @@ int main(){
     io_board_led_pwm(3, 70);
     io_board_led_pwm(4, 70);
     io_board_led_pwm(5, 70);
+    io_board_led_power(0, 0);
+    io_board_led_power(1, 0);
+    io_board_led_power(2, 0);
+    io_board_led_power(3, 0);
+    io_board_led_power(4, 0);
+    io_board_led_power(5, 0);
 
     NODE_1_STATES node_1_state = MENU;
     main_menu_state = NEW_GAME;
@@ -59,22 +66,37 @@ int main(){
     out_msg.data[7] = 0;
     out_msg.size = 8;
     out_msg.id = 0xff;
+
+    msg_global.data[0] = 0;
+    msg_global.data[1] = 0;
+    msg_global.data[2] = 0;
+    msg_global.data[3] = 0;
+    msg_global.data[4] = 0;
+    msg_global.data[5] = 0;
+    msg_global.data[6] = 0;
+    msg_global.data[7] = 0;
+    msg_global.size = 8;
+    msg_global.id = 0xff;
+    printf("Going to while loop \r\n");
     
     while (1){
         switch (node_1_state)
         {
         case MENU:
+            printf("menu state\r\n");
             main_menu();
+            printf("going to play state\r\n");
             node_1_state = PLAY;
             //send msg to node 2 that the game starts
             out_msg.id = 0;
             out_msg.size = 1;
             out_msg.data[0] = 1;
+            can_send_msg(out_msg);
             draw_gameplay();
             break;
         
         case PLAY:
-
+            printf("play state\r\n");
             get_io_board_values();
             out_msg.id = 1;
             out_msg.size = 5;
@@ -83,7 +105,7 @@ int main(){
             out_msg.data[2] = buttons.right;
             out_msg.data[3] = buttons.left;
             out_msg.data[4] = buttons.nav;
-            can_send_msg(message);
+            can_send_msg(out_msg);
 
             goals = msg_global.data[0]; //get number of goals scored
             lives = 6 - goals; 
@@ -101,14 +123,24 @@ int main(){
             }
 
             if (goals == 6){ //change state when reviced game over signal. 
+                printf("No more lives\r\n");
                 node_1_state = MENU;
                 update_highscore(score);
                 lives = 6;
+                goals = 0;
                 score = 0;
                 //send msg to node 2 that the game is over
                 out_msg.id = 0;
                 out_msg.size = 1;
                 out_msg.data[0] = 0;
+                can_send_msg(out_msg);
+                //turn off lights
+                io_board_led_power(0, 0);
+                io_board_led_power(1, 0);
+                io_board_led_power(2, 0);
+                io_board_led_power(3, 0);
+                io_board_led_power(4, 0);
+                io_board_led_power(5, 0);
                 //print game over
                 print_gameover(score);
                 _delay_ms(3000);

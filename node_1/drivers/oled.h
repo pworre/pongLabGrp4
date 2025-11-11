@@ -23,6 +23,7 @@ void oled_get_page(uint8_t page);
 void oled_update_screen(void);
 void oled_draw(FIGURES fig, uint8_t page, uint8_t col);
 void oled_write_inverted_string(char* ptr, uint8_t font_size, uint8_t page, uint8_t col);
+void oled_clear_buffer(void);
 
 
 #endif
