@@ -93,6 +93,7 @@ int main(){
             break;
         
         case PLAY:
+            can_recive_msg(&msg_global, 1);
             _delay_ms(10);
             get_io_board_values();
             out_msg.id = 1;

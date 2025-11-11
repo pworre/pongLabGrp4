@@ -8,10 +8,10 @@ uint8_t tx_reg2_ready = 1;
 CAN_MESSAGE msg_global;
 
 #define fosc 16000000 // Hz
-#define bitrate 500000 // bit/s
+#define bitrate 250000 // bit/s
 #define TQ_per_bit 16
 #define TQ_time (1.0f/(bitrate * TQ_per_bit))
-#define BRP 1
+#define BRP ((uint32_t)(fosc/(TQ_per_bit*bitrate))/2) // 1
 #define synchSeg 1
 #define propSeg 2
 #define phase1 7
@@ -42,7 +42,7 @@ void CAN_CTRL_init(void){
     GICR |= (1 << INT0);                        // Activate INT0
     sei();
 
-    CAN_CTRL_write(MCP_CANINTE, 0b10111111); // All, except wake-up
+    
 
     //-------------------BIT TIMING OF CAN-BUS-------------------
     // BAUDRATE
@@ -72,9 +72,13 @@ void CAN_CTRL_init(void){
     uint8_t config1_val = (((SJW - 1) << SJW0) | (BRP-1));
     CAN_CTRL_write(MCP_CNF1, config1_val);
 
-        //use loopback mode
+    //use loopback mode
     //CAN_CTRL_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000); 
+    //CAN_CTRL_write(MCP_CANINTE, 0b10111111); // All, except wake-up
+    CAN_CTRL_write(MCP_CANINTE, 0b00000001);
+    //use normal mode
     CAN_CTRL_write(MCP_CANCTRL, 0);
+    
 }
 
 void CAN_CTRL_reset(void){
@@ -97,9 +101,7 @@ uint8_t CAN_CTRL_read(uint8_t address){
     return data;
 }
 
-void CAN_CTRL_RTS(uint8_t buffer_nr){
-    uint8_t number = buffer_nr & 0b00000111;
-    uint8_t command = 0b10000000 | number;
+void CAN_CTRL_RTS(){
     SPI_MasterTransmit(MCP_RTS_TX0, CAN);
     SPI_slave_deselect();
 }
@@ -130,12 +132,12 @@ ISR(INT0_vect){
         //CAN_CTRL_write(CANINTF, 0);
         //printf("Receive buffer 0 full!\r\n");
 
-        msg_global = can_recive_msg(0);
+        can_recive_msg(&msg_global, 1);
         CAN_CTRL_bit_modify(CANINTF, (1 << RX0IF), 0);
     } else if ((can_int_reg & (1 << RX1IF)) != 0){  // Receive buffer 1 full
         //printf("Receive buffer 1 full!\r\n");
         
-        msg_global = can_recive_msg(1);
+        can_recive_msg(&msg_global, 2);
         CAN_CTRL_bit_modify(CANINTF, (1 << RX1IF), 0);
     } else if ((can_int_reg & (1 << TX0IF)) != 0){  // Transmit buffer 0 empty
         // Clear interrupt
@@ -210,7 +212,7 @@ ISR(INT0_vect){
         
         // NOT IMPLEMENTED
     } else if ((can_int_reg & (1 << MERRF)) != 0){  // Message
-        // Clear interrupt
+        // Clear interruptget_io_board_values();
         CAN_CTRL_bit_modify(CANINTF, (1 << MERRF), 0);
         
         //printf("CAN-BUS INTERRUPT:  MESSAGE FAULT");
@@ -234,7 +236,22 @@ void can_send_msg(CAN_MESSAGE can_msg){
         CAN_CTRL_write(TXB0D0 + i, can_msg.data[i]);
     }
     //request to send buffer 0
-    CAN_CTRL_RTS(0b001);
+    CAN_CTRL_RTS();
+
+    // Check for errors
+    uint8_t reg = CAN_CTRL_read(TXB0CTRL);
+    if (reg & (1 << 3)) //TXREQ
+    {
+        if (reg & (1 << 4)) //TXERR
+        {
+        printf("CAN_ERROR: msg error detected \n\r");
+        }
+        else if (reg & (1 << 5))//MLOA
+        {
+        printf("CAN_ERROR: MSG lost\n\r");
+        }
+    }
+
 } 
 /*
 void can_send_msg(CAN_MESSAGE can_msg){
@@ -262,34 +279,46 @@ void can_send_msg(CAN_MESSAGE can_msg){
 }*/
 
 
-CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
-    CAN_MESSAGE msg = {};
-    uint8_t buffer_offset = 0;
+int can_recive_msg(CAN_MESSAGE *msg, uint8_t buffer_nr){
+    uint8_t idH = 0;
+    uint8_t idL = 0;
     if (buffer_nr == 1){
-        msg.id = CAN_CTRL_read(RXB0SIDL + buffer_offset) + ((CAN_CTRL_read(RXB0SIDH + buffer_offset) & 0x0f) << 8);
+        if (!(CAN_CTRL_read(MCP_CANINTF) & (1 << RX0IF))){
+        //printf("NO INT RX0 \r\n");
+        return 0;
+        }
+        idH = CAN_CTRL_read(RXB0SIDH);
+        idL = CAN_CTRL_read(RXB0SIDL);
+        msg->id = (idH << 3) + (idL >> 5);
 
-        msg.size = CAN_CTRL_read(RXB0DLC);
-        if (msg.size > 8){
-            msg.size = 8;
+        msg->size = CAN_CTRL_read(RXB0DLC);
+        if (msg->size > 8){
+            msg->size = 8;
         }
 
-        for (uint8_t i = 0; i < msg.size; i++){
-            msg.data[i] = CAN_CTRL_read(RXB0D0 + i);
+        for (uint8_t i = 0; i < msg->size; i++){
+            msg->data[i] = CAN_CTRL_read(RXB0D0 + i);
         }
         //sett CANINTF.RX0IF = 0 to signal that the msg is fetched at buffer RX0
         CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
     }
     else if (buffer_nr == 2){
-        buffer_offset = 0b10000;
-        msg.id = CAN_CTRL_read(RXB0SIDL + buffer_offset) + ((CAN_CTRL_read(RXB0SIDH + buffer_offset) & 0x0f) << 8);
-
-        msg.size = CAN_CTRL_read(RXB0DLC + buffer_offset);
-        if (msg.size > 8){
-            msg.size = 8;
+        if (!(CAN_CTRL_read(MCP_CANINTF) & (1 << RX1IF))){
+        //printf("ikke interrupt flag på at noe er mottat\r\n");
+        return 0;
         }
 
-        for (uint8_t i = 0; i < msg.size; i++){
-            msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offset + i);
+        idH = CAN_CTRL_read(RXB1SIDH);
+        idL = CAN_CTRL_read(RXB1SIDL);
+        msg->id = (idH << 3) + (idL >> 5);
+
+        msg->size = CAN_CTRL_read(RXB1DLC);
+        if (msg->size > 8){
+            msg->size = 8;
+        }
+
+        for (uint8_t i = 0; i < msg->size; i++){
+            msg->data[i] = CAN_CTRL_read(RXB1D0 + i);
         }
 
         //sett CANINTF.RX1IF = 0 to signal that the msg is fetched at buffer RX1
