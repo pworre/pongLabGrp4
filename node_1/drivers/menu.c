@@ -16,7 +16,6 @@ void main_menu(void){
 
             get_io_board_values();
 
-            
             if (buttons.ND == 1){
                 main_menu_state = SCORE;
             }

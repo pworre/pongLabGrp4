@@ -30,8 +30,6 @@
     //     printf("Global interrupt enabled\r\n");
     // }
 
-
-    
 int main()
 {
     SystemInit();
@@ -47,8 +45,6 @@ int main()
     adc_init_freerun();
     solenoide_init();
     
-    
-
     init_encoder();
     motor_init();
     
