@@ -41,4 +41,11 @@ void draw_settings_menu(void); //tegne til undermeny i nedre høyre halvdel
 
 void clear_submenu(void);
 
+void draw_gameplay(void); //tegner score-counter under spill
+
+void update_gameplay(void); //oppdatere score-counter under spill
+
+void clear_screen(void);
+
+
 #endif 
