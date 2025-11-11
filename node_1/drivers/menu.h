@@ -43,9 +43,11 @@ void clear_submenu(void);
 
 void draw_gameplay(void); //tegner score-counter under spill
 
-void update_gameplay(void); //oppdatere score-counter under spill
+void update_gameplay(uint8_t timerCounter, uint8_t goals); //oppdatere score-counter under spill
 
 void clear_screen(void);
+
+void update_highscore(uint8_t score);
 
 
 #endif 

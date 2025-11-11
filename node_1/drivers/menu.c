@@ -1,6 +1,6 @@
 #include "menu.h"
 
-volatile uint8_t high_scores[5] = {76, 46, 23, 3, 1};
+volatile uint8_t high_scores[5] = {0, 0, 0, 0, 0};
 
 void main_menu(void){
     oled_clear();
@@ -23,6 +23,7 @@ void main_menu(void){
 
             else if (buttons.NR == 1){
                 new_game_menu();
+                return;
             }
             break;
 
@@ -76,7 +77,7 @@ void new_game_menu(void){
         get_io_board_values();
 
         if (buttons.NB == 1){
-                //start new game
+                return;
             }
 
         else if (buttons.NL == 1){
@@ -213,20 +214,16 @@ void draw_score_menu(void) {
     oled_write_inverted_string(header, 8, 0, 23);
 
     for (uint8_t i = 0; i < 5; i++) {
-        char line[10];  // midlertidig buffer for teksten på hver linje
+        char line[10];
         char num_str[4];
         uint8_t score = high_scores[i];
 
-        // lag streng for plassnummer (1-5)
         char place = '1' + i;
 
-        // konverter score til tekst
+        // make string 
         snprintf(num_str, sizeof(num_str), "%d", score);
-
-        // lag linjetekst i formatet "1. 76"
         snprintf(line, sizeof(line), "%c. %s", place, num_str);
 
-        // skriv til OLED, f.eks. én linje per side (page)
         oled_write_string(line, 4, 2 + i, 63);
     }
 
@@ -274,3 +271,16 @@ void update_gameplay(uint8_t timerCounter, uint8_t goals) {
     oled_write_string(timer_str, 4, 2, 29);
     oled_write_string(goal_str, 4, 5, 29);
 } //oppdatere score-counter under spill
+
+void update_highscore(uint8_t score){
+    high_scores[5] = score;
+    for (int i = 0; i < 5 - 1; i++) {
+        for (int j = i + 1; j < 5; j++) {
+            if (high_scores[j] > high_scores[i]) {
+                uint8_t temp = high_scores[i];
+                high_scores[i] = high_scores[j];
+                high_scores[j] = temp;
+            }
+        }
+    }
+}

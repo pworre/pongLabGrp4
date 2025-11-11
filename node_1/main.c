@@ -42,6 +42,8 @@ int main(){
     main_menu_state = NEW_GAME;
     settings_menu_state = CALIBRATION;
     uint8_t lives = 6;
+    uint8_t score = 0;
+    uint8_t goals = 0;
 
     //this can msg will either be io_board or game logic signals
     //io_board msg ID: 1
@@ -63,10 +65,12 @@ int main(){
         {
         case MENU:
             main_menu();
+            node_1_state = PLAY;
+            //send msg to node 2 that the game starts
             out_msg.id = 0;
             out_msg.size = 1;
             out_msg.data[0] = 1;
-            node_1_state = PLAY;
+            draw_gameplay();
             break;
         
         case PLAY:
@@ -81,8 +85,11 @@ int main(){
             out_msg.data[4] = buttons.nav;
             can_send_msg(message);
 
-            lives = 6 - msg_global.data[?]; //get number of goals scored
+            goals = msg_global.data[0]; //get number of goals scored
+            lives = 6 - goals; 
+            score = msg_global.data[1];
 
+            update_gameplay(score, goals);
 
             //turn on light representing lives
             for (uint8_t light; light < 6; light++){
@@ -93,9 +100,15 @@ int main(){
                 }
             }
 
-            if (msg_global.data[?] == ?){ //change state when reviced game over signal. 
+            if (goals == 6){ //change state when reviced game over signal. 
                 node_1_state = MENU;
-                //update the highscore
+                update_highscore(score);
+                lives = 6;
+                score = 0;
+                //send msg to node 2 that the game is over
+                out_msg.id = 0;
+                out_msg.size = 1;
+                out_msg.data[0] = 0;
             }
             break;
 
