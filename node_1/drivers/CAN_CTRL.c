@@ -22,7 +22,7 @@ void test_CAN_CTRL(void) {
     CAN_CTRL_init();
     CAN_CTRL_write(0b00000000, 0b00000011);
     uint8_t data = CAN_CTRL_read(0b00000000);
-    printf("Value: %u\r\n", (unsigned int)data);
+    //printf("Value: %u\r\n", (unsigned int)data);
 }
 
 void CAN_CTRL_init(void){
@@ -123,9 +123,9 @@ void CAN_CTRL_bit_modify(uint8_t address, uint8_t mask, uint8_t data){
 
 ISR(INT0_vect){
     uint8_t can_int_reg = CAN_CTRL_read(CANINTF);
-    for (uint8_t bit = 8; bit >= 1; bit--) {
-        printf("%d", ((can_int_reg >> (bit - 1)) & 1));
-    } printf("\r\n");
+    // for (uint8_t bit = 8; bit >= 1; bit--) {
+    //     printf("%d", ((can_int_reg >> (bit - 1)) & 1));
+    // } printf("\r\n");
 
     
     if ((can_int_reg & (1 << RX0IF)) != 0){         // Receive buffer 0 full

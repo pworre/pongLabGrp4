@@ -30,7 +30,6 @@ int main(){
     SPI_MasterInit();
     oled_init();
     CAN_CTRL_init();
-    printf("Initialized \r\n");
 
     io_board_led_pwm(0, 70);
     io_board_led_pwm(1, 70);
@@ -77,15 +76,12 @@ int main(){
     msg_global.data[7] = 0;
     msg_global.size = 8;
     msg_global.id = 0xff;
-    printf("Going to while loop \r\n");
     
     while (1){
         switch (node_1_state)
         {
         case MENU:
-            printf("menu state\r\n");
             main_menu();
-            printf("going to play state\r\n");
             node_1_state = PLAY;
             //send msg to node 2 that the game starts
             out_msg.id = 0;
@@ -96,7 +92,6 @@ int main(){
             break;
         
         case PLAY:
-            printf("play state\r\n");
             get_io_board_values();
             out_msg.id = 1;
             out_msg.size = 5;
