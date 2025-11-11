@@ -50,8 +50,7 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
             score = 0;
 
             while(game.state == PLAY){
-                
-                
+
                 // RECEIVES CAN_MESSAGE
                 can_receive(&can_message, 1);
                 can_sort_message(&game, &can_message);
