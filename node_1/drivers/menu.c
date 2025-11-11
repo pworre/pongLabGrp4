@@ -3,6 +3,7 @@
 volatile uint8_t high_scores[5] = {76, 46, 23, 3, 1};
 
 void main_menu(void){
+    oled_clear();
     draw_main_menu();
     while (1){
         _delay_ms(50);
@@ -252,3 +253,24 @@ void clear_submenu(void){
         }
     }
 }
+
+void draw_gameplay(void) {
+    oled_clear();
+    char* timeHeader = "PLAYTIME:";
+    char* timer = "0";
+    char* goalHeader = "GOALS SCORED:";
+    char* goals = "0";
+    oled_write_string(timeHeader, 5, 1, 25);
+    oled_write_string(timer, 4, 2, 29);
+    oled_write_string(goalHeader, 5, 4, 23);
+    oled_write_string(goals, 4, 5, 29);
+} //tegner score-counter under spill
+
+void update_gameplay(uint8_t timerCounter, uint8_t goals) {
+    char timer_str[10];
+    char goal_str[10];
+    snprintf(timer_str, sizeof(timer_str), "%d", timerCounter);
+    snprintf(goal_str, sizeof(goal_str), "%d", goals);
+    oled_write_string(timer_str, 4, 2, 29);
+    oled_write_string(goal_str, 4, 5, 29);
+} //oppdatere score-counter under spill
