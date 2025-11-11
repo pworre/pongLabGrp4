@@ -23,6 +23,7 @@ typedef struct pid_controller{
     float integral;
     float derivate;
     int32_t controller_output;
+    uint32_t toggle;
 } PID_CONTROLLER;
 
 void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T);
