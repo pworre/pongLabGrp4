@@ -24,10 +24,12 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
             break;
             
             case PLAY:
+            TC0->TC_CHANNEL[0].TC_CCR |= TC_CCR_SWTRG;
+            TC0->TC_CHANNEL[1].TC_CCR |= TC_CCR_SWTRG;
             printf("ENTERED PLAY-STATE\r\n");
             uint32_t is_R5_pressed = 0;
             uint32_t duty_cycle = 0;
-            uint32_t i = 0;
+            volatile uint32_t i = 0;
 
             while(game.state == PLAY){
                 // RECEIVES CAN_MESSAGE
@@ -49,8 +51,9 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
                 }
 
                 //printf("PID-output: %d\r\n", pid_ctrl->controller_output);
-                if (i % 1000){
+                if (i % 100000 == 0){
                     // SEND GAME_INFO TO NODE_1
+                    printf("sends can to node 1\r\n");
                     can_msg_send.id = 2;
                     can_msg_send.data_length = 2;
                     can_msg_send.data[0] = goals;
