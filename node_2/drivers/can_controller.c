@@ -261,6 +261,6 @@ void can_sort_message(GAME *game, CAN_MESSAGE *can_msg){
 		joystick.buttons.left = can_msg->data[3];
 		joystick.buttons.nav = can_msg->data[4];
 
-		printf("x-axis: %d\r\n", joystick.x_axis);
+		//printf("x-axis: %d\r\n", joystick.x_axis);
 	}
 }

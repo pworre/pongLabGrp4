@@ -16,7 +16,7 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
         can_receive(&can_message, 1);
         //printf("msg_id = %u    msg_size = %u    msg_data[0] = %u    msg_data[1] = %u\r\n", can_message.id, can_message.data_length, can_message.data[0], can_message.data[1]);
         can_sort_message(&game, &can_message);
-        printf("STATE: %d\r\n", game.state);
+        //printf("STATE: %d\r\n", game.state);
 
         switch (game.state)
         {
@@ -48,7 +48,7 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
                     is_R5_pressed = 1;
                 }
 
-                printf("PID-output: %d\r\n", pid_ctrl->controller_output);
+                //printf("PID-output: %d\r\n", pid_ctrl->controller_output);
                 if (i % 1000){
                     // SEND GAME_INFO TO NODE_1
                     can_msg_send.id = 2;
