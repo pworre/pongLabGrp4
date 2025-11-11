@@ -22,7 +22,7 @@ void test_CAN_CTRL(void) {
     CAN_CTRL_init();
     CAN_CTRL_write(0b00000000, 0b00000011);
     uint8_t data = CAN_CTRL_read(0b00000000);
-    printf("Value: %u\r\n", (unsigned int)data);
+    //printf("Value: %u\r\n", (unsigned int)data);
 }
 
 void CAN_CTRL_init(void){
@@ -121,9 +121,9 @@ void CAN_CTRL_bit_modify(uint8_t address, uint8_t mask, uint8_t data){
 
 ISR(INT0_vect){
     uint8_t can_int_reg = CAN_CTRL_read(CANINTF);
-    for (uint8_t bit = 0; bit < 8; bit++) {
-        printf("%d", ((can_int_reg >> bit) & 1));
-    } printf("\r\n");
+    // for (uint8_t bit = 8; bit >= 1; bit--) {
+    //     printf("%d", ((can_int_reg >> (bit - 1)) & 1));
+    // } printf("\r\n");
 
     
     if ((can_int_reg & (1 << RX0IF)) != 0){         // Receive buffer 0 full
@@ -276,6 +276,8 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         for (uint8_t i = 0; i < msg.size; i++){
             msg.data[i] = CAN_CTRL_read(RXB0D0 + i);
         }
+        //sett CANINTF.RX0IF = 0 to signal that the msg is fetched at buffer RX0
+        CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
     }
     else if (buffer_nr == 2){
         buffer_offset = 0b10000;
@@ -289,15 +291,15 @@ CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){
         for (uint8_t i = 0; i < msg.size; i++){
             msg.data[i] = CAN_CTRL_read(RXB0D0 + buffer_offset + i);
         }
-    }
-    else {
-        return;
-    }
 
-    //sett the CANINTF.RX0IF = 0 to signal that the msg is fetched
-    CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
-
-    return msg;
+        //sett CANINTF.RX1IF = 0 to signal that the msg is fetched at buffer RX1
+        CAN_CTRL_bit_modify(CANINTF, 0b00000010, 0);
+    }
+    else if ((buffer_nr != 1) || (buffer_nr != 2)) {
+        printf("Ikke gyldig bufferverdi!");
+        return 0;
+    }
+    return 1;
 }
 /*
 CAN_MESSAGE can_recive_msg(uint8_t buffer_nr){

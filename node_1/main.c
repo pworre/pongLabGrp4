@@ -119,7 +119,6 @@ int main(){
             }
 
             if (goals == 6){ //change state when reviced game over signal. 
-                printf("No more lives\r\n");
                 node_1_state = MENU;
                 update_highscore(score);
                 lives = 6;

@@ -7,12 +7,14 @@ void transmit_oled_data(uint8_t data){
     //sett D/C til høy
     PORTB |= (1<<D_C);
     SPI_MasterTransmit(data, OLED);
+    SPI_slave_deselect();
 }
 
 void transmit_oled_command(uint8_t cmd){
     // D/C til lav
     PORTB &= ~(1<<D_C);
     SPI_MasterTransmit(cmd, OLED);
+    SPI_slave_deselect();
     //SPI_MasterTransmit((uint8_t)(cmd>>8), OLED);
     //SPI_MasterTransmit((uint8_t)(cmd & 0xff), OLED);
 }
@@ -226,5 +228,13 @@ void oled_draw(FIGURES fig, uint8_t page, uint8_t col){
     //oled_print_page(page);
     for (int i = 0; i < width; i++){ // OBS!!!
         oled_write_byte(page, (col + i), oled_current_page[col + i]);
+    }
+}
+
+void oled_clear_buffer(void){
+    for (int page = 0; page < 8; page++) { // OBS!!!
+        for (int col = 0; col < 128; col++) {
+            oled_write_byte(page, col, 0);
+        }
     }
 }

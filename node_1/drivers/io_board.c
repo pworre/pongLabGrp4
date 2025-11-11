@@ -45,7 +45,6 @@ void io_board_init(){
 
 void ADC_read(void){
 
-    
     //adc_adress[0] = 0xff;
     adc_adress[0] = 0;
 
@@ -180,6 +179,7 @@ void io_board_led_power(uint8_t led_nr, uint8_t state){
     SPI_MasterTransmit(state, IO_BOARD);
     _delay_us(DELAY_DATA_DATA);
     PORTB |= ((1 << SS_OLED) | (1 << SS_CAN) | (1 << SS_IO_BOARD));
+    SPI_slave_deselect();
 }
 
 
@@ -191,6 +191,7 @@ void io_board_led_pwm(uint8_t led_nr, uint8_t width){
     SPI_MasterTransmit(width, IO_BOARD); // 0 -> 255
     _delay_us(DELAY_DATA_DATA);
     PORTB |= ((1 << SS_OLED) | (1 << SS_CAN) | (1 << SS_IO_BOARD));
+    SPI_slave_deselect();
 }
 
 /*
