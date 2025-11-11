@@ -301,7 +301,7 @@ int can_recive_msg(CAN_MESSAGE *msg, uint8_t buffer_nr){
         }
         //sett CANINTF.RX0IF = 0 to signal that the msg is fetched at buffer RX0
         CAN_CTRL_bit_modify(CANINTF, 0b00000001, 0);
-    }/*
+    }
     else if (buffer_nr == 2){
         if (!(CAN_CTRL_read(MCP_CANINTF) & (1 << RX1IF))){
         //printf("ikke interrupt flag på at noe er mottat\r\n");
@@ -323,7 +323,7 @@ int can_recive_msg(CAN_MESSAGE *msg, uint8_t buffer_nr){
 
         //sett CANINTF.RX1IF = 0 to signal that the msg is fetched at buffer RX1
         CAN_CTRL_bit_modify(CANINTF, 0b00000010, 0);
-    }*/
+    }
     else if ((buffer_nr != 1) || (buffer_nr != 2)) {
         printf("Ikke gyldig bufferverdi!");
         return 0;

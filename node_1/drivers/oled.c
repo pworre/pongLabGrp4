@@ -7,12 +7,14 @@ void transmit_oled_data(uint8_t data){
     //sett D/C til høy
     PORTB |= (1<<D_C);
     SPI_MasterTransmit(data, OLED);
+    SPI_slave_deselect();
 }
 
 void transmit_oled_command(uint8_t cmd){
     // D/C til lav
     PORTB &= ~(1<<D_C);
     SPI_MasterTransmit(cmd, OLED);
+    SPI_slave_deselect();
     //SPI_MasterTransmit((uint8_t)(cmd>>8), OLED);
     //SPI_MasterTransmit((uint8_t)(cmd & 0xff), OLED);
 }

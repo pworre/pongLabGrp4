@@ -40,14 +40,14 @@ void main_menu(void){
             if (buttons.NU == 1){
                 main_menu_state = NEW_GAME;
             }
-            else if (buttons.ND == 1){
-                main_menu_state = SETTINGS;
-            }
+            // else if (buttons.ND == 1){
+            //     main_menu_state = SETTINGS;
+            // }
             else if (buttons.NR == 1){
                 score_menu();
             }
             break;
-
+/*
         case SETTINGS:
             oled_draw(EMPTY, 2, 0); //drawing the correct arrow
             oled_draw(EMPTY, 4, 0);
@@ -63,7 +63,7 @@ void main_menu(void){
                 settings_menu();
             }
             break;
-        
+*/        
         default:
             break;
         }
@@ -99,7 +99,7 @@ void score_menu(void){
     clear_submenu();
     return;
 } //flytter pila
-
+/*
 void settings_menu(void){
     draw_settings_menu();
 
@@ -173,6 +173,7 @@ void settings_menu(void){
         }
     }
 } //flytter pila
+*/
 
 void draw_main_menu(void){
     clear_submenu();
@@ -182,9 +183,10 @@ void draw_main_menu(void){
     oled_write_string(new_game_str, 5, 2, 8);
     char* Score_str = "Score";
     oled_write_string(Score_str, 5, 4, 8);
-    char* Settings_str = "Settings";
-    oled_write_string(Settings_str, 5, 6, 8);
-    oled_update_screen();
+    // char* Settings_str = "Settings";
+    // oled_write_string(Settings_str, 5, 6, 8);
+    oled_update_screen();char* Settings_str = "Settings";
+    // oled_write_string(Settings_str, 5, 6, 8);
 } //tegne til hele skjermen
 
 void draw_new_game_menu(void){
@@ -237,7 +239,7 @@ void draw_score_menu(void) {
     oled_update_screen();
 }
 
-
+/*
 void draw_settings_menu(void){
     char* header = "SETTINGS";
     oled_write_inverted_string(header, 8, 0, 23);
@@ -249,6 +251,7 @@ void draw_settings_menu(void){
     oled_write_string(Difficulty_str, 4, 6, 71);
     oled_update_screen();
 } //tegne til undermeny i nedre høyre halvdel
+ */
 
 void clear_submenu(void){
     for (uint8_t page = 2; page < 8; page++){

@@ -46,7 +46,7 @@ int main(){
 
     NODE_1_STATES node_1_state = MENU;
     main_menu_state = NEW_GAME;
-    settings_menu_state = CALIBRATION;
+    //settings_menu_state = CALIBRATION;
     uint8_t lives = 6;
     uint8_t score = 0;
     uint8_t goals = 0;
@@ -81,6 +81,7 @@ int main(){
         switch (node_1_state)
         {
         case MENU:
+            
             main_menu();
             node_1_state = PLAY;
             //send msg to node 2 that the game starts
@@ -92,6 +93,7 @@ int main(){
             break;
         
         case PLAY:
+            _delay_ms(10);
             get_io_board_values();
             out_msg.id = 1;
             out_msg.size = 5;
@@ -105,7 +107,7 @@ int main(){
             goals = msg_global.data[0]; //get number of goals scored
             lives = 6 - goals; 
             score = msg_global.data[1];
-
+            printf("goals: %d    score: %d\r\n", goals, score);
             update_gameplay(score, goals);
 
             //turn on light representing lives
