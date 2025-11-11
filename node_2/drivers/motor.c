@@ -1,7 +1,7 @@
 #include "motor.h"
 
 #define PWM_PIN 12 // PB12
-#define CPRD 6000 //13125
+#define CPRD 6000 //13125 is 5kHz, 6000 gives 10.94kHz
 
 
 void motor_init(void){

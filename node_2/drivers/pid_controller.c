@@ -33,9 +33,9 @@ void pid_update_referance(PID_CONTROLLER *pid_ctrl){
     int8_t x_axis = io_can_message.data[0];
     //removes the stickdrift
     if (x_axis < 10){
-        pid_ctrl->reference += (x_axis / 3); //can cange the reference 5% of the max value at a time step
+        pid_ctrl->reference -= (x_axis / 2);
     } else if( x_axis > -10){
-        pid_ctrl->reference += (x_axis / 3);
+        pid_ctrl->reference -= (x_axis / 2);
     } 
     if (pid_ctrl->reference < 5){
         pid_ctrl->reference = 5;
