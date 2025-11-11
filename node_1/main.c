@@ -81,8 +81,10 @@ int main(){
         switch (node_1_state)
         {
         case MENU:
-            
             main_menu();
+            lives = 6;
+            goals = 0;
+            score = 0;
             node_1_state = PLAY;
             //send msg to node 2 that the game starts
             out_msg.id = 0;
@@ -111,7 +113,7 @@ int main(){
             update_gameplay(score, goals);
 
             //turn on light representing lives
-            for (uint8_t light; light < 6; light++){
+            for (uint8_t light = 0; light < 6; light++){
                 if (light < lives){
                     io_board_led_power(light, 1);
                 } else{

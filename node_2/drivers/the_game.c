@@ -26,20 +26,28 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
             break;
             
             case PLAY:
-            pid_ctrl->toggle = 1;
+            
+            
             if (!from_main){
                 encoder_calibrate();
+                pid_ctrl->toggle = 1;
                 pid_ctrl->reference = ENCODER_MAX/2;
-                for(volatile uint32_t i = 0; i < 3000000; i++){
+                for(volatile uint32_t i = 0; i < 4000000; i++){
                     __asm__("nop");
                 }
             }
-            TC0->TC_CHANNEL[0].TC_CCR |= TC_CCR_SWTRG;
-            TC0->TC_CHANNEL[1].TC_CCR |= TC_CCR_SWTRG;
+            pid_ctrl->toggle = 1;
+           
+            for(volatile uint32_t i = 0; i < 3000; i++){
+                __asm__("nop");
+            }
+            
             printf("ENTERED PLAY-STATE\r\n");
             uint32_t is_R5_pressed = 0;
             uint32_t duty_cycle = 0;
             volatile uint32_t i = 0;
+            goals = 0;
+            score = 0;
 
             while(game.state == PLAY){
                 
@@ -78,7 +86,8 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
                 for(volatile uint32_t i = 0; i < 30000; i++){
                     __asm__("nop");
                 }
-            goals = 0;
+            // goals = 0;
+            // score = 0;
             from_main = 0;
             pid_ctrl->toggle = 0;
             break;

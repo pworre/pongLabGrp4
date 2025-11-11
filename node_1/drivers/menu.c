@@ -254,6 +254,8 @@ void draw_settings_menu(void){
  */
 
 void clear_submenu(void){
+    char* header = "MAIN  MENU";
+    oled_write_inverted_string(header, 8, 0, 23);
     for (uint8_t page = 2; page < 8; page++){
         for (int col = 63; col < 128; col++){ // OBS!!!
             oled_write_byte(page, col, 0x00);
