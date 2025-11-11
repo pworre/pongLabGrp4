@@ -119,12 +119,9 @@ int main(){
                 }
             }
 
-            if (goals == 6){ //change state when reviced game over signal. 
+            if (goals >= 6){ //change state when reviced game over signal. 
                 node_1_state = MENU;
                 update_highscore(score);
-                lives = 6;
-                goals = 0;
-                score = 0;
                 //send msg to node 2 that the game is over
                 out_msg.id = 0;
                 out_msg.size = 1;
@@ -139,6 +136,9 @@ int main(){
                 io_board_led_power(5, 0);
                 //print game over
                 print_gameover(score);
+                lives = 6;
+                goals = 0;
+                score = 0;
                 _delay_ms(3000);
             }
             break;

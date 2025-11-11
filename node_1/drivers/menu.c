@@ -291,14 +291,14 @@ void print_gameover(uint8_t timerCounter) {
     char* final_time = "Final Score: ";
     char time_string[10];
     snprintf(time_string, sizeof(time_string), "%d", timerCounter);
-    oled_write_string(game_over, 5, 3, 25);
-    oled_write_string(final_time, 4, 5, 23);
-    oled_write_string(time_string, 4, 5, 35);
+    oled_write_string(game_over, 8, 2, 30);
+    oled_write_string(final_time, 5, 5, 30);
+    oled_write_string(time_string, 5, 5, 100);
     oled_update_screen();
 }
 
 void update_highscore(uint8_t score){
-    high_scores[5] = score;
+    high_scores[4] = score;
     for (int i = 0; i < 5 - 1; i++) {
         for (int j = i + 1; j < 5; j++) {
             if (high_scores[j] > high_scores[i]) {

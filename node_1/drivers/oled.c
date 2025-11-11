@@ -50,7 +50,12 @@ void oled_init(void){
 
 
 void oled_reset(void);
-void oled_home(void); // gå til (0,0)
+
+void oled_home(void) {
+    oled_goto_column(0);
+    oled_goto_page(0);
+} // gå til (0,0)
+
 void oled_goto_page(uint8_t page){
     // makes valid max_line
     if (page > 8){
@@ -193,6 +198,7 @@ void oled_get_page(uint8_t page){
 }
 
 void oled_update_screen(void){
+    oled_home();
     for (uint8_t page = 0; page < 8; page++){
         oled_get_page(page);
         oled_print_page(page);
