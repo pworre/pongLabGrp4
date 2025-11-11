@@ -16,6 +16,7 @@
 #define can_id_game_logic 0xf0
 
 #include <stdint.h>
+#include "the_game.h"
 
 typedef struct can_message_t
 {
@@ -24,10 +25,14 @@ typedef struct can_message_t
 	int8_t data[8];
 } CAN_MESSAGE;
 
+// extern CAN_MESSAGE can_msg_game;
+// extern CAN_MESSAGE can_msg_io;
+
 uint8_t can_init_def_tx_rx_mb(uint32_t can_br);
 uint8_t can_init(uint32_t can_br, uint8_t num_tx_mb, uint8_t num_rx_mb);
 
 uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t mailbox_id);
 uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t mailbox_id);
+void can_sort_message(GAME *game, JOYSTICK *joystick);
 
 #endif /* CAN_CONTROLLER_H_ */

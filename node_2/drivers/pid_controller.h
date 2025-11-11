@@ -31,7 +31,7 @@ void pid_update_integral(PID_CONTROLLER *pid_ctrl);
 void pid_update_derivate(PID_CONTROLLER *pid_ctrl);
 void pid_calculate_controller_output(PID_CONTROLLER *pid_ctrl);
 void pid_set_motor_power(PID_CONTROLLER *pid_ctrl);
-void pid_use_controller(PID_CONTROLLER *pid_ctrl);
+void pid_use_controller(PID_CONTROLLER *pid_ctrl, JOYSTICK *joystick);
 
 
 #endif

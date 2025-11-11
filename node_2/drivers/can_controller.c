@@ -236,10 +236,11 @@ uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 				data_high = data_high >> 8;
 			}
 		}
-		
+
 		//Reset for new receive
 		CAN0->CAN_MB[rx_mb_id].CAN_MMR = CAN_MMR_MOT_MB_RX;
 		CAN0->CAN_MB[rx_mb_id].CAN_MCR |= CAN_MCR_MTCR;
+
 		return 0;
 	}
 	else //Mailbox busy
@@ -248,3 +249,14 @@ uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 	}
 }
 
+void can_sort_message(GAME *game, JOYSTICK *joystick, CAN_MESSAGE *can_msg){
+	if (can_msg.id == 0){
+		game->state = (can_msg.data[0] & 1);
+	} else if (can_msg.id == 1){
+		joystick->x_axis = can_msg->data[0];
+		joystick->y_axis = can_msg->data[1];
+		joystick->buttons.right = can_msg->data[2];
+		joystick->buttons.left = can_msg->data[3];
+		joystick->buttons.nav = can_msg->data[4];
+	}
+}

@@ -12,6 +12,7 @@
 #include "drivers/solenoide.h"
 #include "drivers/time.h"
 #include "drivers/pid_controller.h"
+#include "drivers/the_game.h"
 //#include <util/delay.h>
 
 /*
@@ -30,84 +31,22 @@
     //     printf("Global interrupt enabled\r\n");
     // }
 
-
     
-int main()
-{
+int main(){
     SystemInit();
     WDT->WDT_MR = WDT_MR_WDDIS; //Disable Watchdog Timer
+
     pwm_init();
     uart_init(84000000, 9600);
 
-    uint32_t can_br = 250000; //not used
+    uint32_t can_br = 250000;
     uint8_t num_tx_mb = 2;
     uint8_t num_rx_mb = 2;
     can_init(can_br, num_tx_mb, num_rx_mb);
     
-    adc_init_freerun();
-    solenoide_init();
-    
-    
-
-    init_encoder();
-    motor_init();
-    
-    encoder_calibrate();
-
-    timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
-    timer_counter_init(1, 656250 / 100); 
-    float T = 0.01;
-    float K_p = 0.15;
-    float K_i = 0.02;
-    float K_d = 0;
-
-    int32_t duty_cycle = 0;
-    uint32_t is_R5_pressed = 1;
-    uint32_t i = 0;
-
-
-    pid_init(&pid_ctrl, K_p,  K_i, K_d, T);
-    __enable_irq();
-
-    while (1)
-    {
-        can_receive(&io_can_message, 1);
-
-        if (i % 100 == 0){
-        //printf("PID ref: %d       PID meas: %d     PID_output: %d       PID_e: %d\r\n", pid_ctrl.reference, pid_ctrl.measurement, pid_ctrl.controller_output, pid_ctrl.error);
-        int32_t adc_value = (ADC->ADC_CDR[6]) & 0xfff;
-        printf("ADC value: %d\r\n", adc_value);
-        }
-        duty_cycle = (((dutycycle_upper_bound - dutycycle_lower_bound ) * io_can_message.data[1]) / 200) + dutycycle_middle;
-
-        pwm_set_dutycycle(duty_cycle);
-
-        if ((io_can_message.data[2] & (1 << 4)) && is_R5_pressed){// if SR% is pressed
-            solenoide_activate();
-            is_R5_pressed = 0;
-        } else if (io_can_message.data[2] & (1 << 4)){
-            is_R5_pressed = 0;
-        } else {
-            is_R5_pressed = 1;
-        }
-
-        i++;
-        //controll_servo_and_solenoide_with_joystick_test();
-        //send_can_msg_test(1);
-        //recive_can_msg_test(0);
-
-        // uint32_t encoder_value = read_encoder();
-        // printf("Encoder value: %d\r\n", encoder_value);
-
-        // motor_setdir(LEFT);
-        // motor_setpower(40);
-        // time_spinFor(msecs(500));
-        // motor_setdir(RIGHT);
-        // motor_setpower(40);
-        // time_spinFor(msecs(500));
-
-        for(volatile uint32_t i = 0; i < 3000; i++){
-            __asm__("nop");
-        }
-    }
+    play_the_game();
 }
+
+    // for(volatile uint32_t i = 0; i < 3000; i++){
+    //     __asm__("nop");
+    // }

@@ -143,3 +143,11 @@ void print_reg(uint32_t number){
         }
     printf("\r\n");
 }
+
+void print_adc_value(void){
+    if (i % 100 == 0){
+        //printf("PID ref: %d       PID meas: %d     PID_output: %d       PID_e: %d\r\n", pid_ctrl.reference, pid_ctrl.measurement, pid_ctrl.controller_output, pid_ctrl.error);
+        int32_t adc_value = (ADC->ADC_CDR[6]) & 0xfff;
+        printf("ADC value: %d\r\n", adc_value);
+    }
+}

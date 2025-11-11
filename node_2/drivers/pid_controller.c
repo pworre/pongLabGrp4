@@ -1,6 +1,6 @@
 #include "pid_controller.h"
 
-CAN_MESSAGE io_can_message;
+CAN_MESSAGE can_message;
 
 void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T){
 
@@ -18,23 +18,13 @@ void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T
     pid_ctrl->integral = 0;
     pid_ctrl->derivate = 0;
     pid_ctrl->controller_output = 0;
-
-    io_can_message.data[0] = 0; //joystick -x
-    io_can_message.data[1] = 0; //joystick -y
-    io_can_message.data[2] = 0; //right buttons
-    io_can_message.data[3] = 0; //left buttons
-    io_can_message.data[4] = 0; //nav buttons
-    io_can_message.data[5] = 0;
-    io_can_message.data_length= 6;
-    io_can_message.id = 0x0f;
 }
 
-void pid_update_referance(PID_CONTROLLER *pid_ctrl){
-    int8_t x_axis = io_can_message.data[0];
+void pid_update_referance(PID_CONTROLLER *pid_ctrl, JOYSTICK *joystick){
     //removes the stickdrift
-    if (x_axis < 10){
+    if (joystick->x_axis < 10){
         pid_ctrl->reference -= (x_axis / 2);
-    } else if( x_axis > -10){
+    } else if(joystick->x_axis > -10){
         pid_ctrl->reference -= (x_axis / 2);
     } 
     if (pid_ctrl->reference < 5){
@@ -73,8 +63,8 @@ void pid_set_motor_power(PID_CONTROLLER *pid_ctrl){
     }
 }
 
-void pid_use_controller(PID_CONTROLLER *pid_ctrl){
-    pid_update_referance(pid_ctrl);
+void pid_use_controller(PID_CONTROLLER *pid_ctrl, JOYSTICK *joystick){
+    pid_update_referance(pid_ctrl, joystick);
     pid_update_measurement(pid_ctrl);
     pid_update_error(pid_ctrl);
     pid_update_derivate(pid_ctrl);

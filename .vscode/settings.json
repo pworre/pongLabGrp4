@@ -15,7 +15,10 @@
         "can_driver.h": "c",
         "mcp2515_registers.h": "c",
         "can_controller.h": "c",
-        "sam.h": "c"
+        "sam.h": "c",
+        "pid_controller.h": "c",
+        "adc.h": "c",
+        "the_game.h": "c"
     },
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda",

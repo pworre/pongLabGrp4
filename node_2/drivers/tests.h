@@ -12,5 +12,6 @@ void recive_can_msg_test(uint32_t decode); //revices a can_msg and prints it, sa
 void controll_servo_with_buttons_test(void);
 void control_servo_and_solenoide_with_joystick_test(void);
 void print_reg(uint32_t number); //prints a byte: 01101100
+void print_adc_value(void);
 
 #endif
