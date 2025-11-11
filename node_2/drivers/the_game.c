@@ -22,9 +22,18 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
         switch (game.state)
         {
             case MENU:
+                pid_ctrl->toggle = 0;
             break;
             
             case PLAY:
+            pid_ctrl->toggle = 1;
+            if (!from_main){
+                encoder_calibrate();
+                pid_ctrl->reference = ENCODER_MAX/2;
+                for(volatile uint32_t i = 0; i < 3000000; i++){
+                    __asm__("nop");
+                }
+            }
             TC0->TC_CHANNEL[0].TC_CCR |= TC_CCR_SWTRG;
             TC0->TC_CHANNEL[1].TC_CCR |= TC_CCR_SWTRG;
             printf("ENTERED PLAY-STATE\r\n");
@@ -33,10 +42,8 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
             volatile uint32_t i = 0;
 
             while(game.state == PLAY){
-                if (!from_main){
-                    encoder_calibrate();
-                    pid_ctrl->reference = ENCODER_MAX/2;
-                }
+                
+                
                 // RECEIVES CAN_MESSAGE
                 can_receive(&can_message, 1);
                 can_sort_message(&game, &can_message);
@@ -72,6 +79,8 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
                     __asm__("nop");
                 }
             goals = 0;
+            from_main = 0;
+            pid_ctrl->toggle = 0;
             break;
         
         default:

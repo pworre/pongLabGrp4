@@ -69,9 +69,10 @@ int main(){
 
     __enable_irq();
     printf("Ready to start PONG!\r\n");
+    for(volatile uint32_t i = 0; i < 3000000; i++){
+        __asm__("nop");
+    }
     play_the_game(&pid_ctrl);
 }
 
-    // for(volatile uint32_t i = 0; i < 3000; i++){
-    //     __asm__("nop");
-    // }
+    

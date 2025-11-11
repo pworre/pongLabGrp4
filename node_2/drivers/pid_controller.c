@@ -19,6 +19,7 @@ void pid_init(PID_CONTROLLER *pid_ctrl, float K_p, float K_i, float K_d, float T
     pid_ctrl->integral = 0;
     pid_ctrl->derivate = 0;
     pid_ctrl->controller_output = 0;
+    pid_ctrl->toggle = 1;
 }
 
 void pid_update_referance(PID_CONTROLLER *pid_ctrl){
@@ -65,7 +66,7 @@ void pid_set_motor_power(PID_CONTROLLER *pid_ctrl){
 }
 
 void pid_use_controller(PID_CONTROLLER *pid_ctrl){
-    if (pid_ctrl.toggle){
+    if (pid_ctrl->toggle){
         pid_update_referance(pid_ctrl);
         pid_update_measurement(pid_ctrl);
         pid_update_error(pid_ctrl);
@@ -74,6 +75,8 @@ void pid_use_controller(PID_CONTROLLER *pid_ctrl){
         pid_calculate_controller_output(pid_ctrl);
         pid_set_motor_power(pid_ctrl);
     }else{
+        pid_ctrl->controller_output = 0;
+        pid_set_motor_power(pid_ctrl);
         return;
     }
 }
