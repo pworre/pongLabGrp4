@@ -50,6 +50,7 @@ int main(){
     solenoide_init();
     encoder_init();
     motor_init();
+    
     encoder_calibrate();
     timer_counter_init(0, 656250); //sett score TC, 1 poeng per sek ca.
     timer_counter_init(1, 656250 / 100); 
@@ -66,7 +67,6 @@ int main(){
     float K_d = 0;
     pid_init(&pid_ctrl, K_p,  K_i, K_d, T);
 
-    game_init(&pid_ctrl);
     __enable_irq();
     printf("Ready to start PONG!\r\n");
     play_the_game(&pid_ctrl);

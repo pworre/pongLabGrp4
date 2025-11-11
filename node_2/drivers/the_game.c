@@ -3,6 +3,7 @@
 JOYSTICK joystick;
 
 void play_the_game(PID_CONTROLLER *pid_ctrl){
+    uint32_t from_main = 1;
     GAME game; 
     game.state = MENU;
 
@@ -32,6 +33,10 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
             volatile uint32_t i = 0;
 
             while(game.state == PLAY){
+                if (!from_main){
+                    encoder_calibrate();
+                    pid_ctrl->reference = ENCODER_MAX/2;
+                }
                 // RECEIVES CAN_MESSAGE
                 can_receive(&can_message, 1);
                 can_sort_message(&game, &can_message);
@@ -62,6 +67,10 @@ void play_the_game(PID_CONTROLLER *pid_ctrl){
                 }
                 i++;
             }
+            printf("GAME OVER!");
+                for(volatile uint32_t i = 0; i < 30000; i++){
+                    __asm__("nop");
+                }
             goals = 0;
             break;
         
