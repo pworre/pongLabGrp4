@@ -109,6 +109,9 @@ int main(){
                 out_msg.id = 0;
                 out_msg.size = 1;
                 out_msg.data[0] = 0;
+                //print game over
+                print_gameover(score);
+                _delay_ms(3000);
             }
             break;
 
