@@ -4,6 +4,10 @@
 
 #ifndef OLED_H
 #define OLED_H
+//the OLED works by writing bytes to a buffer in the external SRAM, then update the OLED screen with this buffer. 
+//oled_write_string() writes a string in the buffer spot you pick
+//oled_update_screen() updates the OLED with the buffer
+//this way you can change a small part of the oled at once in the buffer and the same function that updates the sreen does so every time
 
 void transmit_oled_data(uint8_t data);
 void transmit_oled_command(uint8_t cmd);

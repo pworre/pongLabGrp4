@@ -19,6 +19,9 @@ typedef enum {
     CAN
 } SLAVES;
 
+//SPI_MasterTransmit() transmits a byte to the dedicated slave, 
+//the slave select signal is NOT deselected after and SPI_slave_deselect() should be called when you are done
+
 void SPI_MasterInit(void);
 void SPI_MasterTransmit(uint8_t data, SLAVES slave);
 uint8_t SPI_read(SLAVES slave);

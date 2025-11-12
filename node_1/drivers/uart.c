@@ -10,23 +10,19 @@
 #define UDRE0 5
 #define RXC0 7
 
-void USART0_Init(unsigned int ubrr)
-{
-    /* Set baud rate */
+void USART0_Init(unsigned int ubrr){
+    //Baud rate 
     UCSR0C = (0<<URSEL0)|(unsigned char)(ubrr>>8);
     UBRR0L = (unsigned char)ubrr;
-    /* Enable receiver and transmitter */
+    //Enable receiver and transmitter 
     UCSR0B = (1<<RXEN0)|(1<<TXEN0);
-    /* Set frame format: 8data, 2stop bit */
+    //Frame format: 8data, 2stop bit
     UCSR0C = (1<<URSEL0)|(1<<USBS0)|(3<<UCSZ00);
 }
 
 
-void USART0_send(unsigned char data)
-{
-    /* Wait for empty transmit buffer */
+void USART0_send(unsigned char data){
     while (!(UCSR0A & (1 << UDRE0)));
-    /* Put data into buffer, sends the data */
     if (data == '\n'){
         UDR0 = '\r';
         while (!(UCSR0A & (1 << UDRE0)));
@@ -34,10 +30,7 @@ void USART0_send(unsigned char data)
     UDR0 = data;
 }
 
-unsigned char USART0_read(void)
-{
-    /* Wait for data to be received */
+unsigned char USART0_read(void){
     while (!(UCSR0A & (1<<RXC0)));
-    /* Get and return received data from buffer */
     return UDR0;
 }

@@ -97,7 +97,6 @@ void oled_write_string(char* ptr, uint8_t font_size, uint8_t page, uint8_t col){
         oled_current_page[i] = 0;
     }
 
-
     while (*ptr != '\0' ){
         switch (font_size){
             case 4:
@@ -122,7 +121,6 @@ void oled_write_string(char* ptr, uint8_t font_size, uint8_t page, uint8_t col){
         char_count++;
         ptr++;
     }
-    
     //oled_print_page(page);
     for (int i = 0; i < (char_count * font_size); i++){ // OBS!!!
         oled_write_byte(page, (col + i), oled_current_page[col + i]);

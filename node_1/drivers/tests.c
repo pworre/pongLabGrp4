@@ -1,5 +1,6 @@
 // #include "tests.h"
 
+//EVERYTHING IS COMMENTED OUT SINCE THEESE ARE NOT USED IN THE FINAL GAME
 
 // void send_can_msg_test(uint8_t decode){
 //     CAN_MESSAGE message;

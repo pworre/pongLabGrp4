@@ -21,33 +21,31 @@ volatile MAIN_MENU_STATES main_menu_state;
 
 //volatile SETTINGS_MENU_STATES settings_menu_state;
 
- //flyttes kanskje til main? eller slik at den kan oppdateres etter endt spill
+void main_menu(void);  //moves the arrow
 
-void main_menu(void);  //flytter pila
+uint8_t new_game_menu(void); //moves the arrow
 
-uint8_t new_game_menu(void); //flytter pila
+void score_menu(void); //moves the arrow
 
-void score_menu(void); //flytter pila
+//void settings_menu(void); //moves the arrow
 
-//void settings_menu(void); //flytter pila
+void draw_main_menu(void); //prints the main menu 
 
-void draw_main_menu(void); //tegne til hele skjermen
+void draw_new_game_menu(void); //draws the new game menu down left
 
-void draw_new_game_menu(void); //tegne til undermeny i nedre høyre halvdel
+void draw_score_menu(void); //draws the scores down left
 
-void draw_score_menu(void); //tegne til undermeny i nedre høyre halvdel
-
-//void draw_settings_menu(void); //tegne til undermeny i nedre høyre halvdel
+//void draw_settings_menu(void); //removed since we dont use it
 
 void clear_submenu(void);
 
-void draw_gameplay(void); //tegner score-counter under spill
+void draw_gameplay(void); //draws the playing game menu
 
-void update_gameplay(uint8_t timerCounter, uint8_t goals); //oppdatere score-counter under spill
+void update_gameplay(uint8_t timerCounter, uint8_t goals); //updates the score and goals
 
-void print_gameover(uint8_t timerCounter);
+void print_gameover(uint8_t timerCounter); 
 
-void update_highscore(uint8_t score);
+void update_highscore(uint8_t score); //puts inn new score and sorts it high to low
 
 
 #endif 

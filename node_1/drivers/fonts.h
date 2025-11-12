@@ -7,7 +7,6 @@
 #ifndef FONTS_H_
 #define FONTS_H_
 
-
 #include <avr/pgmspace.h>
 
 extern const uint8_t font8[95][8];

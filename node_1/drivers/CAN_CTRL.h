@@ -15,9 +15,6 @@ void CAN_CTRL_bit_modify(uint8_t address, uint8_t mask, uint8_t data); //modifye
 
 void test_CAN_CTRL(void);
 
-uint8_t tx_reg0_ready;
-uint8_t tx_reg1_ready;
-uint8_t tx_reg2_ready;
 
 
 typedef struct{

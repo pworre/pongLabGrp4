@@ -11,7 +11,7 @@
 // CHANNEL 0 // JOYSTICK X
 // CHANNEL 1 // JOYSTICK Y
 // CHANNEL 2 // TOUCH X
-// CHANNEL 3 //
+// CHANNEL 3 // TOUCH Y
 
 volatile uint8_t* adc_adress = (uint8_t *) 0x1000;
 static uint8_t adc_data[4];
@@ -65,11 +65,9 @@ void ADC_print(void){
 }
 
 void io_board_calibration(void){
-    uint8_t full_scale = 100;
     ADC_read();
     joystick_x_calibration = adc_data[1];
     joystick_y_calibration = adc_data[0];
-    
 }
 
 void get_io_board_values(void){

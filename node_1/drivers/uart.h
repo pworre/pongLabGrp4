@@ -10,7 +10,6 @@
 /*
 #define USART0 ((ATMEGA_UART_REG*)0x29)
 
-
 typedef struct {
     volatile uint8_t UBRR0L;
     volatile uint8_t UCSR0B;

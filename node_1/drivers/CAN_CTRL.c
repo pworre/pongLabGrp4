@@ -1,11 +1,6 @@
 #include "CAN_CTRL.h"
 
-// Global variable:     STATUS OF TRANSMIT REGISTERS
-uint8_t tx_reg0_ready = 1;
-uint8_t tx_reg1_ready = 1;
-uint8_t tx_reg2_ready = 1;
-
-CAN_MESSAGE msg_global;
+CAN_MESSAGE msg_global; //can msg that is updated with the latest recived can msg
 
 #define fosc 16000000 // Hz
 #define bitrate 250000 // bit/s
@@ -31,8 +26,6 @@ void CAN_CTRL_init(void){
     //no filters on Reseve buffer 0
     CAN_CTRL_write(MCP_RXB0CTRL, 0b01100000);
 
-
-
     // Set "low level" INT0 for Interrupt
     DDRD &= ~(1 << PD2);                        // Input
     PORTD |= (1 << PD2);                        // Intern pull-up
@@ -42,10 +35,7 @@ void CAN_CTRL_init(void){
     GICR |= (1 << INT0);                        // Activate INT0
     sei();
 
-    
-
-    //-------------------BIT TIMING OF CAN-BUS-------------------
-    // BAUDRATE
+    //-------------------BIT TIMING OF CAN-BUS-------------
     //  -   Bit rate = 500 kbits/sek
     //  -   TQ per bit = 16
     //  -   TQ time = 1 / bitrate / TQ per bit = 
@@ -78,7 +68,6 @@ void CAN_CTRL_init(void){
     CAN_CTRL_write(MCP_CANINTE, 0b00000001);
     //use normal mode
     CAN_CTRL_write(MCP_CANCTRL, 0);
-    
 }
 
 void CAN_CTRL_reset(void){
@@ -127,7 +116,6 @@ ISR(INT0_vect){
     //     printf("%d", ((can_int_reg >> (bit - 1)) & 1));
     // } printf("\r\n");
 
-    
     if ((can_int_reg & (1 << RX0IF)) != 0){         // Receive buffer 0 full
         //CAN_CTRL_write(CANINTF, 0);
         //printf("Receive buffer 0 full!\r\n");
@@ -142,20 +130,17 @@ ISR(INT0_vect){
     } else if ((can_int_reg & (1 << TX0IF)) != 0){  // Transmit buffer 0 empty
         // Clear interrupt
         //printf("Transmit buffer 0 empty!\r\n");
-        
-        tx_reg0_ready = 1;
+
         CAN_CTRL_bit_modify(CANINTF, (1 << TX0IF), 0);
     } else if ((can_int_reg & (1 << TX1IF)) != 0){  // Transmit buffer 1 empty
         // Clear interrupt
         //printf("Transmit buffer 1 empty!\r\n");
-        
-        tx_reg1_ready = 1;
+
         CAN_CTRL_bit_modify(CANINTF, (1 << TX1IF), 0);
     } else if ((can_int_reg & (1 << TX2IF)) != 0){  // Transmit buffer 2 empty
         // Clear interrupt
         //printf("Transmit buffer 2 empty!\r\n");
-        
-        tx_reg2_ready = 1;
+
         CAN_CTRL_bit_modify(CANINTF, (1 << TX2IF), 0);
     } else if ((can_int_reg & (1 << ERRIF)) != 0){  // Error
         // Clear interrupt
@@ -304,7 +289,7 @@ int can_recive_msg(CAN_MESSAGE *msg, uint8_t buffer_nr){
     }
     else if (buffer_nr == 2){
         if (!(CAN_CTRL_read(MCP_CANINTF) & (1 << RX1IF))){
-        //printf("ikke interrupt flag på at noe er mottat\r\n");
+        //printf("NO INT RX1 \r\n");
         return 0;
         }
 
