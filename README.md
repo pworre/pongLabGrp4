@@ -8,6 +8,14 @@ Our project explores the design and implementation of an embedded system combini
 
 ---
 
+## Node 1: Atmega 162
+This node is responsible for the game-controller side and the main game-logic. It establish **SPI** for the OLED-display, io-controller and for the CAN-controller *MCP2515*. We also use UART with RS232. An SRAM is connected to the atmega for more storage. **CAN-bus** is used for connection with Node 2. 
+
+## Node 2: Arduinoe Due
+This node is connected to the pong-board and is responsible driving the servo- and DC-motor, and to detect goals when the ball is passing through the line between the IR-emitter and photo-diode. 
+
+---
+
 ##  Objectives
 - Develop a functional embedded system integrating hardware and software components  
 - Implement real-time control and communication  
@@ -21,8 +29,6 @@ Our project explores the design and implementation of an embedded system combini
 **Department:** Engineering Cybernetics (ITK)  
 **Semester:** Fall 2025  
 
-The course is known for its **technical depth** and **hardware precision**, requiring both accurate component integration and correctly implemented control algorithms.
-
 ---
 
 ##  Project Team
@@ -35,15 +41,8 @@ The course is known for its **technical depth** and **hardware precision**, requ
 ---
 
 ##  Technologies and Tools
-- **Microcontroller platform:** Atmega 162
+- **Microcontroller platform:** Atmega 162, sam3x
 - **Programming languages:** C
 - **Communication protocols:** UART, SPI, CAN
 - **Version control:** Git & GitHub  
 
----
-
-##  Testing and Validation
-The system is tested through:
-- Hardware-in-the-loop simulations  
-- Real-time debugging and oscilloscope measurements  
-- Software unit tests  
